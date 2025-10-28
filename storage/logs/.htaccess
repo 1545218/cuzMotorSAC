@@ -1,0 +1,25 @@
+# Protección del directorio de logs
+# Solo el sistema puede escribir y leer estos archivos
+
+<Files "*.log">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "*">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Prevenir listado de directorio
+Options -Indexes
+
+# Mensaje personalizado
+ErrorDocument 403 "Acceso denegado - Logs del sistema protegidos"
+
+# Cabeceras de seguridad
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+</IfModule>

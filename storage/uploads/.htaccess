@@ -1,0 +1,49 @@
+# Protección del directorio de uploads
+# Archivos subidos por usuarios (imágenes, documentos)
+
+# Denegar acceso directo por defecto
+<Files "*">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Permitir solo tipos de archivo específicos y seguros para visualización controlada
+# Nota: El acceso debe ser siempre a través del sistema, nunca directo
+
+# Tipos de imagen permitidos (solo lectura controlada)
+<FilesMatch "\.(jpg|jpeg|png|gif|webp|svg)$">
+    Order Allow,Deny
+    # Comentado para que sea controlado por el sistema
+    # Allow from all
+    Deny from all
+</FilesMatch>
+
+# Documentos permitidos (solo lectura controlada)
+<FilesMatch "\.(pdf|doc|docx|xls|xlsx)$">
+    Order Allow,Deny
+    # Comentado para que sea controlado por el sistema
+    # Allow from all
+    Deny from all
+</FilesMatch>
+
+# Denegar ejecución de scripts subidos
+<FilesMatch "\.(php|phtml|php3|php4|php5|pl|py|jsp|asp|sh|cgi|exe|bat|com)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Prevenir listado de directorio
+Options -Indexes
+
+# Mensaje personalizado
+ErrorDocument 403 "Acceso denegado - Archivos protegidos del sistema"
+
+# Cabeceras de seguridad
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options SAMEORIGIN
+    Header always set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Límites de tamaño para prevenir ataques
+LimitRequestBody 10485760  # 10MB máximo

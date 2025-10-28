@@ -1,0 +1,358 @@
+/* Cruz Motor S.A.C. - Sistema de Inventario */
+/* Archivo CSS principal del sistema */
+
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --success-color: #27ae60;
+    --warning-color: #f39c12;
+    --sidebar-width: 280px;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    overflow-x: hidden; /* Eliminar scroll horizontal */
+}
+
+html {
+    overflow-x: hidden; /* Eliminar scroll horizontal del html también */
+}
+
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: var(--sidebar-width);
+    background: linear-gradient(135deg, var(--primary-color) 0%, #34495e 100%) !important;
+    color: #fff !important;
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto; /* Permitir scroll vertical si es necesario */
+    overflow-x: hidden; /* Solo ocultar scroll horizontal */
+}
+
+/* Sidebar: forzar color blanco en enlaces, íconos y textos */
+.sidebar, .sidebar * {
+    color: #fff !important;
+    text-shadow: none !important;
+}
+.sidebar .nav-link,
+.sidebar .nav-link:visited,
+.sidebar .nav-link:active {
+    color: #fff !important;
+}
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    color: #fff !important;
+    background: rgba(255,255,255,0.12) !important;
+    border-left-color: var(--secondary-color);
+    transform: translateX(5px);
+}
+.sidebar i, .sidebar .fa, .sidebar .fas, .sidebar .far, .sidebar .fab {
+    color: #fff !important;
+}
+.sidebar .dropdown-menu {
+    background: var(--primary-color) !important;
+    color: #fff !important;
+}
+
+/* Forzar color blanco en los enlaces de la sidebar */
+.sidebar .nav-link,
+.sidebar .nav-link:visited,
+.sidebar .nav-link:active {
+    color: #fff !important;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    color: #fff !important;
+    background: rgba(255,255,255,0.12) !important;
+    border-left-color: var(--secondary-color);
+    transform: translateX(5px);
+}
+
+.sidebar.show {
+    transform: translateX(0);
+}
+
+.sidebar-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.sidebar-header .logo {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.5rem;
+    font-size: 1.5rem;
+}
+
+.nav-item {
+    margin: 0.2rem 0;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    padding: 0.75rem 1.5rem;
+    border-radius: 0;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    border-left-color: var(--secondary-color);
+    transform: translateX(5px);
+}
+
+.nav-link i {
+    width: 20px;
+    margin-right: 0.75rem;
+}
+
+.main-content {
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+    padding: 1rem;
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+.sidebar-overlay.show {
+    display: block;
+}
+
+@media (max-width: 991px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+}
+
+@media (min-width: 992px) {
+    .sidebar {
+        transform: translateX(0);
+        position: fixed;
+    }
+
+    .main-content {
+        margin-left: var(--sidebar-width);
+    }
+
+    .sidebar-overlay {
+        display: none !important;
+    }
+}
+
+.user-info {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem;
+}
+
+/* Dropdown en sidebar */
+.sidebar .dropdown.dropup {
+    position: relative !important;
+}
+
+.sidebar .dropdown.dropup .dropdown-menu {
+    position: absolute !important;
+    background: var(--primary-color);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+    bottom: 100% !important;
+    top: auto !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin-bottom: 0.5rem;
+    z-index: 9999 !important;
+    display: none;
+    width: 100% !important;
+}
+
+.sidebar .dropdown.dropup .dropdown-menu.show {
+    display: block !important;
+}
+
+.sidebar .dropdown-item {
+    color: rgba(255, 255, 255, 0.8);
+    padding: 0.75rem 1rem;
+}
+
+.sidebar .dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.sidebar .dropdown-item.text-danger {
+    color: #ff6b6b !important;
+}
+
+.sidebar .dropdown-item.text-danger:hover {
+    background: rgba(255, 107, 107, 0.2);
+    color: #ff6b6b !important;
+}
+
+/* Eliminar scrolls innecesarios */
+.container,
+.container-fluid,
+.main-content {
+    overflow-x: hidden;
+}
+
+/* Prevenir scroll horizontal en tablas responsive */
+.table-responsive {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+/* Eliminar TODAS las scrollbars visibles */
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+* {
+    scrollbar-width: none; /* Firefox */
+}
+
+/* Estilos para formulario de productos - diseño híbrido */
+.product-form-card {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+
+.product-row {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.product-col {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+/* Encabezado horizontal */
+.product-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+/* Product form hybrid card/horizontal layout */
+.product-form-card .product-header {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    margin-bottom: 1rem;
+}
+
+.product-header .title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.product-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+/* Botones estilo compacto */
+.btn-compact {
+    padding: 0.45rem 0.7rem;
+    font-size: 0.92rem;
+    border-radius: 4px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.btn-compact:hover {
+    transform: translateY(-1px);
+}
+
+/* Mejora de accesibilidad: foco visible para enlaces y botones */
+.nav-link:focus,
+.btn-compact:focus,
+.dropdown-item:focus,
+.btn:focus {
+    outline: 3px solid rgba(52,152,219,0.18);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba(52,152,219,0.06);
+}
+
+/* Ajustes visuales: mayor contraste en enlaces del sidebar */
+.nav-link {
+    color: rgba(255, 255, 255, 0.92);
+}
+
+@media (max-width: 767px) {
+    .product-form-card .product-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+@media (max-width: 767px) {
+    .product-row { flex-direction: column; }
+    .product-header { flex-direction: column; align-items: stretch; }
+}
+
+/* ==========================
+   Reglas migradas desde app/views/layout/header.php
+   Fecha: 2025-10-21
+   Motivo: mantener CSS centralizado en public/css/main.css
+   ========================== */
+
+/* Fix para navegación móvil (mismo comportamiento que en header) */
+@media (max-width: 991.98px) {
+    .sidebar.show {
+        transform: translateX(0) !important;
+        z-index: 1050 !important;
+    }
+
+    .sidebar-overlay.show {
+        display: block !important;
+        z-index: 1040 !important;
+    }
+}
+
+/* Asegurar que dropdown funcione */
+.dropdown-menu {
+    z-index: 1055 !important;
+}

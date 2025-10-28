@@ -1,0 +1,33 @@
+# Protección del directorio storage principal
+# Denegar acceso directo desde navegador web
+
+# Denegar acceso a todos los archivos por defecto
+<Files "*">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Denegar listado de directorio
+Options -Indexes
+
+# Mensaje personalizado para intentos de acceso
+ErrorDocument 403 "Acceso denegado - Directorio protegido del sistema"
+
+# Cabeceras de seguridad adicionales
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Prevenir ejecución de scripts
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+
+# Tipos de archivo denegados específicamente
+<FilesMatch "\.(php|phtml|php3|php4|php5|pl|py|jsp|asp|sh|cgi)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>

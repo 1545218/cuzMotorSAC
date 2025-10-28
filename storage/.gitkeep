@@ -1,0 +1,25 @@
+# Directorio storage/ - Almacenamiento seguro del sistema Cruz Motor SAC
+# 
+# Este directorio contiene subdirectorios para:
+# - logs/: Registros del sistema (autenticación, inventario, errores)
+# - cache/: Datos temporales para acelerar el sistema  
+# - backups/: Exportaciones de base de datos y configuraciones
+# - uploads/: Archivos subidos (imágenes de productos, PDFs, documentos)
+# - temp/: Archivos temporales del sistema
+#
+# SEGURIDAD:
+# - Todos los subdirectorios están protegidos con .htaccess
+# - No se permite acceso directo desde navegador web
+# - El sistema accede programáticamente pero nunca expone archivos
+# - Protección contra ejecución de scripts maliciosos
+#
+# ESTRUCTURA:
+# storage/
+# ├── logs/           - Logs del sistema protegidos
+# ├── cache/          - Cache temporal optimizado
+# ├── backups/        - Respaldos críticos ultra-protegidos  
+# ├── uploads/        - Archivos de usuario controlados
+# │   ├── productos/  - Imágenes de productos
+# │   ├── cotizaciones/ - PDFs de cotizaciones
+# │   └── documentos/ - Documentos administrativos
+# └── temp/           - Archivos temporales con limpieza automática

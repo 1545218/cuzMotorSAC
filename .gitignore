@@ -1,0 +1,66 @@
+# Archivo .gitignore para Cruz Motor SAC
+
+# Archivos de logs - NO subir al repositorio
+/logs/*.log
+/logs/app-*.log
+/storage/logs/*.log
+/storage/logs/sistema-*.log
+/storage/logs/auth-*.log
+/storage/logs/inventory-*.log
+
+# Archivos de respaldo - NO subir al repositorio  
+/storage/backups/*
+!/storage/backups/.gitkeep
+
+# Archivos de cache - NO subir al repositorio
+/storage/cache/*
+!/storage/cache/.gitkeep
+
+# Archivos subidos por usuarios - NO subir al repositorio
+/storage/uploads/productos/*
+!/storage/uploads/productos/.gitkeep
+/storage/uploads/cotizaciones/*
+!/storage/uploads/cotizaciones/.gitkeep
+/storage/uploads/documentos/*
+!/storage/uploads/documentos/.gitkeep
+
+# Archivos temporales - NO subir al repositorio
+/storage/temp/*
+!/storage/temp/.gitkeep
+
+# Archivos temporales generales
+/storage/uploads/temp/*
+
+# Variables de entorno locales (si se usan)
+.env
+.env.local
+
+# Archivos de configuración local
+/config/local.php
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos del sistema
+Thumbs.db
+.DS_Store
+
+# Logs de errores del servidor
+error_log
+php_errors.log
+
+# Archivos de composer (si se usan)
+/vendor/
+composer.lock
+
+# Archivos de node (si se usan)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de upload temporales
+/public/uploads/temp/*

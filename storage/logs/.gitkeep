@@ -1,0 +1,4 @@
+# Directorio logs/ - Registros del sistema Cruz Motor SAC
+# Los archivos .log se generan automáticamente por el sistema
+# Formato: sistema-YYYY-MM-DD.log, auth-YYYY-MM-DD.log, inventory-YYYY-MM-DD.log
+# Acceso: Solo lectura/escritura del sistema, completamente protegido de acceso web
