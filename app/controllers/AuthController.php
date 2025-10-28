@@ -7,8 +7,6 @@
 
 class AuthController extends Controller
 {
-    private $db;
-    private $auth;
 
     public function __construct()
     {
