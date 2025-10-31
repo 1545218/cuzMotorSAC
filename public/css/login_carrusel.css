@@ -3,13 +3,11 @@
     position: relative;
     width: 100%;
     height: 100%;
-    min-height: 380px;
-    background: #2c3e50;
+    min-height: 380px; /* altura compacta */
+    background: #23272b url('../images/taller-moderno.jpg') center center/cover no-repeat;
     overflow: hidden;
     display: flex;
-    align-items: stretch;
-    margin: 0 !important;
-    border-radius: 0 !important;
+    align-items: stretch; /* asegurar que los paneles ocupen 100% */
 }
 .carrusel-login-bg .carousel-item {
     height: 100%;
@@ -22,39 +20,37 @@
     position: absolute;
     inset: 0;
     /* Overlay oscuro semitransparente para mejorar legibilidad sobre imágenes de taller */
-    background: rgba(0,0,0,0.55); /* 55% black para mayor contraste */
+    background: rgba(10,10,10,0.82); /* Más oscuro para máximo contraste */
     z-index: 1;
 }
 .carrusel-content {
     position: relative;
     z-index: 2;
     color: #fff;
-    padding: 16px 16px 16px 32px;
-    max-width: 300px;
+    padding: 32px 32px 32px 40px;
+    max-width: 420px;
     min-height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     height: 100%;
     text-align: left;
-    overflow-wrap: break-word;
-    background: rgba(0,0,0,0.45); /* fondo semitransparente para máxima legibilidad */
-    border-radius: 12px;
+    overflow: hidden;
 }
 .carrusel-content h2 {
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 0.4rem;
+    font-size: 2.2rem;
+    font-weight: bold;
+    margin-bottom: 0.7rem;
     color: #fff;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.35);
-    line-height: 1.1;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+    letter-spacing: 0.5px;
 }
 .carrusel-content p {
-    font-size: 0.95rem;
+    font-size: 1.18rem;
     color: #fff;
+    font-weight: 400;
     margin-bottom: 0;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.22);
-    line-height: 1.4;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.32);
 }
 .carrusel-content p {
     /* Mejor lectura en panel derecho: texto alineado a la izquierda y mayor interlineado */
@@ -62,17 +58,20 @@
     line-height: 1.5;
 }
 .carrusel-content .icon {
-    font-size: 1.3rem;
-    color: #fff;
     margin-bottom: 0.7rem;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.22);
+}
+.carrusel-content .icon .feather-icon {
+    width: 2.6rem;
+    height: 2.6rem;
+    color: #fff;
+    opacity: 0.95;
 }
 
 /* Fusion visual: remover radius interno de la tarjeta izquierda para que
    la tarjeta completa tenga border-radius sólo en sus esquinas exteriores */
 .login-glass-card {
     border-radius: 0 !important;
-    background: rgba(255,255,255,0.9); /* ligeramente translúcido pero sin esquinas redondeadas */
+    background: rgba(255,255,255,0.93); /* ligeramente translúcido pero sin esquinas redondeadas */
 }
 .carrusel-login-bg .carousel-indicators {
     position: absolute;
@@ -85,12 +84,6 @@
     gap: 10px; /* separación uniforme entre puntos */
     z-index: 3; /* sobre el overlay */
     margin: 0; /* eliminar margen por defecto */
-}
-@media (max-width: 767px) {
-    .carrusel-content h2 { font-size: 1.6rem; }
-    .carrusel-content p { font-size: 1rem; line-height: 1.4; }
-    .carrusel-content .icon { font-size: 2rem; }
-    .carrusel-login-bg .carousel-indicators { bottom: 1rem; gap:8px; }
 }
 .carrusel-login-bg .carousel-indicators [data-bs-target] {
     background-color: #f39c12;
@@ -109,7 +102,53 @@
     opacity: 1;
 }
 @media (max-width: 991px) {
-    .carrusel-login-bg { display: none; }
+    .login-carrusel-panel {
+        min-height: 320px !important;
+    }
+}
+@media (max-width: 767.98px) {
+    .login-card-unificada {
+        flex-direction: column !important;
+        border-radius: 24px !important;
+        min-height: 0 !important;
+        max-width: 98vw !important;
+    }
+    .login-form-panel {
+        border-radius: 24px 24px 0 0 !important;
+        min-height: 320px !important;
+        max-width: 100vw !important;
+    }
+    .login-carrusel-panel {
+        border-radius: 0 0 24px 24px !important;
+        min-height: 220px !important;
+        max-width: 100vw !important;
+        display: flex !important;
+        order: 2 !important;
+    }
+    .carrusel-login-bg {
+        min-height: 220px !important;
+        border-radius: 0 0 24px 24px !important;
+        display: flex !important;
+    }
+    .carrusel-content {
+        padding: 24px 16px 24px 16px !important;
+        max-width: 100vw !important;
+        font-size: 1.1rem !important;
+    }
+    .carrusel-content h2 {
+        font-size: 1.45rem !important;
+    }
+    .carrusel-content p {
+        font-size: 1.05rem !important;
+    }
+    .carrusel-content .icon .feather-icon {
+        width: 2.1rem !important;
+        height: 2.1rem !important;
+    }
+    .login-carousel-indicators-custom {
+        bottom: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+    }
 }
 /* Glassmorphism para el login */
 .login-glass-card {

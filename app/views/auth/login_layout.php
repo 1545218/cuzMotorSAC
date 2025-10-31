@@ -14,10 +14,10 @@
 
 <body class="bg-light">
     <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
-    <div class="row w-100 g-0 flex-md-nowrap shadow-lg rounded-4 overflow-hidden" style="max-width: 950px; min-height: 380px; background: #fff;">
+        <div class="row w-100 g-0 flex-md-nowrap shadow-lg rounded-4 overflow-hidden login-card-unificada" style="max-width: 950px; min-height: 380px; background: #fff; border-radius: 24px;">
             <!-- Login SIEMPRE visible a la izquierda -->
-            <div class="col-12 col-md-6 d-flex align-items-stretch justify-content-center p-0 order-1 order-md-1" style="min-height:380px;">
-                <div class="w-100 login-glass-card d-flex flex-column justify-content-center align-items-center" style="max-width: 390px; min-height: 100%; padding: 24px 20px;">
+            <div class="col-12 col-md-6 d-flex align-items-stretch justify-content-center p-0 order-1 order-md-1 login-form-panel" style="min-height:380px; border-radius: 24px 0 0 24px;">
+                <div class="w-100 login-glass-card d-flex flex-column justify-content-center align-items-center" style="max-width: 390px; min-height: 100%; padding: 24px 20px; background: #fff;">
                     <div class="mb-4 w-100">
                         <div class="text-center mb-3">
                             <i data-feather="box" class="feather-icon fa-3x text-primary mb-2"></i>
@@ -64,18 +64,18 @@
                 </div>
             </div>
             <!-- Carrusel visual automotriz a la derecha -->
-            <div class="col-12 col-md-6 d-flex p-0 carrusel-login-bg align-items-center justify-content-center order-2 order-md-2" style="min-height:380px;">
-                <div id="loginCarousel" class="carousel carousel-fade slide w-100" data-bs-ride="carousel" data-bs-interval="2000" data-bs-pause="hover">
+            <div class="col-12 col-md-6 d-flex p-0 carrusel-login-bg align-items-center justify-content-center order-2 order-md-2 login-carrusel-panel" style="min-height:380px; border-radius: 0 24px 24px 0;">
+                <div id="loginCarousel" class="carousel carousel-fade slide w-100" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="hover">
                     <div class="carousel-inner w-100">
-                        <div class="carousel-item active w-100 d-flex flex-column justify-content-start align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
+                        <div class="carousel-item active w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
                             <div class="carrusel-content d-flex flex-column justify-content-center align-items-start h-100 w-100">
                                 <span class="icon"><i data-feather="archive" class="feather-icon"></i></span>
-                                <h2>+1200 repuestos gestionados</h2>
+                                <h2>1200 repuestos gestionados</h2>
                                 <p>Inventario digitalizado y actualizado en tiempo real.</p>
                             </div>
                         </div>
-                        <div class="carousel-item w-100 d-flex flex-column justify-content-start align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
+                        <div class="carousel-item w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
                             <div class="carrusel-content d-flex flex-column justify-content-center align-items-start h-100 w-100">
                                 <span class="icon"><i data-feather="truck" class="feather-icon"></i></span>
@@ -83,7 +83,7 @@
                                 <p>Visualiza el avance de cada servicio en segundos.</p>
                             </div>
                         </div>
-                        <div class="carousel-item w-100 d-flex flex-column justify-content-start align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
+                        <div class="carousel-item w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
                             <div class="carrusel-content d-flex flex-column justify-content-center align-items-start h-100 w-100">
                                 <span class="icon"><i data-feather="wrench" class="feather-icon"></i></span>
@@ -91,7 +91,7 @@
                                 <p>Optimiza procesos y reduce errores humanos.</p>
                             </div>
                         </div>
-                        <div class="carousel-item w-100 d-flex flex-column justify-content-start align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
+                        <div class="carousel-item w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
                             <div class="carrusel-content d-flex flex-column justify-content-center align-items-start h-100 w-100">
                                 <span class="icon"><i data-feather="users" class="feather-icon"></i></span>
@@ -99,7 +99,7 @@
                                 <p>Equipo capacitado y atención personalizada.</p>
                             </div>
                         </div>
-                        <div class="carousel-item w-100 d-flex flex-column justify-content-start align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
+                        <div class="carousel-item w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
                             <div class="carrusel-content d-flex flex-column justify-content-center align-items-start w-100">
                                 <span class="icon"><i data-feather="bar-chart-2" class="feather-icon"></i></span>
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                     <!-- Flechas de navegación eliminadas para diseño limpio -->
-                    <div class="carousel-indicators mb-0">
+                    <div class="carousel-indicators mb-0 login-carousel-indicators-custom">
                         <button type="button" data-bs-target="#loginCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
                         <button type="button" data-bs-target="#loginCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
                         <button type="button" data-bs-target="#loginCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
@@ -123,7 +123,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Inicializaciones del login
+        // Inicializaciones del login y feather icons
         function igualarAlturaCarrusel() {
             var login = document.querySelector('.login-glass-card');
             var carrusel = document.getElementById('loginCarousel');
@@ -137,18 +137,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof feather !== 'undefined') feather.replace();
             igualarAlturaCarrusel();
-            // Forzar inicialización y ciclo del carrusel
-            try {
-                var carouselEl = document.getElementById('loginCarousel');
-                if (carouselEl && typeof bootstrap !== 'undefined' && bootstrap.Carousel) {
-                    var bsCarousel = bootstrap.Carousel.getInstance(carouselEl) || new bootstrap.Carousel(carouselEl, { interval: 3500, ride: 'carousel', pause: false });
-                    if (bsCarousel && typeof bsCarousel.cycle === 'function') bsCarousel.cycle();
-                }
-            } catch (e) {
-                console.warn('No se pudo inicializar el carrusel automáticamente:', e);
-            }
         });
-
         window.addEventListener('load', igualarAlturaCarrusel);
         window.addEventListener('resize', igualarAlturaCarrusel);
     </script>
