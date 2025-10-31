@@ -67,7 +67,7 @@
             <div class="col-12 col-md-6 d-flex p-0 carrusel-login-bg align-items-center justify-content-center order-2 order-md-2" style="border-radius: 0 24px 24px 0; min-height:520px;">
                 <div id="loginCarousel" class="carousel carousel-fade slide w-100" data-bs-ride="carousel" data-bs-interval="2000" data-bs-pause="hover">
                     <div class="carousel-inner w-100">
-                        <div class="carousel-item active w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80');">
+                        <div class="carousel-item active w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80');">
                             <div class="carrusel-overlay"></div>
                             <div class="carrusel-content d-flex flex-column justify-content-center align-items-start h-100 w-100" style="padding: 48px;">
                                 <span class="icon"><i data-feather="archive" class="feather-icon"></i></span>
@@ -83,10 +83,10 @@
                                 <p>Visualiza el avance de cada servicio en segundos.</p>
                             </div>
                         </div>
-                        <div class="carousel-item w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80');">
+                        <div class="carousel-item w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=80');">
                             <div class="carrusel-overlay"></div>
                             <div class="carrusel-content d-flex flex-column justify-content-center align-items-start h-100 w-100" style="padding: 48px;">
-                                <span class="icon"><i data-feather="cpu" class="feather-icon"></i></span>
+                                <span class="icon"><i data-feather="wrench" class="feather-icon"></i></span>
                                 <h2>+30% eficiencia operativa</h2>
                                 <p>Optimiza procesos y reduce errores humanos.</p>
                             </div>
@@ -102,7 +102,7 @@
                         <div class="carousel-item w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=80');">
                             <div class="carrusel-overlay"></div>
                             <div class="carrusel-content d-flex flex-column justify-content-center align-items-start w-100" style="padding: 48px;">
-                                <span class="icon"><i class="fas fa-chart-line"></i></span>
+                                <span class="icon"><i data-feather="bar-chart-2" class="feather-icon"></i></span>
                                 <h2>Reportes y estadísticas</h2>
                                 <p>Toma decisiones con datos claros y visuales.</p>
                             </div>

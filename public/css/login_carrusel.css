@@ -19,13 +19,14 @@
 .carrusel-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(120deg, rgba(44,62,80,0.82) 60%, rgba(52,152,219,0.55) 100%);
+    /* Overlay oscuro semitransparente para mejorar legibilidad sobre imágenes de taller */
+    background: rgba(0,0,0,0.45); /* 45% black */
     z-index: 1;
 }
 .carrusel-content {
     position: relative;
     z-index: 2;
-    color: #ecf0f1;
+    color: #ffffff; /* texto en blanco puro para máxima legibilidad */
     padding: 2.5rem 2.5rem 2.5rem 3.5rem;
     max-width: 420px;
     min-height: 340px;
@@ -38,14 +39,14 @@
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 0.75rem;
-    color: #f39c12;
-    text-shadow: 0 2px 8px rgba(44,62,80,0.18);
+    color: #ffffff; /* título en blanco */
+    text-shadow: 0 2px 8px rgba(0,0,0,0.35);
 }
 .carrusel-content p {
     font-size: 1.15rem;
-    color: #ecf0f1;
+    color: #ffffff; /* párrafos en blanco */
     margin-bottom: 0;
-    text-shadow: 0 1px 4px rgba(44,62,80,0.12);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.28);
 }
 .carrusel-content p {
     /* Mejor lectura en panel derecho: texto alineado a la izquierda y mayor interlineado */
@@ -54,19 +55,28 @@
 }
 .carrusel-content .icon {
     font-size: 2.5rem;
-    color: #e67e22;
+    color: #ffffff; /* iconos también en blanco para consistencia */
     margin-bottom: 1.2rem;
-    text-shadow: 0 2px 8px rgba(44,62,80,0.18);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.28);
+}
+.carrusel-login-bg .carousel-indicators {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 1.5rem; /* distancia desde el borde inferior */
+    display: flex;
+    justify-content: center; /* centrar horizontalmente */
+    padding: 0 1.25rem; /* espacio lateral para que no queden pegados a la esquina */
+    gap: 12px; /* separación uniforme entre puntos */
+    z-index: 3; /* sobre el overlay */
+    margin: 0; /* eliminar margen por defecto */
 }
 .carrusel-login-bg .carousel-indicators [data-bs-target] {
     background-color: #f39c12;
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    margin: 0 6px;
-}
-.carrusel-login-bg .carousel-indicators {
-    bottom: 1.5rem;
+    /* margin es manejado por gap en el contenedor */
 }
 .carrusel-login-bg .carousel-fade .carousel-item {
     opacity: 0;
