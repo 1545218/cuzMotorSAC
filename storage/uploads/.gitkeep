@@ -1,4 +1,0 @@
-# Directorio uploads/ - Archivos subidos por usuarios
-# Acceso controlado programáticamente, nunca directo
-# Validación de tipos de archivo, límites de tamaño
-# Subdirectorios: productos/, cotizaciones/, documentos/

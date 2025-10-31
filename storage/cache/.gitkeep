@@ -1,4 +1,0 @@
-# Directorio cache/ - Cache del sistema Cruz Motor SAC  
-# Almacena datos temporales para mejorar rendimiento
-# Archivos con TTL automático, limpieza programada
-# Tipos: consultas DB, vistas compiladas, datos de sesión temporal

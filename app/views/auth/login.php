@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?= BASE_PATH ?>/public/css/login.css">
+    <!-- Feather icons (line icons) -->
+    <script src="https://unpkg.com/feather-icons"></script>
 </head>
 
 <body>
@@ -23,7 +25,7 @@
                         <!-- Logo de la empresa -->
                         <div class="text-center mb-4">
                             <div class="company-logo">
-                                <i class="fas fa-tools"></i>
+                                <i data-feather="box" class="feather-icon"></i>
                             </div>
                             <h2 class="company-title"><?= COMPANY_NAME ?></h2>
                             <p class="company-subtitle">Sistema de Inventario</p>
@@ -46,11 +48,11 @@
 
                             <div class="mb-3">
                                 <label for="username" class="form-label">
-                                    <i class="fas fa-user me-2"></i>Usuario
+                                    <i data-feather="user" class="feather-icon me-2"></i>Usuario
                                 </label>
                                 <div class="input-group">
                                     <span class="input-group-text">
-                                        <i class="fas fa-user text-muted"></i>
+                                        <i data-feather="user" class="feather-icon text-muted"></i>
                                     </span>
                                     <input type="text"
                                         class="form-control"
@@ -64,11 +66,11 @@
 
                             <div class="mb-3">
                                 <label for="password" class="form-label">
-                                    <i class="fas fa-lock me-2"></i>Contraseña
+                                    <i data-feather="lock" class="feather-icon me-2"></i>Contraseña
                                 </label>
                                 <div class="input-group">
                                     <span class="input-group-text">
-                                        <i class="fas fa-lock text-muted"></i>
+                                        <i data-feather="lock" class="feather-icon text-muted"></i>
                                     </span>
                                     <input type="password"
                                         class="form-control"
@@ -77,8 +79,9 @@
                                         placeholder="Ingrese su contraseña"
                                         required
                                         autocomplete="current-password">
-                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                        <i class="fas fa-eye"></i>
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword" aria-label="Mostrar contraseña">
+                                        <!-- Feather eye icon will be rendered by JS -->
+                                        <i data-feather="eye" class="feather-icon"></i>
                                     </button>
                                 </div>
                             </div>
@@ -94,7 +97,7 @@
 
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-login text-white">
-                                    <i class="fas fa-sign-in-alt me-2"></i>
+                                    <i data-feather="log-in" class="feather-icon me-2"></i>
                                     Iniciar Sesión
                                 </button>
                             </div>
@@ -103,7 +106,7 @@
                         <!-- Información adicional -->
                         <div class="security-info">
                             <small>
-                                <i class="fas fa-shield-alt"></i>
+                                <i data-feather="shield" class="feather-icon"></i>
                                 Acceso seguro y protegido
                             </small>
                         </div>
@@ -124,22 +127,39 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Toggle password visibility
-        document.getElementById('togglePassword').addEventListener('click', function() {
-            const password = document.getElementById('password');
-            const icon = this.querySelector('i');
+        // Initialize feather icons and setup toggle eye logic
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
 
-            if (password.type === 'password') {
-                password.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                password.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
+            var toggleBtn = document.getElementById('togglePassword');
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function() {
+                    var password = document.getElementById('password');
+                    if (!password) return;
+                    if (password.type === 'password') {
+                        password.type = 'text';
+                        // replace icon to eye-off
+                        if (typeof feather !== 'undefined') {
+                            toggleBtn.innerHTML = feather.icons['eye-off'].toSvg({
+                                class: 'feather-icon'
+                            });
+                        }
+                    } else {
+                        password.type = 'password';
+                        if (typeof feather !== 'undefined') {
+                            toggleBtn.innerHTML = feather.icons['eye'].toSvg({
+                                class: 'feather-icon'
+                            });
+                        }
+                    }
+                });
             }
         });
+    </script>
 
+    <script>
         // Auto-dismiss alerts after 5 seconds
         document.addEventListener('DOMContentLoaded', function() {
             const alerts = document.querySelectorAll('.alert');

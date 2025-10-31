@@ -1,0 +1,77 @@
+/* Ergonomía visual y accesibilidad para login_layout.php */
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #e3e9f7 0%, #f7fafc 100%);
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+}
+.card {
+    border-radius: 1.25rem;
+    box-shadow: 0 6px 32px 0 rgba(44, 62, 80, 0.10), 0 1.5px 6px 0 rgba(44, 62, 80, 0.08);
+    border: none;
+}
+.card-body {
+    padding: 2.5rem 2rem 2rem 2rem;
+}
+.text-primary {
+    color: #2563eb !important;
+}
+.form-label {
+    font-weight: 500;
+    color: #222;
+    font-size: 1.1rem;
+}
+.form-control {
+    border-radius: 0.5rem;
+    border: 1px solid #e3e9f7;
+    background: #f7fafc;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-size: 1.08rem;
+}
+.form-control:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 0.15rem rgba(37,99,235,.15);
+    background: #fff;
+}
+.btn-primary {
+    background: linear-gradient(90deg, #2563eb 60%, #0d6efd 100%);
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: 0 2px 8px 0 rgba(13,110,253,0.08);
+    transition: background 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover, .btn-primary:focus {
+    background: linear-gradient(90deg, #0d6efd 60%, #2563eb 100%);
+    box-shadow: 0 4px 16px 0 rgba(13,110,253,0.12);
+}
+.btn-primary:hover, .btn-primary:focus {
+    filter: brightness(0.96);
+}
+.form-check-input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 0.15rem rgba(37,99,235,.15);
+}
+.form-check-label {
+    font-size: 1rem;
+}
+/* Mejor contraste para el checkbox 'Recordarme' en la pantalla de login */
+.form-check-label, .login-glass-card .form-check-label {
+    color: #495057;
+}
+.alert {
+    font-size: 1rem;
+    border-radius: 0.5rem;
+}
+.fa-tools {
+    filter: drop-shadow(0 2px 4px rgba(37,99,235,0.10));
+}
+@media (max-width: 576px) {
+    .card-body { padding: 1.5rem 0.5rem; }
+}
+
+/* Feather icons: usar el color actual del texto y tamaño de línea coherente */
+.feather-icon {
+    stroke: currentColor;
+    vertical-align: middle;
+}

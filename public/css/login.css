@@ -98,7 +98,8 @@ body.login-page {
 }
 
 .company-subtitle {
-    color: #6c757d;
+    /* Subtitulo con mayor contraste para legibilidad */
+    color: #495057;
     font-size: 0.875rem;
     margin-bottom: 2rem;
 }
@@ -192,7 +193,8 @@ body.login-page {
 }
 
 .form-check-label {
-    color: #6c757d;
+    /* Texto secundario (ej. Recordarme) más oscuro para mejorar contraste */
+    color: #495057;
     font-size: 0.9rem;
     cursor: pointer;
 }
@@ -228,6 +230,20 @@ body.login-page {
 .btn-login:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-medium);
+    /* sutil oscurecimiento para indicar interactividad */
+    filter: brightness(0.96);
+}
+
+/* Feather icons (estilo línea) */
+.feather-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    vertical-align: middle;
+    color: var(--primary-color);
+}
+
+svg.feather {
+    stroke: currentColor;
 }
 
 .btn-login:hover::before {

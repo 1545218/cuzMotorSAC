@@ -300,7 +300,43 @@ class InventarioController extends Controller
                 // Obtener correos de notificación
                 require_once APP_PATH . '/models/NotificacionCorreo.php';
                 $correoModel = new NotificacionCorreo();
-                $correos_notificacion = $correoModel->getAll();
+                // Intentar obtener correos desde el modelo
+                try {
+                    $correos_notificacion = $correoModel->getAll();
+                    // Registrar en logs para depuración sin afectar la ejecución
+                    if (class_exists('Logger')) {
+                        Logger::info('InventarioController::alertas - NotificacionCorreo::getAll returned count=' . (is_array($correos_notificacion) ? count($correos_notificacion) : 'null'));
+                    }
+                } catch (Exception $e) {
+                    $correos_notificacion = [];
+                    if (class_exists('Logger')) {
+                        Logger::error('InventarioController::alertas - Error al obtener correos desde modelo: ' . $e->getMessage());
+                    }
+                }
+
+                // Si el array viene vacío, realizar una consulta directa a la DB para verificar
+                if (empty($correos_notificacion)) {
+                    try {
+                        if (class_exists('Database')) {
+                            $db = Database::getInstance()->getConnection();
+                            $stmt = $db->prepare('SELECT id, email FROM notificacion_correos ORDER BY id ASC');
+                            $stmt->execute();
+                            $direct = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            if (class_exists('Logger')) {
+                                Logger::info('InventarioController::alertas - direct DB query returned count=' . (is_array($direct) ? count($direct) : 'null'));
+                                Logger::info('InventarioController::alertas - direct DB sample: ' . json_encode(array_slice($direct, 0, 5)));
+                            }
+                            // Si la consulta directa retorna datos, asignarlos para que la vista muestre
+                            if (!empty($direct) && is_array($direct)) {
+                                $correos_notificacion = $direct;
+                            }
+                        }
+                    } catch (Exception $ex) {
+                        if (class_exists('Logger')) {
+                            Logger::error('InventarioController::alertas - Error en consulta directa: ' . $ex->getMessage());
+                        }
+                    }
+                }
             } catch (Exception $ex) {
                 Logger::error("Error seguro obteniendo alertas de stock bajo: " . $ex->getMessage());
                 $alertas = [];

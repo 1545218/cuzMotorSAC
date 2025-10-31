@@ -1,10 +1,25 @@
+
 <?php
 // Configuración principal del sistema Cruz Motor SAC
-// Información de la base de datos
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'cruzmotorstockbd');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+
+// Cargar variables de entorno desde .env
+$envPath = dirname(__DIR__) . '/.env';
+if (file_exists($envPath)) {
+    $lines = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos(trim($line), '#') === 0) continue;
+        if (!str_contains($line, '=')) continue;
+        list($name, $value) = array_map('trim', explode('=', $line, 2));
+        $_ENV[$name] = $value;
+    }
+}
+
+
+// Información de la base de datos desde .env
+define('DB_HOST', $_ENV['DB_HOST'] ?? 'localhost');
+define('DB_NAME', $_ENV['DB_NAME'] ?? 'cruzmotorstockbd');
+define('DB_USER', $_ENV['DB_USER'] ?? 'root');
+define('DB_PASS', $_ENV['DB_PASS'] ?? '');
 define('DB_CHARSET', 'utf8mb4');
 
 // Configuración de la aplicación
@@ -220,4 +235,6 @@ function getAvailableRoles()
         ROLE_VENDEDOR => 'Vendedor',
         ROLE_MECANICO => 'Mecánico'
     ];
+    
 }
+

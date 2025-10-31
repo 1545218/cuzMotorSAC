@@ -204,7 +204,8 @@ class Inventario extends Model
         }
 
         if ($categoriaId) {
-            $conditions[] = "p.id_categoria = ?";
+            // productos reference subcategoría; filtrar por la categoría a través de subcategorias
+            $conditions[] = "s.id_categoria = ?";
             $params[] = $categoriaId;
         }
 
@@ -227,7 +228,8 @@ class Inventario extends Model
                     END as estado_stock,
                     p.stock_actual, p.stock_minimo, p.precio_unitario
              FROM productos p
-             LEFT JOIN categorias c ON p.id_categoria = c.id_categoria
+             LEFT JOIN subcategorias s ON p.id_subcategoria = s.id_subcategoria
+             LEFT JOIN categorias c ON s.id_categoria = c.id_categoria
              LEFT JOIN marcas m ON p.id_marca = m.id_marca
              LEFT JOIN ubicaciones u ON p.id_ubicacion = u.id_ubicacion
              LEFT JOIN unidades un ON p.id_unidad = un.id_unidad
@@ -350,7 +352,8 @@ class Inventario extends Model
         }
 
         if ($categoriaId) {
-            $conditions[] = "p.id_categoria = ?";
+            // filtrar por categoría a través de subcategorias
+            $conditions[] = "s.id_categoria = ?";
             $params[] = $categoriaId;
         }
 
@@ -363,7 +366,8 @@ class Inventario extends Model
                     COALESCE(p.stock_actual,0) as stock_actual, COALESCE(p.stock_minimo,0) as stock_minimo,
                     (COALESCE(p.stock_actual,0) * COALESCE(p.precio_unitario,0)) as valor_stock
              FROM productos p
-             LEFT JOIN categorias c ON p.id_categoria = c.id_categoria
+             LEFT JOIN subcategorias s ON p.id_subcategoria = s.id_subcategoria
+             LEFT JOIN categorias c ON s.id_categoria = c.id_categoria
              LEFT JOIN marcas m ON p.id_marca = m.id_marca
              LEFT JOIN ubicaciones u ON p.id_ubicacion = u.id_ubicacion
              WHERE {$whereClause}
@@ -394,7 +398,8 @@ class Inventario extends Model
                     (p.stock_minimo - p.stock_actual) as diferencia_stock,
                     p.stock_actual, p.stock_minimo
              FROM productos p
-             LEFT JOIN categorias c ON p.id_categoria = c.id_categoria
+             LEFT JOIN subcategorias s ON p.id_subcategoria = s.id_subcategoria
+             LEFT JOIN categorias c ON s.id_categoria = c.id_categoria
              LEFT JOIN marcas m ON p.id_marca = m.id_marca
              LEFT JOIN ubicaciones u ON p.id_ubicacion = u.id_ubicacion
              WHERE {$whereClause}
@@ -424,7 +429,8 @@ class Inventario extends Model
                     c.nombre as categoria_nombre, m.nombre as marca_nombre,
                     u.nombre as ubicacion_nombre, p.stock_actual
              FROM productos p
-             LEFT JOIN categorias c ON p.id_categoria = c.id_categoria
+             LEFT JOIN subcategorias s ON p.id_subcategoria = s.id_subcategoria
+             LEFT JOIN categorias c ON s.id_categoria = c.id_categoria
              LEFT JOIN marcas m ON p.id_marca = m.id_marca
              LEFT JOIN ubicaciones u ON p.id_ubicacion = u.id_ubicacion
              WHERE {$whereClause}
@@ -558,9 +564,10 @@ class Inventario extends Model
                     COALESCE(SUM(p.stock_actual * COALESCE(p.precio_unitario,0)), 0) as valor_costo,
                     COALESCE(SUM(p.stock_actual * COALESCE(p.precio_unitario,0)), 0) as valor_venta
              FROM productos p
-             LEFT JOIN categorias c ON p.id_categoria = c.id_categoria
+             LEFT JOIN subcategorias s ON p.id_subcategoria = s.id_subcategoria
+             LEFT JOIN categorias c ON s.id_categoria = c.id_categoria
              WHERE {$whereClause}
-             GROUP BY p.id_categoria, c.nombre
+             GROUP BY s.id_categoria, c.nombre
              ORDER BY valor_costo DESC",
             $params
         );
