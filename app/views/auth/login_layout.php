@@ -71,7 +71,7 @@
                     <div class="carousel-inner w-100">
                         <div class="carousel-item active w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
-                                <div class="carrusel-content d-flex flex-column justify-content-center align-items-center" style="width:420px; max-width:78%;">
+                            <div class="carrusel-content d-flex flex-column justify-content-center align-items-center" style="width:420px; max-width:78%;">
                                 <span class="icon"><i data-feather="archive" class="feather-icon"></i></span>
                                 <h2>1200 repuestos gestionados</h2>
                                 <p>Inventario digitalizado y actualizado en tiempo real.</p>
@@ -79,7 +79,7 @@
                         </div>
                         <div class="carousel-item w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
-                                <div class="carrusel-content d-flex flex-column justify-content-center align-items-center" style="width:420px; max-width:78%;">
+                            <div class="carrusel-content d-flex flex-column justify-content-center align-items-center" style="width:420px; max-width:78%;">
                                 <span class="icon"><i data-feather="truck" class="feather-icon"></i></span>
                                 <h2>Control de vehículos en taller</h2>
                                 <p>Visualiza el avance de cada servicio en segundos.</p>
@@ -87,7 +87,7 @@
                         </div>
                         <div class="carousel-item w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
-                                <div class="carrusel-content d-flex flex-column justify-content-center align-items-center" style="width:420px; max-width:78%;">
+                            <div class="carrusel-content d-flex flex-column justify-content-center align-items-center" style="width:420px; max-width:78%;">
                                 <span class="icon"><i data-feather="wrench" class="feather-icon"></i></span>
                                 <h2>+30% eficiencia operativa</h2>
                                 <p>Optimiza procesos y reduce errores humanos.</p>
@@ -95,7 +95,7 @@
                         </div>
                         <div class="carousel-item w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
-                                <div class="carrusel-content d-flex flex-column justify-content-center align-items-center" style="width:420px; max-width:78%;">
+                            <div class="carrusel-content d-flex flex-column justify-content-center align-items-center" style="width:420px; max-width:78%;">
                                 <span class="icon"><i data-feather="users" class="feather-icon"></i></span>
                                 <h2>Soporte técnico especializado</h2>
                                 <p>Equipo capacitado y atención personalizada.</p>
@@ -103,7 +103,7 @@
                         </div>
                         <div class="carousel-item w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
-                                <div class="carrusel-content d-flex flex-column justify-content-center align-items-center" style="width:420px; max-width:78%;">
+                            <div class="carrusel-content d-flex flex-column justify-content-center align-items-center" style="width:420px; max-width:78%;">
                                 <span class="icon"><i data-feather="bar-chart-2" class="feather-icon"></i></span>
                                 <h2>Reportes y estadísticas</h2>
                                 <p>Toma decisiones con datos claros y visuales.</p>
