@@ -3,11 +3,13 @@
     position: relative;
     width: 100%;
     height: 100%;
-    min-height: 380px; /* altura compacta final */
+    min-height: 380px;
     background: #2c3e50;
     overflow: hidden;
     display: flex;
-    align-items: stretch; /* asegurar que los paneles ocupen 100% */
+    align-items: stretch;
+    margin: 0 !important;
+    border-radius: 0 !important;
 }
 .carrusel-login-bg .carousel-item {
     height: 100%;
@@ -26,32 +28,33 @@
 .carrusel-content {
     position: relative;
     z-index: 2;
-    color: #ffffff; /* texto en blanco puro para máxima legibilidad */
-    /* padding unificado y compacto para orden visual */
-    padding: 24px 32px 24px 48px; /* más espacio a la izquierda para que el texto no toque el borde */
-    max-width: 360px; /* limitar anchura para evitar textos fuera del área */
+    color: #fff;
+    padding: 16px 16px 16px 32px;
+    max-width: 300px;
     min-height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 100%; /* ocupar toda la altura del panel */
-    text-align: left; /* forzar alineación izquierda */
-    overflow-wrap: break-word; /* evitar desbordes extraños */
+    height: 100%;
+    text-align: left;
+    overflow-wrap: break-word;
+    background: rgba(0,0,0,0.45); /* fondo semitransparente para máxima legibilidad */
+    border-radius: 12px;
 }
 .carrusel-content h2 {
-    font-size: 1.8rem; /* tamaño moderado para legibilidad sin overflow */
-    font-weight: 700; /* bold para jerarquía */
-    margin-bottom: 0.5rem;
-    color: #ffffff; /* título en blanco */
-    text-shadow: 0 2px 8px rgba(0,0,0,0.35);
-    line-height: 1.08;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    color: #fff;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.35);
+    line-height: 1.1;
 }
 .carrusel-content p {
-    font-size: 1rem; /* tamaño conservador para evitar cortes */
-    color: #ffffff; /* párrafos en blanco */
+    font-size: 0.95rem;
+    color: #fff;
     margin-bottom: 0;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.28);
-    line-height: 1.5;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.22);
+    line-height: 1.4;
 }
 .carrusel-content p {
     /* Mejor lectura en panel derecho: texto alineado a la izquierda y mayor interlineado */
@@ -59,10 +62,10 @@
     line-height: 1.5;
 }
 .carrusel-content .icon {
-    font-size: 2rem; /* icono equilibrado para no competir con texto */
-    color: #ffffff; /* iconos también en blanco para consistencia */
-    margin-bottom: 1rem;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.32);
+    font-size: 1.3rem;
+    color: #fff;
+    margin-bottom: 0.7rem;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.22);
 }
 
 /* Fusion visual: remover radius interno de la tarjeta izquierda para que
