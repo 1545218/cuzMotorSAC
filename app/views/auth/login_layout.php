@@ -17,7 +17,9 @@
         <div class="row w-100 g-0 flex-md-nowrap shadow-lg rounded-4 overflow-hidden login-card-unificada" style="max-width: 950px; min-height: 380px; background: #fff; border-radius: 24px;">
             <!-- Login SIEMPRE visible a la izquierda -->
             <div class="col-12 col-md-6 d-flex align-items-stretch justify-content-center p-0 order-1 order-md-1 login-form-panel" style="min-height:380px; border-radius: 24px 0 0 24px;">
-                <div class="w-100 login-glass-card d-flex flex-column justify-content-center align-items-center" style="max-width: 390px; min-height: 100%; padding: 24px 20px; background: #fff;">
+                <!-- Hacer que la tarjeta ocupe todo el ancho del panel izquierdo y sea transparente
+                     para evitar la franja blanca entre los dos paneles. -->
+                <div class="w-100 login-glass-card d-flex flex-column justify-content-center align-items-stretch" style="width:100%; min-height: 100%; padding: 24px 20px; background: transparent;">
                     <div class="mb-4 w-100">
                         <div class="text-center mb-3">
                             <i data-feather="box" class="feather-icon fa-3x text-primary mb-2"></i>
@@ -65,11 +67,11 @@
             </div>
             <!-- Carrusel visual automotriz a la derecha -->
             <div class="col-12 col-md-6 d-flex p-0 carrusel-login-bg align-items-center justify-content-center order-2 order-md-2 login-carrusel-panel" style="min-height:380px; border-radius: 0 24px 24px 0;">
-                <div id="loginCarousel" class="carousel carousel-fade slide w-100" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="hover">
+                <div id="loginCarousel" class="carousel carousel-fade slide w-100" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="false">
                     <div class="carousel-inner w-100">
                         <div class="carousel-item active w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
-                            <div class="carrusel-content d-flex flex-column justify-content-center align-items-start h-100 w-100">
+                            <div class="carrusel-content d-flex flex-column justify-content-center align-items-center" style="position:absolute; left:25%; top:50%; transform:translate(-50%,-50%); width:420px; max-width:78%; text-align:center;">
                                 <span class="icon"><i data-feather="archive" class="feather-icon"></i></span>
                                 <h2>1200 repuestos gestionados</h2>
                                 <p>Inventario digitalizado y actualizado en tiempo real.</p>
@@ -77,7 +79,7 @@
                         </div>
                         <div class="carousel-item w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
-                            <div class="carrusel-content d-flex flex-column justify-content-center align-items-start h-100 w-100">
+                            <div class="carrusel-content d-flex flex-column justify-content-center align-items-center" style="position:absolute; left:25%; top:50%; transform:translate(-50%,-50%); width:420px; max-width:78%; text-align:center;">
                                 <span class="icon"><i data-feather="truck" class="feather-icon"></i></span>
                                 <h2>Control de vehículos en taller</h2>
                                 <p>Visualiza el avance de cada servicio en segundos.</p>
@@ -85,7 +87,7 @@
                         </div>
                         <div class="carousel-item w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
-                            <div class="carrusel-content d-flex flex-column justify-content-center align-items-start h-100 w-100">
+                            <div class="carrusel-content d-flex flex-column justify-content-center align-items-center" style="position:absolute; left:25%; top:50%; transform:translate(-50%,-50%); width:420px; max-width:78%; text-align:center;">
                                 <span class="icon"><i data-feather="wrench" class="feather-icon"></i></span>
                                 <h2>+30% eficiencia operativa</h2>
                                 <p>Optimiza procesos y reduce errores humanos.</p>
@@ -93,7 +95,7 @@
                         </div>
                         <div class="carousel-item w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
-                            <div class="carrusel-content d-flex flex-column justify-content-center align-items-start h-100 w-100">
+                            <div class="carrusel-content d-flex flex-column justify-content-center align-items-center" style="position:absolute; left:25%; top:50%; transform:translate(-50%,-50%); width:420px; max-width:78%; text-align:center;">
                                 <span class="icon"><i data-feather="users" class="feather-icon"></i></span>
                                 <h2>Soporte técnico especializado</h2>
                                 <p>Equipo capacitado y atención personalizada.</p>
@@ -101,7 +103,7 @@
                         </div>
                         <div class="carousel-item w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
-                            <div class="carrusel-content d-flex flex-column justify-content-center align-items-start w-100">
+                            <div class="carrusel-content d-flex flex-column justify-content-center align-items-center" style="position:absolute; left:25%; top:50%; transform:translate(-50%,-50%); width:420px; max-width:78%; text-align:center;">
                                 <span class="icon"><i data-feather="bar-chart-2" class="feather-icon"></i></span>
                                 <h2>Reportes y estadísticas</h2>
                                 <p>Toma decisiones con datos claros y visuales.</p>
@@ -140,6 +142,22 @@
         });
         window.addEventListener('load', igualarAlturaCarrusel);
         window.addEventListener('resize', igualarAlturaCarrusel);
+        // Asegurar que el carousel se inicializa y rota aún si hay overlays o hover
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                var el = document.querySelector('#loginCarousel');
+                if (el && typeof bootstrap !== 'undefined' && bootstrap.Carousel) {
+                    // Inicializar explícitamente con pause=false para que no se detenga al hacer hover
+                    new bootstrap.Carousel(el, {
+                        interval: 3000,
+                        ride: 'carousel',
+                        pause: false
+                    });
+                }
+            } catch (e) {
+                console.warn('No se pudo inicializar el carousel manualmente:', e);
+            }
+        });
     </script>
 </body>
 
