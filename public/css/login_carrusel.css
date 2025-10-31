@@ -28,28 +28,30 @@
     z-index: 2;
     color: #ffffff; /* texto en blanco puro para máxima legibilidad */
     /* padding unificado y compacto para orden visual */
-    padding: 24px 20px;
-    max-width: 420px;
+    padding: 24px 32px;
+    max-width: 360px; /* limitar anchura para evitar textos fuera del área */
     min-height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     height: 100%; /* ocupar toda la altura del panel */
+    text-align: left; /* forzar alineación izquierda */
+    overflow-wrap: break-word; /* evitar desbordes extraños */
 }
 .carrusel-content h2 {
-    font-size: 2.4rem; /* aumentado para legibilidad */
-    font-weight: 800; /* bold para jerarquía */
-    margin-bottom: 0.6rem;
+    font-size: 1.8rem; /* tamaño moderado para legibilidad sin overflow */
+    font-weight: 700; /* bold para jerarquía */
+    margin-bottom: 0.5rem;
     color: #ffffff; /* título en blanco */
-    text-shadow: 0 2px 10px rgba(0,0,0,0.45);
-    line-height: 1.05;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    line-height: 1.08;
 }
 .carrusel-content p {
-    font-size: 1.25rem; /* más grande para lectura */
+    font-size: 1rem; /* tamaño conservador para evitar cortes */
     color: #ffffff; /* párrafos en blanco */
     margin-bottom: 0;
-    text-shadow: 0 1px 6px rgba(0,0,0,0.35);
-    line-height: 1.6;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.28);
+    line-height: 1.5;
 }
 .carrusel-content p {
     /* Mejor lectura en panel derecho: texto alineado a la izquierda y mayor interlineado */
@@ -57,10 +59,10 @@
     line-height: 1.5;
 }
 .carrusel-content .icon {
-    font-size: 3rem; /* icono más grande y visible */
+    font-size: 2rem; /* icono equilibrado para no competir con texto */
     color: #ffffff; /* iconos también en blanco para consistencia */
     margin-bottom: 1rem;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.35);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.32);
 }
 
 /* Fusion visual: remover radius interno de la tarjeta izquierda para que
