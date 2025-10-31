@@ -20,14 +20,15 @@
     position: absolute;
     inset: 0;
     /* Overlay oscuro semitransparente para mejorar legibilidad sobre imágenes de taller */
-    background: rgba(0,0,0,0.45); /* 45% black */
+    background: rgba(0,0,0,0.5); /* 50% black */
     z-index: 1;
 }
 .carrusel-content {
     position: relative;
     z-index: 2;
     color: #ffffff; /* texto en blanco puro para máxima legibilidad */
-    padding: 2.5rem 2.5rem 2.5rem 3.5rem;
+    /* padding unificado para orden visual */
+    padding: 40px 32px;
     max-width: 420px;
     min-height: 340px;
     display: flex;
@@ -58,6 +59,13 @@
     color: #ffffff; /* iconos también en blanco para consistencia */
     margin-bottom: 1.2rem;
     text-shadow: 0 2px 8px rgba(0,0,0,0.28);
+}
+
+/* Fusion visual: remover radius interno de la tarjeta izquierda para que
+   la tarjeta completa tenga border-radius sólo en sus esquinas exteriores */
+.login-glass-card {
+    border-radius: 0 !important;
+    background: rgba(255,255,255,0.9); /* ligeramente translúcido pero sin esquinas redondeadas */
 }
 .carrusel-login-bg .carousel-indicators {
     position: absolute;

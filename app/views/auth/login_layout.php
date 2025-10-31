@@ -14,9 +14,9 @@
 
 <body class="bg-light">
     <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
-        <div class="row w-100 flex-md-nowrap shadow-lg rounded-4 overflow-hidden" style="max-width: 950px; min-height: 520px; background: #fff;">
+    <div class="row w-100 g-0 flex-md-nowrap shadow-lg rounded-4 overflow-hidden" style="max-width: 950px; min-height: 520px; background: #fff;">
             <!-- Login SIEMPRE visible a la izquierda -->
-            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center bg-white p-0 order-1 order-md-1" style="border-radius: 24px 0 0 24px; min-height:520px;">
+            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center p-0 order-1 order-md-1" style="min-height:520px;">
                 <div class="w-100 login-glass-card d-flex flex-column justify-content-center align-items-center" style="max-width: 390px; min-height: 100%; padding: 40px 32px;">
                     <div class="mb-4 w-100">
                         <div class="text-center mb-3">
@@ -64,7 +64,7 @@
                 </div>
             </div>
             <!-- Carrusel visual automotriz a la derecha -->
-            <div class="col-12 col-md-6 d-flex p-0 carrusel-login-bg align-items-center justify-content-center order-2 order-md-2" style="border-radius: 0 24px 24px 0; min-height:520px;">
+            <div class="col-12 col-md-6 d-flex p-0 carrusel-login-bg align-items-center justify-content-center order-2 order-md-2" style="min-height:520px;">
                 <div id="loginCarousel" class="carousel carousel-fade slide w-100" data-bs-ride="carousel" data-bs-interval="2000" data-bs-pause="hover">
                     <div class="carousel-inner w-100">
                         <div class="carousel-item active w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80');">
