@@ -28,7 +28,7 @@
     z-index: 2;
     color: #ffffff; /* texto en blanco puro para máxima legibilidad */
     /* padding unificado y compacto para orden visual */
-    padding: 24px 32px;
+    padding: 24px 32px 24px 48px; /* más espacio a la izquierda para que el texto no toque el borde */
     max-width: 360px; /* limitar anchura para evitar textos fuera del área */
     min-height: 100%;
     display: flex;

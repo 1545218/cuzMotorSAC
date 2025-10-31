@@ -67,7 +67,7 @@
             <div class="col-12 col-md-6 d-flex p-0 carrusel-login-bg align-items-center justify-content-center order-2 order-md-2" style="min-height:420px;">
                 <div id="loginCarousel" class="carousel carousel-fade slide w-100" data-bs-ride="carousel" data-bs-interval="2000" data-bs-pause="hover">
                     <div class="carousel-inner w-100">
-                        <div class="carousel-item active w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
+                        <div class="carousel-item active w-100 d-flex flex-column justify-content-start align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
                             <div class="carrusel-content d-flex flex-column justify-content-center align-items-start h-100 w-100">
                                 <span class="icon"><i data-feather="archive" class="feather-icon"></i></span>
@@ -75,7 +75,7 @@
                                 <p>Inventario digitalizado y actualizado en tiempo real.</p>
                             </div>
                         </div>
-                        <div class="carousel-item w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
+                        <div class="carousel-item w-100 d-flex flex-column justify-content-start align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
                             <div class="carrusel-content d-flex flex-column justify-content-center align-items-start h-100 w-100">
                                 <span class="icon"><i data-feather="truck" class="feather-icon"></i></span>
@@ -83,7 +83,7 @@
                                 <p>Visualiza el avance de cada servicio en segundos.</p>
                             </div>
                         </div>
-                        <div class="carousel-item w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
+                        <div class="carousel-item w-100 d-flex flex-column justify-content-start align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
                             <div class="carrusel-content d-flex flex-column justify-content-center align-items-start h-100 w-100">
                                 <span class="icon"><i data-feather="wrench" class="feather-icon"></i></span>
@@ -91,7 +91,7 @@
                                 <p>Optimiza procesos y reduce errores humanos.</p>
                             </div>
                         </div>
-                        <div class="carousel-item w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
+                        <div class="carousel-item w-100 d-flex flex-column justify-content-start align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
                             <div class="carrusel-content d-flex flex-column justify-content-center align-items-start h-100 w-100">
                                 <span class="icon"><i data-feather="users" class="feather-icon"></i></span>
@@ -99,7 +99,7 @@
                                 <p>Equipo capacitado y atención personalizada.</p>
                             </div>
                         </div>
-                        <div class="carousel-item w-100 d-flex flex-column justify-content-center align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
+                        <div class="carousel-item w-100 d-flex flex-column justify-content-start align-items-center" style="background-image: url('<?= BASE_PATH ?>/public/images/race-car-4503692.jpg');">
                             <div class="carrusel-overlay"></div>
                             <div class="carrusel-content d-flex flex-column justify-content-center align-items-start w-100">
                                 <span class="icon"><i data-feather="bar-chart-2" class="feather-icon"></i></span>
@@ -138,6 +138,16 @@
             if (typeof feather !== 'undefined') feather.replace();
             // Igualar altura al cargar
             igualarAlturaCarrusel();
+            // Asegurar que el carrusel esté inicializado y gire automáticamente
+            try {
+                var carouselEl = document.getElementById('loginCarousel');
+                if (carouselEl && typeof bootstrap !== 'undefined' && bootstrap.Carousel) {
+                    var bsCarousel = bootstrap.Carousel.getInstance(carouselEl) || new bootstrap.Carousel(carouselEl, { interval: 3000 });
+                    if (bsCarousel && typeof bsCarousel.cycle === 'function') bsCarousel.cycle();
+                }
+            } catch (e) {
+                console.warn('No se pudo inicializar el carrusel automáticamente:', e);
+            }
         });
 
         window.addEventListener('load', igualarAlturaCarrusel);
