@@ -14,7 +14,7 @@
 
 <body class="bg-light">
     <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
-    <div class="row w-100 g-0 flex-md-nowrap shadow-lg rounded-4 overflow-hidden" style="max-width: 950px; min-height: 420px; background: #fff;">
+        <div class="row w-100 g-0 flex-md-nowrap shadow-lg rounded-4 overflow-hidden" style="max-width: 950px; min-height: 420px; background: #fff;">
             <!-- Login SIEMPRE visible a la izquierda -->
             <div class="col-12 col-md-6 d-flex align-items-stretch justify-content-center p-0 order-1 order-md-1" style="min-height:420px;">
                 <div class="w-100 login-glass-card d-flex flex-column justify-content-center align-items-center" style="max-width: 390px; min-height: 100%; padding: 24px 20px;">
