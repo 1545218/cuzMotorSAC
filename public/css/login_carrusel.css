@@ -3,11 +3,11 @@
     position: relative;
     width: 100%;
     height: 100%;
-    min-height: 520px;
+    min-height: 420px; /* altura optimizada */
     background: #2c3e50;
     overflow: hidden;
     display: flex;
-    align-items: stretch;
+    align-items: stretch; /* asegurar que los paneles ocupen 100% */
 }
 .carrusel-login-bg .carousel-item {
     height: 100%;
@@ -20,21 +20,21 @@
     position: absolute;
     inset: 0;
     /* Overlay oscuro semitransparente para mejorar legibilidad sobre imágenes de taller */
-    background: rgba(0,0,0,0.5); /* 50% black */
+    background: rgba(0,0,0,0.55); /* 55% black para mayor contraste */
     z-index: 1;
 }
 .carrusel-content {
     position: relative;
     z-index: 2;
     color: #ffffff; /* texto en blanco puro para máxima legibilidad */
-    /* padding unificado para orden visual */
-    padding: 40px 32px;
+    /* padding unificado y compacto para orden visual */
+    padding: 24px 20px;
     max-width: 420px;
-    min-height: 340px;
+    min-height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 100%;
+    height: 100%; /* ocupar toda la altura del panel */
 }
 .carrusel-content h2 {
     font-size: 2rem;
@@ -71,11 +71,11 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 1.5rem; /* distancia desde el borde inferior */
+    bottom: 1.25rem; /* ligeramente más compacto */
     display: flex;
     justify-content: center; /* centrar horizontalmente */
-    padding: 0 1.25rem; /* espacio lateral para que no queden pegados a la esquina */
-    gap: 12px; /* separación uniforme entre puntos */
+    padding: 0 1rem; /* espacio lateral para que no queden pegados a la esquina */
+    gap: 10px; /* separación uniforme entre puntos */
     z-index: 3; /* sobre el overlay */
     margin: 0; /* eliminar margen por defecto */
 }
