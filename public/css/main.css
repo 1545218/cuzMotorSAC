@@ -48,11 +48,10 @@ html {
     border: none;
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
     margin-bottom: 1rem;
-    transition: all 0.3s ease;
+    transition: box-shadow 0.3s ease;
 }
 
 .card:hover {
-    transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
 }
 
@@ -85,12 +84,11 @@ html {
     border: 1px solid #e3e6f0;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    transition: all 0.2s ease;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
     background: #ffffff;
 }
 
 .backups-page .card:hover {
-    transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     border-color: #5a67d8;
 }
@@ -171,7 +169,6 @@ html {
 }
 
 .backups-page .btn:hover {
-    transform: translateY(-1px);
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -630,7 +627,7 @@ html {
     font-size: 0.95rem !important;
     color: #1f2937 !important;
     background-color: #ffffff !important;
-    transition: all 0.2s ease !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
 }
 
 .productos-page .form-control:focus {
@@ -658,7 +655,7 @@ html {
     font-weight: 600 !important;
     border-radius: 6px !important;
     padding: 0.75rem 1.5rem !important;
-    transition: all 0.2s ease !important;
+    transition: background-color 0.2s ease, border-color 0.2s ease !important;
 }
 
 .productos-page .btn-primary {
@@ -670,7 +667,6 @@ html {
 .productos-page .btn-primary:hover {
     background-color: #2563eb !important;
     border-color: #2563eb !important;
-    transform: translateY(-1px) !important;
 }
 
 .productos-page .btn-outline-primary {
@@ -892,11 +888,11 @@ html {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    transition: background-color 0.12s ease, box-shadow 0.12s ease;
 }
 
 .btn-compact:hover {
-    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* Mejora de accesibilidad: foco visible para enlaces y botones */
