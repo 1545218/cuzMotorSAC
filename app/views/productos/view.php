@@ -1,6 +1,6 @@
 <?php /* header ya se incluye desde Controller->view */ ?>
 
-<div class="container-fluid">
+<div class="container-fluid productos-page">
     <div class="row">
         <div class="col-12">
             <div class="card">

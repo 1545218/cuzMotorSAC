@@ -592,6 +592,251 @@ html {
     scrollbar-width: none; /* Firefox */
 }
 
+/* Estilos ergonómicos para formulario de productos */
+.productos-page {
+    background: #f8f9fc;
+    min-height: 100vh;
+}
+
+.productos-page .container-fluid {
+    background: #ffffff;
+    border-radius: 12px;
+    margin: 20px;
+    padding: 30px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e3e6f0;
+}
+
+.productos-page h1, .productos-page h2 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+/* Mejorar legibilidad de labels */
+.productos-page label {
+    color: #374151 !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    margin-bottom: 0.5rem !important;
+    display: block !important;
+}
+
+/* Mejorar contraste de inputs */
+.productos-page .form-control {
+    border: 2px solid #e5e7eb !important;
+    border-radius: 6px !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 0.95rem !important;
+    color: #1f2937 !important;
+    background-color: #ffffff !important;
+    transition: all 0.2s ease !important;
+}
+
+.productos-page .form-control:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+    outline: none !important;
+}
+
+.productos-page .form-control::placeholder {
+    color: #9ca3af !important;
+    opacity: 1 !important;
+}
+
+/* Mejorar selects */
+.productos-page select.form-control {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+    background-position: right 0.75rem center !important;
+    background-repeat: no-repeat !important;
+    background-size: 1.25rem !important;
+    padding-right: 2.5rem !important;
+}
+
+/* Botones con mejor contraste */
+.productos-page .btn {
+    font-weight: 600 !important;
+    border-radius: 6px !important;
+    padding: 0.75rem 1.5rem !important;
+    transition: all 0.2s ease !important;
+}
+
+.productos-page .btn-primary {
+    background-color: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+    color: #ffffff !important;
+}
+
+.productos-page .btn-primary:hover {
+    background-color: #2563eb !important;
+    border-color: #2563eb !important;
+    transform: translateY(-1px) !important;
+}
+
+.productos-page .btn-outline-primary {
+    color: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+    background-color: transparent !important;
+}
+
+.productos-page .btn-outline-primary:hover {
+    background-color: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+    color: #ffffff !important;
+}
+
+.productos-page .btn-secondary {
+    background-color: #6b7280 !important;
+    border-color: #6b7280 !important;
+    color: #ffffff !important;
+}
+
+/* Mejorar grupos de inputs */
+.productos-page .input-group {
+    border-radius: 6px !important;
+    overflow: hidden !important;
+}
+
+.productos-page .input-group .form-control {
+    border-right: none !important;
+}
+
+.productos-page .input-group .btn {
+    border-left: none !important;
+    border-color: #e5e7eb !important;
+    background-color: #f9fafb !important;
+    color: #374151 !important;
+    font-size: 0.875rem !important;
+    padding: 0.75rem 1rem !important;
+}
+
+.productos-page .input-group .btn:hover {
+    background-color: #f3f4f6 !important;
+    color: #1f2937 !important;
+}
+
+/* Mejorar textarea */
+.productos-page textarea.form-control {
+    resize: vertical !important;
+    min-height: 100px !important;
+}
+
+/* Cards del formulario */
+.productos-page .card {
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+    background: #ffffff !important;
+}
+
+.productos-page .card-header {
+    background-color: #f9fafb !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    padding: 1rem 1.25rem !important;
+    color: #374151 !important;
+    font-weight: 600 !important;
+}
+
+.productos-page .card-body {
+    padding: 1.5rem !important;
+}
+
+/* Text requerido más visible */
+.productos-page .text-danger {
+    color: #ef4444 !important;
+    font-weight: 700 !important;
+}
+
+/* Mejorar espaciado entre elementos */
+.productos-page .form-group {
+    margin-bottom: 1.5rem !important;
+}
+
+.productos-page .row {
+    margin-bottom: 1rem !important;
+}
+
+/* Mejorar visibilidad de los options en select */
+.productos-page select.form-control option {
+    color: #1f2937 !important;
+    background-color: #ffffff !important;
+    padding: 0.5rem !important;
+}
+
+/* Mejorar breadcrumbs si existen */
+.productos-page .breadcrumb {
+    background-color: #f8fafc !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 6px !important;
+    padding: 0.75rem 1rem !important;
+}
+
+.productos-page .breadcrumb-item {
+    color: #6b7280 !important;
+}
+
+.productos-page .breadcrumb-item.active {
+    color: #374151 !important;
+    font-weight: 600 !important;
+}
+
+.productos-page .breadcrumb-item a {
+    color: #3b82f6 !important;
+    text-decoration: none !important;
+}
+
+.productos-page .breadcrumb-item a:hover {
+    color: #2563eb !important;
+    text-decoration: underline !important;
+}
+
+/* Mejorar estados de disabled */
+.productos-page .form-control:disabled {
+    background-color: #f9fafb !important;
+    color: #9ca3af !important;
+    border-color: #e5e7eb !important;
+    cursor: not-allowed !important;
+}
+
+/* Mejorar alertas y mensajes */
+.productos-page .alert {
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 1rem 1.25rem !important;
+    font-weight: 500 !important;
+}
+
+.productos-page .alert-success {
+    background-color: #ecfdf5 !important;
+    color: #047857 !important;
+    border-left: 4px solid #10b981 !important;
+}
+
+.productos-page .alert-danger {
+    background-color: #fef2f2 !important;
+    color: #dc2626 !important;
+    border-left: 4px solid #ef4444 !important;
+}
+
+.productos-page .alert-warning {
+    background-color: #fffbeb !important;
+    color: #d97706 !important;
+    border-left: 4px solid #f59e0b !important;
+}
+
+/* Responsive mejorado */
+@media (max-width: 768px) {
+    .productos-page .container-fluid {
+        margin: 10px;
+        padding: 20px;
+    }
+    
+    .productos-page .product-header {
+        flex-direction: column !important;
+        gap: 1rem !important;
+    }
+}
+
 /* Estilos para formulario de productos - diseño híbrido */
 .product-form-card {
     background: #ffffff;

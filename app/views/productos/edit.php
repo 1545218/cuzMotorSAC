@@ -2,7 +2,7 @@
 ?>
 
 
-<div class="container py-4">
+<div class="container py-4 productos-page">
     <div class="row justify-content-center">
         <div class="col-lg-10 col-md-12">
             <form method="POST" action="?page=productos&action=update&id=<?= $producto['id_producto'] ?>" class="bg-white rounded shadow-lg p-4 mb-4">
