@@ -241,24 +241,21 @@ include_once __DIR__ . '/../layout/header.php'; ?>
 
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="text"
-                                            class="form-control"
-                                            id="nombre"
-                                            name="nombre"
-                                            placeholder="Ej: Aceite Motor 15W40"
-                                            value="<?= htmlspecialchars($_POST['nombre'] ?? '') ?>"
-                                            required>
-                                        <label for="nombre">
-                                            <i class="fas fa-tag text-primary me-1"></i>
-                                            Nombre del Producto <span class="text-danger">*</span>
-                                        </label>
-                                        <div class="invalid-feedback">
-                                            Por favor, ingrese el nombre del producto.
-                                        </div>
+                                    <label for="nombre" class="form-label fw-bold">
+                                        <i class="fas fa-tag text-primary me-1"></i>
+                                        Nombre del Producto <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text"
+                                        class="form-control"
+                                        id="nombre"
+                                        name="nombre"
+                                        placeholder="Ej: Aceite Motor 15W40"
+                                        value="<?= htmlspecialchars($_POST['nombre'] ?? '') ?>"
+                                        required>
+                                    <div class="invalid-feedback">
+                                        Por favor, ingrese el nombre del producto.
                                     </div>
                                 </div>
-
                                 <div class="col-md-3">
                                     <label for="id_unidad" class="form-label fw-bold">
                                         <i class="fas fa-ruler text-primary me-1"></i>
@@ -283,33 +280,37 @@ include_once __DIR__ . '/../layout/header.php'; ?>
                                 </div>
 
                                 <div class="col-md-3">
-                                    <div class="form-floating">
-                                        <input type="text"
-                                            class="form-control"
-                                            id="codigo_barras"
-                                            name="codigo_barras"
-                                            placeholder="Código de barras"
-                                            value="<?= htmlspecialchars($_POST['codigo_barras'] ?? '') ?>">
-                                        <label for="codigo_barras">
-                                            <i class="fas fa-barcode text-primary me-1"></i>
-                                            Código de Barras
-                                        </label>
+                                    <label for="codigo_barras" class="form-label fw-bold">
+                                        <i class="fas fa-barcode text-primary me-1"></i>
+                                        Código de Barras
+                                    </label>
+                                    <input type="text"
+                                        class="form-control"
+                                        id="codigo_barras"
+                                        name="codigo_barras"
+                                        placeholder="Código automático"
+                                        value="<?= htmlspecialchars($_POST['codigo_barras'] ?? '') ?>">
+                                    <div class="form-text">
+                                        <i class="fas fa-magic"></i>
+                                        Se genera automáticamente si se deja vacío
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row g-3 mt-2">
                                 <div class="col-12">
-                                    <div class="form-floating">
-                                        <textarea class="form-control"
-                                            id="descripcion"
-                                            name="descripcion"
-                                            placeholder="Descripción detallada del producto"
-                                            style="height: 100px"><?= htmlspecialchars($_POST['descripcion'] ?? '') ?></textarea>
-                                        <label for="descripcion">
-                                            <i class="fas fa-align-left text-primary me-1"></i>
-                                            Descripción
-                                        </label>
+                                    <label for="descripcion" class="form-label fw-bold">
+                                        <i class="fas fa-align-left text-primary me-1"></i>
+                                        Descripción
+                                    </label>
+                                    <textarea class="form-control"
+                                        id="descripcion"
+                                        name="descripcion"
+                                        placeholder="Descripción detallada del producto (opcional)"
+                                        rows="4"><?= htmlspecialchars($_POST['descripcion'] ?? '') ?></textarea>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle"></i>
+                                        Proporcione detalles adicionales sobre el producto
                                     </div>
                                 </div>
                             </div>
@@ -431,7 +432,12 @@ include_once __DIR__ . '/../layout/header.php'; ?>
                                 </div>
 
                                 <div class="col-md-4">
-                                    <div class="form-floating">
+                                    <label for="precio_unitario" class="form-label fw-bold">
+                                        <i class="fas fa-tag text-warning me-1"></i>
+                                        Precio Unitario S/ <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">S/</span>
                                         <input type="number"
                                             class="form-control"
                                             id="precio_unitario"
@@ -441,13 +447,13 @@ include_once __DIR__ . '/../layout/header.php'; ?>
                                             placeholder="0.00"
                                             value="<?= htmlspecialchars($_POST['precio_unitario'] ?? '') ?>"
                                             required>
-                                        <label for="precio_unitario">
-                                            <i class="fas fa-tag text-warning me-1"></i>
-                                            Precio Unitario S/ <span class="text-danger">*</span>
-                                        </label>
-                                        <div class="invalid-feedback">
-                                            Ingrese un precio válido.
-                                        </div>
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Ingrese un precio válido.
+                                    </div>
+                                    <div class="form-text">
+                                        <i class="fas fa-calculator"></i>
+                                        Precio en soles peruanos
                                     </div>
                                 </div>
 
@@ -480,42 +486,38 @@ include_once __DIR__ . '/../layout/header.php'; ?>
 
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="number"
-                                            class="form-control"
-                                            id="stock_actual"
-                                            name="stock_actual"
-                                            min="0"
-                                            placeholder="0"
-                                            value="<?= htmlspecialchars($_POST['stock_actual'] ?? '0') ?>">
-                                        <label for="stock_actual">
-                                            <i class="fas fa-cubes text-info me-1"></i>
-                                            Stock Inicial
-                                        </label>
-                                        <div class="form-text">
-                                            <i class="fas fa-info-circle"></i>
-                                            Cantidad inicial del producto en almacén
-                                        </div>
+                                    <label for="stock_actual" class="form-label fw-bold">
+                                        <i class="fas fa-cubes text-info me-1"></i>
+                                        Stock Inicial
+                                    </label>
+                                    <input type="number"
+                                        class="form-control"
+                                        id="stock_actual"
+                                        name="stock_actual"
+                                        min="0"
+                                        placeholder="0"
+                                        value="<?= htmlspecialchars($_POST['stock_actual'] ?? '0') ?>">
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle"></i>
+                                        Cantidad inicial del producto en almacén
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="number"
-                                            class="form-control"
-                                            id="stock_minimo"
-                                            name="stock_minimo"
-                                            min="0"
-                                            placeholder="10"
-                                            value="<?= htmlspecialchars($_POST['stock_minimo'] ?? '0') ?>">
-                                        <label for="stock_minimo">
-                                            <i class="fas fa-exclamation-triangle text-info me-1"></i>
-                                            Stock Mínimo
-                                        </label>
-                                        <div class="form-text">
-                                            <i class="fas fa-bell"></i>
-                                            Se alertará cuando el stock esté por debajo de este valor
-                                        </div>
+                                    <label for="stock_minimo" class="form-label fw-bold">
+                                        <i class="fas fa-exclamation-triangle text-info me-1"></i>
+                                        Stock Mínimo
+                                    </label>
+                                    <input type="number"
+                                        class="form-control"
+                                        id="stock_minimo"
+                                        name="stock_minimo"
+                                        min="0"
+                                        placeholder="10"
+                                        value="<?= htmlspecialchars($_POST['stock_minimo'] ?? '0') ?>">
+                                    <div class="form-text">
+                                        <i class="fas fa-bell"></i>
+                                        Se alertará cuando el stock esté por debajo de este valor
                                     </div>
                                 </div>
                             </div>

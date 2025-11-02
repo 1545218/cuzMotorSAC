@@ -1038,7 +1038,7 @@ html {
     outline: none;
 }
 
-/* Input group styling */
+/* Input group styling mejorado */
 .input-group {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
@@ -1049,6 +1049,38 @@ html {
 .input-group .form-select {
     border-right: none;
     border-radius: 8px 0 0 8px;
+}
+
+.input-group-text {
+    background-color: #f8f9fa;
+    border: 2px solid #e3e6f0;
+    border-right: none;
+    color: #6c757d;
+    font-weight: 600;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+}
+
+/* Form text con mejor espaciado */
+.form-text {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    font-style: italic;
+}
+
+.form-text i {
+    margin-right: 0.5rem;
+    color: #adb5bd;
+    font-size: 0.8rem;
+}
+
+/* Separación entre elementos del formulario */
+.col-md-3, .col-md-4, .col-md-6, .col-12 {
+    margin-bottom: 1.5rem;
 }
 
 /* Botones de agregar elementos */
