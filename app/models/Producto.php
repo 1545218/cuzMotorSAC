@@ -101,8 +101,8 @@ class Producto extends Model
 
         // Búsqueda por término
         if (!empty($term)) {
-            $conditions[] = "(p.nombre LIKE ? OR p.codigo LIKE ? OR p.codigo_barras LIKE ? OR p.descripcion LIKE ?)";
-            $params = array_merge($params, ["%$term%", "%$term%", "%$term%", "%$term%"]);
+            $conditions[] = "(p.nombre LIKE ? OR p.codigo_barras LIKE ? OR p.descripcion LIKE ?)";
+            $params = array_merge($params, ["%$term%", "%$term%", "%$term%"]);
         }
 
         // Filtros adicionales
