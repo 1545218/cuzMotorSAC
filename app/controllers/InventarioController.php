@@ -14,6 +14,18 @@ class InventarioController extends Controller
         // Verificar autenticación para todas las acciones
         Auth::requireAuth();
     }
+    
+    /**
+     * Validar token CSRF para endpoints AJAX
+     */
+    private function validateCSRFToken()
+    {
+        $csrfName = defined('CSRF_TOKEN_NAME') ? CSRF_TOKEN_NAME : 'csrf_token';
+        $receivedToken = $_POST[$csrfName] ?? '';
+        $sessionToken = $_SESSION['csrf_token'] ?? '';
+        
+        return !empty($receivedToken) && !empty($sessionToken) && hash_equals($sessionToken, $receivedToken);
+    }
 
     /**
      * Mostrar formulario de movimiento (entrada/salida/ajuste) para un producto específico
@@ -79,57 +91,80 @@ class InventarioController extends Controller
      */
     public function registrarEntrada()
     {
+        // Limpiar cualquier salida previa y establecer headers JSON
+        ob_clean();
+        header('Content-Type: application/json; charset=utf-8');
+        
         try {
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $producto_id = (int)$_POST['producto_id'];
-                $cantidad = (int)$_POST['cantidad'];
-                $motivo = trim($_POST['motivo'] ?? 'Entrada manual');
-                $observaciones = trim($_POST['observaciones'] ?? '');
-
-                // Validaciones
-                if ($producto_id <= 0 || $cantidad <= 0) {
-                    throw new Exception('Datos inválidos para la entrada');
-                }
-
-                // Obtener producto actual
-                $producto = $this->productoModel->obtenerPorId($producto_id);
-                if (!$producto) {
-                    throw new Exception('Producto no encontrado');
-                }
-
-                $stock_anterior = (int)$producto['stock_actual'];
-                $stock_nuevo = $stock_anterior + $cantidad;
-
-                // Actualizar stock del producto
-                if (!$this->productoModel->actualizarStock($producto_id, $stock_nuevo)) {
-                    throw new Exception('Error al actualizar stock del producto');
-                }
-
-                // Registrar movimiento
-                $movimiento_data = [
-                    'producto_id' => $producto_id,
-                    'tipo_movimiento' => 'entrada',
-                    'cantidad' => $cantidad,
-                    'stock_anterior' => $stock_anterior,
-                    'stock_nuevo' => $stock_nuevo,
-                    'motivo' => $motivo,
-                    'observaciones' => $observaciones,
-                    'usuario_id' => $_SESSION['user_id']
-                ];
-
-                if ($this->inventarioModel->registrarMovimiento($movimiento_data)) {
-                    Logger::info("Entrada registrada: Producto {$producto_id}, Cantidad {$cantidad}");
-                    echo json_encode(['success' => true, 'message' => 'Entrada registrada correctamente']);
-                } else {
-                    throw new Exception('Error al registrar el movimiento');
-                }
-            } else {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 throw new Exception('Método no permitido');
             }
+
+            // Validar CSRF si existe
+            if (!$this->validateCSRFToken()) {
+                throw new Exception('Token de seguridad inválido');
+            }
+
+            $producto_id = (int)($_POST['producto_id'] ?? 0);
+            $cantidad = (int)($_POST['cantidad'] ?? 0);
+            $motivo = trim($_POST['motivo'] ?? 'Entrada manual');
+            $observaciones = trim($_POST['observaciones'] ?? '');
+
+            // Validaciones
+            if ($producto_id <= 0) {
+                throw new Exception('ID de producto inválido');
+            }
+            
+            if ($cantidad <= 0) {
+                throw new Exception('La cantidad debe ser mayor a 0');
+            }
+
+            // Obtener producto actual
+            $producto = $this->productoModel->obtenerPorId($producto_id);
+            if (!$producto) {
+                throw new Exception('Producto no encontrado');
+            }
+
+            $stock_anterior = (int)($producto['stock_actual'] ?? 0);
+            $stock_nuevo = $stock_anterior + $cantidad;
+
+            // Actualizar stock del producto
+            if (!$this->productoModel->actualizarStock($producto_id, $stock_nuevo)) {
+                throw new Exception('Error al actualizar stock del producto');
+            }
+
+            // Registrar movimiento
+            $movimiento_data = [
+                'producto_id' => $producto_id,
+                'tipo_movimiento' => 'entrada',
+                'cantidad' => $cantidad,
+                'stock_anterior' => $stock_anterior,
+                'stock_nuevo' => $stock_nuevo,
+                'motivo' => $motivo,
+                'observaciones' => $observaciones,
+                'usuario_id' => $_SESSION['user_id'] ?? 1
+            ];
+
+            if (!$this->inventarioModel->registrarMovimiento($movimiento_data)) {
+                throw new Exception('Error al registrar el movimiento');
+            }
+            
+            Logger::info("Entrada registrada: Producto {$producto_id}, Cantidad {$cantidad}");
+            
+            echo json_encode([
+                'success' => true, 
+                'message' => 'Entrada registrada correctamente',
+                'stock_nuevo' => $stock_nuevo
+            ]);
+            
         } catch (Exception $e) {
             Logger::error("Error en registrarEntrada: " . $e->getMessage());
-            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+            echo json_encode([
+                'success' => false, 
+                'error' => $e->getMessage()
+            ]);
         }
+        exit;
     }
 
     /**
@@ -137,84 +172,93 @@ class InventarioController extends Controller
      */
     public function registrarSalida()
     {
+        // Limpiar cualquier salida previa y establecer headers JSON
+        ob_clean();
+        header('Content-Type: application/json; charset=utf-8');
+        
         try {
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $producto_id = (int)$_POST['producto_id'];
-                $cantidad = (int)$_POST['cantidad'];
-                $motivo = trim($_POST['motivo'] ?? 'Salida manual');
-                $observaciones = trim($_POST['observaciones'] ?? '');
-
-                // Validaciones
-                if ($producto_id <= 0 || $cantidad <= 0) {
-                    throw new Exception('Datos inválidos para la salida');
-                }
-
-                // Obtener producto actual
-                $producto = $this->productoModel->obtenerPorId($producto_id);
-                if (!$producto) {
-                    throw new Exception('Producto no encontrado');
-                }
-
-                $stock_anterior = (int)$producto['stock_actual'];
-
-                // Verificar stock suficiente
-                if ($stock_anterior < $cantidad) {
-                    throw new Exception("Stock insuficiente. Disponible: {$stock_anterior}, Solicitado: {$cantidad}");
-                }
-
-                $stock_nuevo = $stock_anterior - $cantidad;
-
-                // Actualizar stock del producto
-                if (!$this->productoModel->actualizarStock($producto_id, $stock_nuevo)) {
-                    throw new Exception('Error al actualizar stock del producto');
-                }
-
-                // Registrar movimiento
-                $movimiento_data = [
-                    'producto_id' => $producto_id,
-                    'tipo_movimiento' => 'salida',
-                    'cantidad' => $cantidad,
-                    'stock_anterior' => $stock_anterior,
-                    'stock_nuevo' => $stock_nuevo,
-                    'motivo' => $motivo,
-                    'observaciones' => $observaciones,
-                    'usuario_id' => $_SESSION['user_id']
-                ];
-
-                if ($this->inventarioModel->registrarMovimiento($movimiento_data)) {
-                    Logger::info("Salida registrada: Producto {$producto_id}, Cantidad {$cantidad}");
-                    // Verificar si el producto quedó en stock bajo
-                    $producto_actualizado = $this->productoModel->obtenerPorId($producto_id);
-                    if ($producto_actualizado && isset($producto_actualizado['stock_actual'], $producto_actualizado['stock_minimo'])) {
-                        $stock_actual = (int)$producto_actualizado['stock_actual'];
-                        $stock_minimo = (int)$producto_actualizado['stock_minimo'];
-                        if ($stock_actual <= $stock_minimo) {
-                            // Notificar a todos los correos registrados
-                            require_once APP_PATH . '/models/NotificacionCorreo.php';
-                            require_once APP_PATH . '/core/Mailer.php';
-                            $correoModel = new NotificacionCorreo();
-                            $correos = $correoModel->getAll();
-                            $asunto = 'Alerta de Stock Bajo';
-                            $mensaje = '<h3>Alerta de Stock Bajo</h3>';
-                            $mensaje .= '<p>El producto <strong>' . htmlspecialchars($producto_actualizado['nombre']) . '</strong> tiene un stock actual de <strong>' . $stock_actual . '</strong> (mínimo: ' . $stock_minimo . ').</p>';
-                            foreach ($correos as $c) {
-                                if (filter_var($c['email'], FILTER_VALIDATE_EMAIL)) {
-                                    Mailer::send($c['email'], $asunto, $mensaje);
-                                }
-                            }
-                        }
-                    }
-                    echo json_encode(['success' => true, 'message' => 'Salida registrada correctamente']);
-                } else {
-                    throw new Exception('Error al registrar el movimiento');
-                }
-            } else {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 throw new Exception('Método no permitido');
             }
+
+            // Validar CSRF si existe
+            if (!$this->validateCSRFToken()) {
+                throw new Exception('Token de seguridad inválido');
+            }
+
+            $producto_id = (int)($_POST['producto_id'] ?? 0);
+            $cantidad = (int)($_POST['cantidad'] ?? 0);
+            $motivo = trim($_POST['motivo'] ?? 'Salida manual');
+            $observaciones = trim($_POST['observaciones'] ?? '');
+
+            // Validaciones
+            if ($producto_id <= 0) {
+                throw new Exception('ID de producto inválido');
+            }
+            
+            if ($cantidad <= 0) {
+                throw new Exception('La cantidad debe ser mayor a 0');
+            }
+
+            // Obtener producto actual
+            $producto = $this->productoModel->obtenerPorId($producto_id);
+            if (!$producto) {
+                throw new Exception('Producto no encontrado');
+            }
+
+            $stock_anterior = (int)($producto['stock_actual'] ?? 0);
+
+            // Verificar stock suficiente
+            if ($stock_anterior < $cantidad) {
+                throw new Exception("Stock insuficiente. Disponible: {$stock_anterior}, Solicitado: {$cantidad}");
+            }
+
+            $stock_nuevo = $stock_anterior - $cantidad;
+
+            // Actualizar stock del producto
+            if (!$this->productoModel->actualizarStock($producto_id, $stock_nuevo)) {
+                throw new Exception('Error al actualizar stock del producto');
+            }
+
+            // Registrar movimiento
+            $movimiento_data = [
+                'producto_id' => $producto_id,
+                'tipo_movimiento' => 'salida',
+                'cantidad' => $cantidad,
+                'stock_anterior' => $stock_anterior,
+                'stock_nuevo' => $stock_nuevo,
+                'motivo' => $motivo,
+                'observaciones' => $observaciones,
+                'usuario_id' => $_SESSION['user_id'] ?? 1
+            ];
+
+            if (!$this->inventarioModel->registrarMovimiento($movimiento_data)) {
+                throw new Exception('Error al registrar el movimiento');
+            }
+            
+            Logger::info("Salida registrada: Producto {$producto_id}, Cantidad {$cantidad}");
+            
+            // Verificar si quedó en stock bajo
+            $alerta_stock = '';
+            if (isset($producto['stock_minimo']) && $stock_nuevo <= (int)$producto['stock_minimo']) {
+                $alerta_stock = "⚠️ ALERTA: El producto quedó con stock bajo ({$stock_nuevo} unidades)";
+            }
+            
+            echo json_encode([
+                'success' => true, 
+                'message' => 'Salida registrada correctamente',
+                'stock_nuevo' => $stock_nuevo,
+                'alerta' => $alerta_stock
+            ]);
+            
         } catch (Exception $e) {
             Logger::error("Error en registrarSalida: " . $e->getMessage());
-            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+            echo json_encode([
+                'success' => false, 
+                'error' => $e->getMessage()
+            ]);
         }
+        exit;
     }
 
     /**
@@ -222,66 +266,94 @@ class InventarioController extends Controller
      */
     public function registrarAjuste()
     {
+        // Limpiar cualquier salida previa y establecer headers JSON
+        ob_clean();
+        header('Content-Type: application/json; charset=utf-8');
+        
         try {
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $producto_id = (int)$_POST['producto_id'];
-                $stock_nuevo = (int)$_POST['stock_nuevo'];
-                $motivo = trim($_POST['motivo'] ?? 'Ajuste de inventario');
-                $observaciones = trim($_POST['observaciones'] ?? '');
-
-                // Validaciones
-                if ($producto_id <= 0 || $stock_nuevo < 0) {
-                    throw new Exception('Datos inválidos para el ajuste');
-                }
-
-                // Obtener producto actual
-                $producto = $this->productoModel->obtenerPorId($producto_id);
-                if (!$producto) {
-                    throw new Exception('Producto no encontrado');
-                }
-
-                $stock_anterior = (int)$producto['stock_actual'];
-                $diferencia = $stock_nuevo - $stock_anterior;
-
-                // Si no hay cambio, no hacer nada
-                if ($diferencia == 0) {
-                    echo json_encode(['success' => true, 'message' => 'No hay cambios en el stock']);
-                    return;
-                }
-
-                // Actualizar stock del producto
-                if (!$this->productoModel->actualizarStock($producto_id, $stock_nuevo)) {
-                    throw new Exception('Error al actualizar stock del producto');
-                }
-
-                // Registrar movimiento
-                $tipo_movimiento = $diferencia > 0 ? 'entrada' : 'salida';
-                $cantidad_movimiento = abs($diferencia);
-
-                $movimiento_data = [
-                    'producto_id' => $producto_id,
-                    'tipo_movimiento' => $tipo_movimiento,
-                    'cantidad' => $cantidad_movimiento,
-                    'stock_anterior' => $stock_anterior,
-                    'stock_nuevo' => $stock_nuevo,
-                    'motivo' => $motivo,
-                    'observaciones' => $observaciones,
-                    'usuario_id' => $_SESSION['user_id']
-                ];
-
-                if ($this->inventarioModel->registrarMovimiento($movimiento_data)) {
-                    Logger::info("Ajuste registrado: Producto {$producto_id}, Stock anterior {$stock_anterior}, Stock nuevo {$stock_nuevo}");
-                    echo json_encode(['success' => true, 'message' => 'Ajuste registrado correctamente']);
-                } else {
-                    throw new Exception('Error al registrar el movimiento');
-                }
-            } else {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 throw new Exception('Método no permitido');
             }
+
+            // Validar CSRF si existe
+            if (!$this->validateCSRFToken()) {
+                throw new Exception('Token de seguridad inválido');
+            }
+
+            $producto_id = (int)($_POST['producto_id'] ?? 0);
+            $cantidad = (int)($_POST['cantidad'] ?? 0);
+            $motivo = trim($_POST['motivo'] ?? 'Ajuste de inventario');
+            $observaciones = trim($_POST['observaciones'] ?? '');
+
+            // Validaciones
+            if ($producto_id <= 0) {
+                throw new Exception('ID de producto inválido');
+            }
+            
+            if ($cantidad < 0) {
+                throw new Exception('La cantidad no puede ser negativa');
+            }
+
+            // Obtener producto actual
+            $producto = $this->productoModel->obtenerPorId($producto_id);
+            if (!$producto) {
+                throw new Exception('Producto no encontrado');
+            }
+
+            $stock_anterior = (int)($producto['stock_actual'] ?? 0);
+            $diferencia = $cantidad - $stock_anterior;
+
+            // Si no hay cambio, no hacer nada
+            if ($diferencia == 0) {
+                echo json_encode([
+                    'success' => true, 
+                    'message' => 'No hay cambios en el stock',
+                    'stock_nuevo' => $stock_anterior
+                ]);
+                exit;
+            }
+
+            // Actualizar stock del producto
+            if (!$this->productoModel->actualizarStock($producto_id, $cantidad)) {
+                throw new Exception('Error al actualizar stock del producto');
+            }
+
+            // Registrar movimiento
+            $tipo_movimiento = $diferencia > 0 ? 'entrada' : 'salida';
+            $cantidad_movimiento = abs($diferencia);
+
+            $movimiento_data = [
+                'producto_id' => $producto_id,
+                'tipo_movimiento' => 'ajuste',
+                'cantidad' => $cantidad_movimiento,
+                'stock_anterior' => $stock_anterior,
+                'stock_nuevo' => $cantidad,
+                'motivo' => $motivo,
+                'observaciones' => $observaciones,
+                'usuario_id' => $_SESSION['user_id'] ?? 1
+            ];
+
+            if (!$this->inventarioModel->registrarMovimiento($movimiento_data)) {
+                throw new Exception('Error al registrar el movimiento');
+            }
+            
+            Logger::info("Ajuste registrado: Producto {$producto_id}, Stock anterior {$stock_anterior}, Stock nuevo {$cantidad}");
+            
+            echo json_encode([
+                'success' => true, 
+                'message' => 'Ajuste registrado correctamente',
+                'stock_nuevo' => $cantidad,
+                'diferencia' => $diferencia
+            ]);
+            
         } catch (Exception $e) {
             Logger::error("Error en registrarAjuste: " . $e->getMessage());
-            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+            echo json_encode([
+                'success' => false, 
+                'error' => $e->getMessage()
+            ]);
         }
+        exit;
     }
 
     /**
