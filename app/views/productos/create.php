@@ -223,178 +223,329 @@ include_once __DIR__ . '/../layout/header.php'; ?>
 
                 <div class="card-body product-form-card">
                     <!-- Usar routing por query string para compatibilidad con index.php -->
-                    <form method="POST" action="?page=productos&action=store">
+                    <form method="POST" action="?page=productos&action=store" class="needs-validation" novalidate>
                         <?php // Usar el nombre de token definido en config (CSRF_TOKEN_NAME)
                         $csrfName = defined('CSRF_TOKEN_NAME') ? CSRF_TOKEN_NAME : 'csrf_token';
                         $csrfValue = $_SESSION['csrf_token'] ?? (new Auth())->getCSRFToken(); ?>
                         <input type="hidden" name="<?= htmlspecialchars($csrfName) ?>" value="<?= htmlspecialchars($csrfValue) ?>">
 
-                        <div class="product-header">
-                            <div class="product-col">
-                                <label for="nombre">Nombre del Producto <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" value="<?= htmlspecialchars($_POST['nombre'] ?? '') ?>" required>
+                        <!-- SECCIÓN 1: INFORMACIÓN BÁSICA -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <h5 class="section-title">
+                                    <i class="fas fa-info-circle text-primary"></i>
+                                    Información Básica
+                                </h5>
+                                <small class="text-muted">Datos principales del producto</small>
                             </div>
-                            <div class="product-col">
-                                <label for="id_unidad">Unidad <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <select class="form-control" id="id_unidad" name="id_unidad" required>
-                                        <option value="">Seleccionar unidad...</option>
-                                        <?php foreach ($unidades as $unidad): ?>
-                                            <option value="<?= $unidad['id_unidad'] ?>" <?= (($_POST['id_unidad'] ?? '') == $unidad['id_unidad']) ? 'selected' : '' ?>><?= htmlspecialchars($unidad['nombre']) ?></option>
-                                        <?php endforeach; ?>
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="nombre" 
+                                               name="nombre" 
+                                               placeholder="Ej: Aceite Motor 15W40"
+                                               value="<?= htmlspecialchars($_POST['nombre'] ?? '') ?>" 
+                                               required>
+                                        <label for="nombre">
+                                            <i class="fas fa-tag text-primary me-1"></i>
+                                            Nombre del Producto <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="invalid-feedback">
+                                            Por favor, ingrese el nombre del producto.
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3">
+                                    <label for="id_unidad" class="form-label">
+                                        <i class="fas fa-ruler text-primary me-1"></i>
+                                        Unidad <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <select class="form-select" id="id_unidad" name="id_unidad" required>
+                                            <option value="">Seleccionar...</option>
+                                            <?php foreach ($unidades as $unidad): ?>
+                                                <option value="<?= $unidad['id_unidad'] ?>" <?= (($_POST['id_unidad'] ?? '') == $unidad['id_unidad']) ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($unidad['nombre']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalNuevaUnidad" title="Agregar nueva unidad">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Seleccione una unidad.
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3">
+                                    <div class="form-floating">
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="codigo_barras" 
+                                               name="codigo_barras" 
+                                               placeholder="Código de barras"
+                                               value="<?= htmlspecialchars($_POST['codigo_barras'] ?? '') ?>">
+                                        <label for="codigo_barras">
+                                            <i class="fas fa-barcode text-primary me-1"></i>
+                                            Código de Barras
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row g-3 mt-2">
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" 
+                                                  id="descripcion" 
+                                                  name="descripcion" 
+                                                  placeholder="Descripción detallada del producto"
+                                                  style="height: 100px"><?= htmlspecialchars($_POST['descripcion'] ?? '') ?></textarea>
+                                        <label for="descripcion">
+                                            <i class="fas fa-align-left text-primary me-1"></i>
+                                            Descripción
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECCIÓN 2: CATEGORIZACIÓN -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <h5 class="section-title">
+                                    <i class="fas fa-sitemap text-success"></i>
+                                    Categorización
+                                </h5>
+                                <small class="text-muted">Organización y clasificación del producto</small>
+                            </div>
+                            
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="id_categoria" class="form-label">
+                                        <i class="fas fa-folder text-success me-1"></i>
+                                        Categoría <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <select class="form-select" id="id_categoria" name="id_categoria" required>
+                                            <option value="">Seleccionar categoría...</option>
+                                            <?php foreach ($categorias as $categoria): ?>
+                                                <option value="<?= $categoria['id_categoria'] ?>"
+                                                    <?= ($_POST['id_categoria'] ?? '') == $categoria['id_categoria'] ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($categoria['nombre']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalNuevaCategoria" title="Agregar nueva categoría">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Seleccione una categoría.
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <label for="id_subcategoria" class="form-label">
+                                        <i class="fas fa-folder-open text-success me-1"></i>
+                                        Subcategoría
+                                    </label>
+                                    <div class="input-group">
+                                        <select class="form-select" id="id_subcategoria" name="id_subcategoria">
+                                            <option value="">Seleccionar subcategoría...</option>
+                                            <?php if (isset($subcategorias) && is_array($subcategorias) && !empty($subcategorias)): ?>
+                                                <?php foreach ($subcategorias as $subcat): ?>
+                                                    <option value="<?= $subcat['id_subcategoria'] ?>"
+                                                        <?= (($_POST['id_subcategoria'] ?? '') == $subcat['id_subcategoria']) ? 'selected' : '' ?>>
+                                                        <?= htmlspecialchars($subcat['nombre']) ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <option value="general">General (creada automáticamente)</option>
+                                            <?php endif; ?>
+                                        </select>
+                                        <button type="button" class="btn btn-outline-success" id="addSubcategory" onclick="openAddSubcategoryModal()" title="Agregar nueva subcategoría">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <label for="id_marca" class="form-label">
+                                        <i class="fas fa-trademark text-success me-1"></i>
+                                        Marca
+                                    </label>
+                                    <div class="input-group">
+                                        <select class="form-select" id="id_marca" name="id_marca">
+                                            <option value="">Sin marca</option>
+                                            <?php foreach ($marcas as $marca): ?>
+                                                <option value="<?= $marca['id_marca'] ?>"
+                                                    <?= ($_POST['id_marca'] ?? '') == $marca['id_marca'] ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($marca['nombre']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalNuevaMarca" title="Agregar nueva marca">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECCIÓN 3: UBICACIÓN Y PRECIOS -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <h5 class="section-title">
+                                    <i class="fas fa-dollar-sign text-warning"></i>
+                                    Ubicación y Precios
+                                </h5>
+                                <small class="text-muted">Configuración de almacenamiento y valores</small>
+                            </div>
+                            
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="id_ubicacion" class="form-label">
+                                        <i class="fas fa-map-marker-alt text-warning me-1"></i>
+                                        Ubicación
+                                    </label>
+                                    <div class="input-group">
+                                        <select class="form-select" id="id_ubicacion" name="id_ubicacion">
+                                            <option value="">Sin ubicación</option>
+                                            <?php foreach ($ubicaciones as $ubicacion): ?>
+                                                <option value="<?= $ubicacion['id_ubicacion'] ?>"
+                                                    <?= ($_POST['id_ubicacion'] ?? '') == $ubicacion['id_ubicacion'] ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($ubicacion['nombre']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#modalNuevaUbicacion" title="Agregar nueva ubicación">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <div class="form-floating">
+                                        <input type="number" 
+                                               class="form-control" 
+                                               id="precio_unitario" 
+                                               name="precio_unitario"
+                                               step="0.01" 
+                                               min="0" 
+                                               placeholder="0.00"
+                                               value="<?= htmlspecialchars($_POST['precio_unitario'] ?? '') ?>" 
+                                               required>
+                                        <label for="precio_unitario">
+                                            <i class="fas fa-tag text-warning me-1"></i>
+                                            Precio Unitario S/ <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="invalid-feedback">
+                                            Ingrese un precio válido.
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <label for="estado" class="form-label">
+                                        <i class="fas fa-toggle-on text-warning me-1"></i>
+                                        Estado
+                                    </label>
+                                    <select class="form-select" id="estado" name="estado">
+                                        <option value="activo" <?= ($_POST['estado'] ?? 'activo') == 'activo' ? 'selected' : '' ?>>
+                                            <i class="fas fa-check-circle"></i> Activo
+                                        </option>
+                                        <option value="inactivo" <?= ($_POST['estado'] ?? '') == 'inactivo' ? 'selected' : '' ?>>
+                                            <i class="fas fa-times-circle"></i> Inactivo
+                                        </option>
                                     </select>
-                                    <button type="button" class="btn btn-outline-primary btn-sm btn-compact" data-bs-toggle="modal" data-bs-target="#modalNuevaUnidad">
-                                        <i class="fas fa-plus"></i> Añadir nueva
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECCIÓN 4: INVENTARIO -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <h5 class="section-title">
+                                    <i class="fas fa-boxes text-info"></i>
+                                    Control de Inventario
+                                </h5>
+                                <small class="text-muted">Configuración inicial de stock</small>
+                            </div>
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="number" 
+                                               class="form-control" 
+                                               id="stock_actual" 
+                                               name="stock_actual"
+                                               min="0" 
+                                               placeholder="0"
+                                               value="<?= htmlspecialchars($_POST['stock_actual'] ?? '0') ?>">
+                                        <label for="stock_actual">
+                                            <i class="fas fa-cubes text-info me-1"></i>
+                                            Stock Inicial
+                                        </label>
+                                        <div class="form-text">
+                                            <i class="fas fa-info-circle"></i>
+                                            Cantidad inicial del producto en almacén
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="number" 
+                                               class="form-control" 
+                                               id="stock_minimo" 
+                                               name="stock_minimo"
+                                               min="0" 
+                                               placeholder="10"
+                                               value="<?= htmlspecialchars($_POST['stock_minimo'] ?? '0') ?>">
+                                        <label for="stock_minimo">
+                                            <i class="fas fa-exclamation-triangle text-info me-1"></i>
+                                            Stock Mínimo
+                                        </label>
+                                        <div class="form-text">
+                                            <i class="fas fa-bell"></i>
+                                            Se alertará cuando el stock esté por debajo de este valor
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BOTONES DE ACCIÓN -->
+                        <div class="form-actions">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="?page=productos" class="btn btn-light btn-lg">
+                                    <i class="fas fa-arrow-left me-2"></i>
+                                    Cancelar
+                                </a>
+                                
+                                <div class="action-buttons">
+                                    <button type="reset" class="btn btn-outline-secondary btn-lg me-2">
+                                        <i class="fas fa-eraser me-2"></i>
+                                        Limpiar
+                                    </button>
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-save me-2"></i>
+                                        Guardar Producto
                                     </button>
                                 </div>
                             </div>
-                            <div class="product-col">
-                                <label for="codigo_barras">Código de Barras</label>
-                                <input type="text" class="form-control" id="codigo_barras" name="codigo_barras" value="<?= htmlspecialchars($_POST['codigo_barras'] ?? '') ?>">
-                            </div>
                         </div>
+                    </form>
                 </div>
-
-                <div class="form-group">
-                    <label for="descripcion">Descripción</label>
-                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3"><?= htmlspecialchars($_POST['descripcion'] ?? '') ?></textarea>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="id_categoria" class="mb-1">Categoría <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <select class="form-control" id="id_categoria" name="id_categoria" required>
-                                    <option value="">Seleccionar categoría...</option>
-                                    <?php foreach ($categorias as $categoria): ?>
-                                        <option value="<?= $categoria['id_categoria'] ?>"
-                                            <?= ($_POST['id_categoria'] ?? '') == $categoria['id_categoria'] ? 'selected' : '' ?>>
-                                            <?= htmlspecialchars($categoria['nombre']) ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalNuevaCategoria">
-                                    <i class="fas fa-plus"></i> Añadir nueva
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="id_subcategoria" class="mb-1">Subcategoría</label>
-                            <div class="input-group">
-                                <select class="form-control" id="id_subcategoria" name="id_subcategoria" required>
-                                    <option value="">Seleccionar subcategoría...</option>
-                                    <?php if (isset($subcategorias) && is_array($subcategorias) && !empty($subcategorias)): ?>
-                                        <?php foreach ($subcategorias as $subcat): ?>
-                                            <option value="<?= $subcat['id_subcategoria'] ?>"
-                                                <?= (($_POST['id_subcategoria'] ?? '') == $subcat['id_subcategoria']) ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($subcat['nombre']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <option value="general">General (creada automáticamente)</option>
-                                    <?php endif; ?>
-                                </select>
-                                <button type="button" class="btn btn-outline-secondary" id="addSubcategory" onclick="openAddSubcategoryModal()">Añadir nueva</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="id_marca" class="mb-1">Marca</label>
-                            <div class="input-group">
-                                <select class="form-control" id="id_marca" name="id_marca">
-                                    <option value="">Sin marca</option>
-                                    <?php foreach ($marcas as $marca): ?>
-                                        <option value="<?= $marca['id_marca'] ?>"
-                                            <?= ($_POST['id_marca'] ?? '') == $marca['id_marca'] ? 'selected' : '' ?>>
-                                            <?= htmlspecialchars($marca['nombre']) ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalNuevaMarca">
-                                    <i class="fas fa-plus"></i> Añadir nueva
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="id_ubicacion" class="mb-1">Ubicación</label>
-                            <div class="input-group">
-                                <select class="form-control" id="id_ubicacion" name="id_ubicacion">
-                                    <option value="">Sin ubicación</option>
-                                    <?php foreach ($ubicaciones as $ubicacion): ?>
-                                        <option value="<?= $ubicacion['id_ubicacion'] ?>"
-                                            <?= ($_POST['id_ubicacion'] ?? '') == $ubicacion['id_ubicacion'] ? 'selected' : '' ?>>
-                                            <?= htmlspecialchars($ubicacion['nombre']) ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalNuevaUbicacion">
-                                    <i class="fas fa-plus"></i> Añadir nueva
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="precio_unitario">Precio Unitario <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">S/</span>
-                                </div>
-                                <input type="number" class="form-control" id="precio_unitario" name="precio_unitario"
-                                    step="0.01" min="0" value="<?= htmlspecialchars($_POST['precio_unitario'] ?? '') ?>" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="estado">Estado</label>
-                            <select class="form-control" id="estado" name="estado">
-                                <option value="activo" <?= ($_POST['estado'] ?? 'activo') == 'activo' ? 'selected' : '' ?>>Activo</option>
-                                <option value="inactivo" <?= ($_POST['estado'] ?? '') == 'inactivo' ? 'selected' : '' ?>>Inactivo</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="stock_actual">Stock Inicial</label>
-                            <input type="number" class="form-control" id="stock_actual" name="stock_actual"
-                                min="0" value="<?= htmlspecialchars($_POST['stock_actual'] ?? '0') ?>">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="stock_minimo">Stock Mínimo</label>
-                            <input type="number" class="form-control" id="stock_minimo" name="stock_minimo"
-                                min="0" value="<?= htmlspecialchars($_POST['stock_minimo'] ?? '0') ?>">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group mt-4">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Guardar Producto
-                    </button>
-                    <a href="?page=productos" class="btn btn-secondary ml-2">
-                        <i class="fas fa-times"></i> Cancelar
-                    </a>
-                </div>
-                </form>
             </div>
         </div>
     </div>
-</div>
 </div>
 
 <!-- Modales para añadir nueva categoría, marca, unidad y ubicación (fuera del form) -->
@@ -514,5 +665,137 @@ include_once __DIR__ . '/../layout/header.php'; ?>
         </div>
     </div>
 </div>
+
+<!-- Script de validación y mejoras del formulario -->
+<script>
+// Validación en tiempo real del formulario
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.needs-validation');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    
+    // Validación automática al escribir
+    const inputs = form.querySelectorAll('input[required], select[required]');
+    inputs.forEach(input => {
+        input.addEventListener('input', validateField);
+        input.addEventListener('blur', validateField);
+    });
+    
+    function validateField(e) {
+        const field = e.target;
+        const isValid = field.checkValidity();
+        
+        field.classList.remove('is-valid', 'is-invalid');
+        
+        if (field.value.trim()) {
+            field.classList.add(isValid ? 'is-valid' : 'is-invalid');
+        }
+        
+        updateSubmitButton();
+    }
+    
+    function updateSubmitButton() {
+        const isFormValid = form.checkValidity();
+        submitBtn.disabled = !isFormValid;
+        
+        if (isFormValid) {
+            submitBtn.classList.remove('btn-secondary');
+            submitBtn.classList.add('btn-primary');
+        } else {
+            submitBtn.classList.remove('btn-primary');
+            submitBtn.classList.add('btn-secondary');
+        }
+    }
+    
+    // Validación al enviar
+    form.addEventListener('submit', function(e) {
+        if (!form.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Mostrar primera sección con error
+            const firstInvalid = form.querySelector('.is-invalid');
+            if (firstInvalid) {
+                firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstInvalid.focus();
+            }
+        }
+        
+        form.classList.add('was-validated');
+    });
+    
+    // Mejorar experiencia con tooltips
+    const buttons = document.querySelectorAll('[title]');
+    buttons.forEach(btn => {
+        new bootstrap.Tooltip(btn);
+    });
+    
+    // Auto-generar código de barras si está vacío
+    const nombreInput = document.getElementById('nombre');
+    const codigoInput = document.getElementById('codigo_barras');
+    
+    if (nombreInput && codigoInput) {
+        nombreInput.addEventListener('blur', function() {
+            if (!codigoInput.value && nombreInput.value) {
+                const codigo = generateBarcode(nombreInput.value);
+                codigoInput.value = codigo;
+            }
+        });
+    }
+    
+    function generateBarcode(nombre) {
+        // Generar código de barras basado en nombre + timestamp
+        const cleanName = nombre.toUpperCase()
+            .replace(/[^A-Z0-9]/g, '')
+            .substring(0, 6);
+        const timestamp = Date.now().toString().slice(-6);
+        return cleanName + timestamp;
+    }
+    
+    // Mejora para el campo de precio
+    const precioInput = document.getElementById('precio_unitario');
+    if (precioInput) {
+        precioInput.addEventListener('input', function() {
+            let value = this.value;
+            if (value && !isNaN(value)) {
+                this.value = parseFloat(value).toFixed(2);
+            }
+        });
+    }
+    
+    // Actualizar estado inicial
+    updateSubmitButton();
+    
+    // Animar las secciones al cargar
+    const sections = document.querySelectorAll('.form-section');
+    sections.forEach((section, index) => {
+        setTimeout(() => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.offsetHeight; // Trigger reflow
+            section.style.transition = 'all 0.5s ease';
+            section.style.opacity = '1';
+            section.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+});
+
+// Función para mostrar notificaciones de éxito
+function showSuccessNotification(message) {
+    const alert = document.createElement('div');
+    alert.className = 'alert alert-success alert-dismissible fade show position-fixed';
+    alert.style.cssText = 'top: 20px; right: 20px; z-index: 2000; min-width: 300px;';
+    alert.innerHTML = `
+        <i class="fas fa-check-circle me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(alert);
+    
+    setTimeout(() => {
+        alert.remove();
+    }, 5000);
+}
+</script>
 
 <!-- No hay carga dinámica de subcategorías: campo eliminado -->
