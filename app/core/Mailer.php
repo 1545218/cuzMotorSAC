@@ -54,6 +54,16 @@ class Mailer
             "Content-type: text/html; charset=UTF-8\r\n" .
             "From: " . $mailFromName . " <" . $mailFrom . ">\r\n";
         $headers = $defaultHeaders . $headers;
-        return mail($to, $subject, $message, $headers);
+        $result = mail($to, $subject, $message, $headers);
+        if ($result) {
+            if (class_exists('Logger')) {
+                Logger::info("Mailer::send via mail() succeeded for: {$to}");
+            }
+        } else {
+            if (class_exists('Logger')) {
+                Logger::error("Mailer::send via mail() FAILED for: {$to}");
+            }
+        }
+        return $result;
     }
 }

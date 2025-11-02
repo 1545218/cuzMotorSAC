@@ -230,52 +230,45 @@ class DashboardController extends Controller
     }
 
     /**
-     * Obtiene alertas del sistema
+     * Obtiene alertas del sistema usando el modelo Alerta
      */
     private function getAlerts()
     {
         try {
+            require_once APP_PATH . '/models/Alerta.php';
+            $alertaModel = new Alerta();
+
+            // Obtener alertas pendientes del sistema
+            $alertasPendientes = $alertaModel->getAlertasPendientes();
+
+            // Convertir al formato que espera el dashboard
             $alerts = [];
-
-            // Productos sin stock
-            $outOfStock = $this->db->selectOne(
-                "SELECT COUNT(*) as total FROM productos WHERE stock_actual = 0 AND estado = 'activo'"
-            )['total'] ?? 0;
-
-            if ($outOfStock > 0) {
-                $alerts[] = [
-                    'type' => 'danger',
-                    'icon' => 'fas fa-exclamation-triangle',
-                    'title' => 'Productos sin stock',
-                    'message' => "Hay {$outOfStock} productos sin stock disponible",
-                    'url' => BASE_PATH . '/productos?filter=sin_stock'
+            foreach ($alertasPendientes as $alerta) {
+                $typeMap = [
+                    'stock_bajo' => ['type' => 'warning', 'icon' => 'fas fa-exclamation-triangle'],
+                    'sin_stock' => ['type' => 'danger', 'icon' => 'fas fa-times-circle'],
+                    'proximo_vencer' => ['type' => 'info', 'icon' => 'fas fa-calendar-alt'],
+                    'pocas_ventas' => ['type' => 'warning', 'icon' => 'fas fa-chart-line'],
+                    'sistema' => ['type' => 'info', 'icon' => 'fas fa-cog'],
+                    'critico' => ['type' => 'danger', 'icon' => 'fas fa-exclamation']
                 ];
-            }
 
-            // Productos próximos a vencer (si tienes fecha de vencimiento)
-            // Esto sería una mejora futura
+                $config = $typeMap[$alerta['tipo']] ?? ['type' => 'secondary', 'icon' => 'fas fa-bell'];
 
-            // Usuarios inactivos hace más de 30 días
-            if ($this->auth->hasRole(ROLE_ADMIN)) {
-                $inactiveUsers = $this->db->selectOne(
-                    "SELECT COUNT(*) as total FROM usuarios 
-                     WHERE estado = 'activo'"
-                )['total'] ?? 0;
-
-                if ($inactiveUsers > 0) {
-                    $alerts[] = [
-                        'type' => 'warning',
-                        'icon' => 'fas fa-user-clock',
-                        'title' => 'Usuarios inactivos',
-                        'message' => "Hay {$inactiveUsers} usuarios sin actividad reciente",
-                        'url' => BASE_PATH . '/usuarios?filter=inactive'
-                    ];
-                }
+                $alerts[] = [
+                    'type' => $config['type'],
+                    'icon' => $config['icon'],
+                    'title' => ucfirst(str_replace('_', ' ', $alerta['tipo'])),
+                    'message' => $alerta['mensaje'],
+                    'date' => $alerta['fecha'],
+                    'id' => $alerta['id_alerta'],
+                    'url' => '?page=alertas'
+                ];
             }
 
             return $alerts;
         } catch (Exception $e) {
-            error_log("Error obteniendo alertas: " . $e->getMessage());
+            Logger::error("Error al obtener alertas del dashboard: " . $e->getMessage());
             return [];
         }
     }

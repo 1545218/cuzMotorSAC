@@ -54,11 +54,6 @@
                     <?php endif; ?>
 
                     <?php if (isset($correos_notificacion) && is_array($correos_notificacion)): ?>
-                        <!-- DEBUG: Mostrar contenido de $correos_notificacion -->
-                        <div class="alert alert-secondary" style="font-size:0.9em;">
-                            <strong>Debug correos_notificacion:</strong>
-                            <pre><?php print_r($correos_notificacion); ?></pre>
-                        </div>
                         <div class="mb-4">
                             <h5 class="mb-3"><i class="fas fa-envelope me-2"></i>Correos para notificación de stock bajo</h5>
                             <form method="post" action="?page=inventario&action=addCorreoNotificacion" class="row g-2 align-items-center mb-3">

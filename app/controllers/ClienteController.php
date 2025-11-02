@@ -480,4 +480,67 @@ class ClienteController extends Controller
         $result = $this->db->selectOne($sql, $sqlParams);
         return $result['total'] ?? 0;
     }
+
+    /**
+     * Obtiene los vehículos de un cliente (AJAX)
+     */
+    public function vehiculos()
+    {
+        try {
+            $idCliente = $_GET['id_cliente'] ?? null;
+
+            if (!$idCliente) {
+                echo json_encode(['success' => false, 'message' => 'ID de cliente requerido']);
+                return;
+            }
+
+            $vehiculos = $this->clienteModel->getVehiculos($idCliente);
+            echo json_encode(['success' => true, 'vehiculos' => $vehiculos]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Agrega un vehículo a un cliente
+     */
+    public function agregarVehiculo()
+    {
+        try {
+            $idCliente = $_POST['id_cliente'] ?? null;
+            $placa = $_POST['placa'] ?? null;
+            $marca = $_POST['marca'] ?? null;
+            $modelo = $_POST['modelo'] ?? null;
+
+            if (!$idCliente || !$placa || !$marca || !$modelo) {
+                echo json_encode(['success' => false, 'message' => 'Todos los campos son requeridos']);
+                return;
+            }
+
+            $this->clienteModel->agregarVehiculo($idCliente, $placa, $marca, $modelo);
+            echo json_encode(['success' => true, 'message' => 'Vehículo agregado correctamente']);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Elimina un vehículo
+     */
+    public function eliminarVehiculo()
+    {
+        try {
+            $idVehiculo = $_POST['id_vehiculo'] ?? null;
+
+            if (!$idVehiculo) {
+                echo json_encode(['success' => false, 'message' => 'ID de vehículo requerido']);
+                return;
+            }
+
+            $this->clienteModel->eliminarVehiculo($idVehiculo);
+            echo json_encode(['success' => true, 'message' => 'Vehículo eliminado correctamente']);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+        }
+    }
 }

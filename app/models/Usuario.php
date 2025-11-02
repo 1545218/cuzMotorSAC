@@ -254,4 +254,20 @@ class Usuario extends Model
 
         return true;
     }
+
+    /**
+     * Registra una acción del usuario en los logs del sistema
+     */
+    public function registrarLog($idUsuario, $accion, $descripcion = null)
+    {
+        try {
+            require_once 'LogSistema.php';
+            $logSistema = new LogSistema();
+            return $logSistema->registrarAccion($idUsuario, $accion, $descripcion);
+        } catch (Exception $e) {
+            // Si falla el log, no interrumpir la operación principal
+            error_log("Error al registrar log: " . $e->getMessage());
+            return false;
+        }
+    }
 }

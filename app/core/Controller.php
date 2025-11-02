@@ -33,7 +33,12 @@ class Controller
         $this->logger = new Logger();
 
         // Verificar sesión para rutas protegidas
-        $this->checkAuthentication();
+        try {
+            $this->checkAuthentication();
+        } catch (Exception $e) {
+            Logger::error("Error en checkAuthentication: " . $e->getMessage());
+            // No fallar si hay problemas con autenticación, permitir continuar
+        }
     }
 
     /**
@@ -46,9 +51,9 @@ class Controller
 
         // Datos globales disponibles en todas las vistas
         $auth = $this->auth; // Objeto Auth para usar en vistas
-        $user = $this->auth->getUser();
-        $isLoggedIn = $this->auth->isLoggedIn();
-        $userRole = $this->auth->getUserRole();
+        $user = $this->auth ? $this->auth->getUser() : null;
+        $isLoggedIn = $this->auth ? $this->auth->isLoggedIn() : false;
+        $userRole = $this->auth ? $this->auth->getUserRole() : null;
         $notifications = $this->getNotifications();
         $config = $this->getAppConfig();
 
@@ -272,6 +277,11 @@ class Controller
      */
     private function checkAuthentication()
     {
+        // Verificar que auth esté inicializado
+        if (!$this->auth) {
+            return; // No hacer verificación si auth no está disponible
+        }
+
         // Rutas públicas que no requieren autenticación
         $publicRoutes = [
             'auth/login',
@@ -303,7 +313,7 @@ class Controller
     {
         $notifications = [];
 
-        if ($this->auth->isLoggedIn()) {
+        if ($this->auth && $this->auth->isLoggedIn()) {
             // Verificar productos con stock bajo
             try {
                 $lowStockProducts = $this->db->select(

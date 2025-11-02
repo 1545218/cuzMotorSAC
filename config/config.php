@@ -58,16 +58,22 @@ define('COMPANY_ADDRESS', 'AV. Panamericana N° 197 - puno');
 define('COMPANY_PHONE', '+51 999 123 456');
 define('COMPANY_EMAIL', '#');
 
-// Configuración de correo / SMTP (vacíos por seguridad — rellenar en entorno)
-define('SMTP_USE', false); // true para usar SMTP, false para usar mail()
-define('SMTP_HOST', 'smtp.example.com');
-define('SMTP_PORT', 587);
-define('SMTP_USERNAME', '');
-define('SMTP_PASSWORD', '');
-define('SMTP_SECURE', 'tls'); // tls o ssl
-define('SMTP_DEBUG', 0); // 0 = off, 1 = client, 2 = client+server
-define('MAIL_FROM', 'no-reply@cruzmotorsac.com');
-define('MAIL_FROM_NAME', COMPANY_NAME);
+// Configuración de correo / SMTP (puede leerse desde .env si está presente)
+// Valores por defecto pensados para usar con Gmail (requiere app password)
+if (isset($_ENV['SMTP_USE'])) {
+    $smtpUse = strtolower($_ENV['SMTP_USE']) === 'true';
+} else {
+    $smtpUse = false; // por defecto usar mail()
+}
+define('SMTP_USE', $smtpUse);
+define('SMTP_HOST', $_ENV['SMTP_HOST'] ?? 'smtp.gmail.com');
+define('SMTP_PORT', isset($_ENV['SMTP_PORT']) ? (int)$_ENV['SMTP_PORT'] : 587);
+define('SMTP_USERNAME', $_ENV['SMTP_USERNAME'] ?? '');
+define('SMTP_PASSWORD', $_ENV['SMTP_PASSWORD'] ?? '');
+define('SMTP_SECURE', $_ENV['SMTP_SECURE'] ?? 'tls'); // tls o ssl
+define('SMTP_DEBUG', isset($_ENV['SMTP_DEBUG']) ? (int)$_ENV['SMTP_DEBUG'] : 0); // 0 = off, 1 = client, 2 = client+server
+define('MAIL_FROM', $_ENV['MAIL_FROM'] ?? ($_ENV['SMTP_USERNAME'] ?? 'no-reply@cruzmotorsac.com'));
+define('MAIL_FROM_NAME', $_ENV['MAIL_FROM_NAME'] ?? COMPANY_NAME);
 
 // Notificaciones: modo de prueba para enviar sólo a un correo de verificación
 // NOTIFY_TEST_MODE = true -> enviará únicamente a NOTIFY_TEST_EMAIL y NO a los administradores.
@@ -235,6 +241,4 @@ function getAvailableRoles()
         ROLE_VENDEDOR => 'Vendedor',
         ROLE_MECANICO => 'Mecánico'
     ];
-    
 }
-

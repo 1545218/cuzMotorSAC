@@ -95,6 +95,20 @@ class AuthController extends Controller
                 'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
                 'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown'
             ]);
+
+            // Registrar en logs del sistema
+            try {
+                require_once APP_PATH . '/models/LogSistema.php';
+                $logSistema = new LogSistema();
+                $user = $this->auth->getUser();
+                if ($user) {
+                    $logSistema->registrarAccion($user['id_usuario'], 'login', 'Usuario logueado exitosamente');
+                }
+            } catch (Exception $e) {
+                // No interrumpir el flujo si falla el log
+                error_log("Error al registrar log de login: " . $e->getMessage());
+            }
+
             $this->setFlash('success', $result['message']);
             $this->logActivity('login', 'Usuario logueado exitosamente');
             $this->redirect('dashboard');
