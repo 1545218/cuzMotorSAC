@@ -14,11 +14,13 @@
                 <div class="card-body">
                     <!-- Filtros -->
                     <form id="filtrosProductosForm" method="GET" action="http://localhost/CruzMotorSAC/public/?page=productos" class="mb-3">
-                        <div class="row">
+                        <div class="row g-3">
                             <div class="col-md-4">
-                                <input type="text" name="search" class="form-control" placeholder="Buscar por nombre, código..." value="<?= htmlspecialchars($search) ?>">
+                                <label class="form-label small text-muted">Buscar producto:</label>
+                                <input type="text" name="search" class="form-control" placeholder="Buscar por nombre, código de barras, descripción..." value="<?= htmlspecialchars($search) ?>">
                             </div>
                             <div class="col-md-2">
+                                <label class="form-label small text-muted">Estado:</label>
                                 <select name="estado" class="form-control">
                                     <option value="activo" <?= $estado_selected == 'activo' ? 'selected' : '' ?>>Activos</option>
                                     <option value="inactivo" <?= $estado_selected == 'inactivo' ? 'selected' : '' ?>>Inactivos</option>
@@ -26,7 +28,21 @@
                                 </select>
                             </div>
                             <div class="col-md-2">
-                                <button type="submit" class="btn btn-success w-100"><i class="fas fa-search"></i> Buscar</button>
+                                <label class="form-label small text-muted">Stock:</label>
+                                <select name="stock_filter" class="form-control">
+                                    <option value="">Todos</option>
+                                    <option value="bajo" <?= ($stock_filter_selected ?? '') == 'bajo' ? 'selected' : '' ?>>Stock bajo</option>
+                                    <option value="sin_stock" <?= ($stock_filter_selected ?? '') == 'sin_stock' ? 'selected' : '' ?>>Sin stock</option>
+                                    <option value="disponible" <?= ($stock_filter_selected ?? '') == 'disponible' ? 'selected' : '' ?>>Con stock</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label small text-muted">&nbsp;</label>
+                                <button type="submit" class="btn btn-success w-100 d-block"><i class="fas fa-search"></i> Buscar</button>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label small text-muted">&nbsp;</label>
+                                <a href="?page=productos" class="btn btn-outline-secondary w-100 d-block"><i class="fas fa-undo"></i> Limpiar</a>
                             </div>
                         </div>
                     </form>
@@ -106,20 +122,16 @@
                                                 <?php
                                                 $stock = isset($producto['stock_actual']) ? (int)$producto['stock_actual'] : 0;
                                                 $stockMin = isset($producto['stock_minimo']) ? (int)$producto['stock_minimo'] : 0;
-                                                $alertClass = 'text-secondary';
 
                                                 if ($stock === 0) {
-                                                    $alertClass = 'text-danger';
+                                                    echo '<span class="badge bg-danger"><i class="fas fa-exclamation-triangle"></i> Sin stock</span>';
                                                 } elseif ($stockMin > 0 && $stock <= $stockMin) {
-                                                    $alertClass = 'text-warning';
-                                                } elseif ($stock > $stockMin) {
-                                                    $alertClass = 'text-success';
+                                                    echo '<span class="badge bg-warning text-dark"><i class="fas fa-exclamation-circle"></i> ' . number_format($stock) . ' (Bajo)</span>';
+                                                } else {
+                                                    echo '<span class="badge bg-success"><i class="fas fa-check-circle"></i> ' . number_format($stock) . '</span>';
                                                 }
                                                 ?>
-                                                <span class="<?= $alertClass ?>">
-                                                    <strong><?= number_format($stock) ?></strong>
-                                                </span>
-                                                <br><small class="text-muted">Min: <?= number_format($stockMin) ?></small>
+                                                <br><small class="text-muted">Mín: <?= number_format($stockMin) ?></small>
                                             </td>
                                             <td>
                                                 <strong><?= formatCurrency($producto['precio_unitario']) ?></strong>

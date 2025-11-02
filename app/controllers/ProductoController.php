@@ -60,7 +60,7 @@ class ProductoController extends Controller
         $subcategoria = $_GET['subcategoria'] ?? '';
         $marca = $_GET['marca'] ?? '';
         $estado = $_GET['estado'] ?? 'activo';
-        $stock = $_GET['stock'] ?? '';
+        $stock_filter = $_GET['stock_filter'] ?? '';
 
         // Construir filtros para el modelo
         $filters = [
@@ -69,8 +69,11 @@ class ProductoController extends Controller
             'marca' => $marca,
             'estado' => $estado
         ];
-        if ($stock === 'bajo') $filters['stock_bajo'] = true;
-        if ($stock === '0') $filters['sin_stock'] = true;
+        
+        // Filtros de stock mejorados
+        if ($stock_filter === 'bajo') $filters['stock_bajo'] = true;
+        if ($stock_filter === 'sin_stock') $filters['sin_stock'] = true;
+        if ($stock_filter === 'disponible') $filters['con_stock'] = true;
 
         $productos = $this->productoModel->searchProducts($search, $filters);
 
@@ -80,9 +83,9 @@ class ProductoController extends Controller
 
         // Determinar título según filtro
         $titulo = 'Gestión de Productos';
-        if ($stock === '1') $titulo = 'Productos en Stock';
-        elseif ($stock === 'bajo') $titulo = 'Productos con Stock Bajo';
-        elseif ($stock === '0') $titulo = 'Productos sin Stock';
+        if ($stock_filter === 'disponible') $titulo = 'Productos en Stock';
+        elseif ($stock_filter === 'bajo') $titulo = 'Productos con Stock Bajo';
+        elseif ($stock_filter === 'sin_stock') $titulo = 'Productos sin Stock';
 
         $this->view('productos/index', [
             'productos' => $productos,
@@ -94,7 +97,7 @@ class ProductoController extends Controller
             'subcategoria_selected' => $subcategoria,
             'marca_selected' => $marca,
             'estado_selected' => $estado,
-            'stock_selected' => $stock,
+            'stock_filter_selected' => $stock_filter,
             'titulo' => $titulo
         ]);
     }

@@ -134,6 +134,10 @@ class Producto extends Model
             $conditions[] = "p.stock_actual = 0";
         }
 
+        if (isset($filters['con_stock']) && $filters['con_stock']) {
+            $conditions[] = "p.stock_actual > 0";
+        }
+
         $whereClause = implode(' AND ', $conditions);
         if (trim($whereClause) === '') {
             $whereClause = '1=1';
