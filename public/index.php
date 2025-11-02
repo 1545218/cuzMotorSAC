@@ -132,6 +132,13 @@ function handleCRUD($controllerClass, $customActions = [])
 $page = $_GET['page'] ?? '';
 $action = $_GET['action'] ?? 'index';
 
+// Manejar URLs amigables como /auth/logout
+$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+if ($requestUri === '/auth/logout') {
+    $page = 'auth';
+    $action = 'logout';
+}
+
 try {
     // Log de la request entrante
     Logger::info("Request procesada", [
@@ -167,6 +174,13 @@ try {
     switch ($page) {
         case 'login':
         case 'auth':
+            // Verificar si es logout específicamente
+            if ($action === 'logout') {
+                $auth->logout();
+                header("Location: ?page=login");
+                exit;
+            }
+
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Procesar login
                 $username = $_POST['username'] ?? '';
@@ -472,6 +486,15 @@ try {
                 case 'get-for-select':
                     $controller->getForSelect();
                     break;
+                case 'vehiculos':
+                    $controller->vehiculos();
+                    break;
+                case 'agregarVehiculo':
+                    $controller->agregarVehiculo();
+                    break;
+                case 'eliminarVehiculo':
+                    $controller->eliminarVehiculo();
+                    break;
                 default:
                     $controller->index();
             }
@@ -512,6 +535,53 @@ try {
             $controller = new ReporteController();
             // Solo permitir la acción index, ya que los demás métodos pueden no estar implementados
             $controller->index();
+            break;
+
+        case 'alertas':
+            Auth::requireAuth();
+            Auth::requireRole(['administrador']); // Solo administradores
+            $controller = new AlertaController();
+            switch ($action) {
+                case 'verificarStock':
+                    $controller->verificarStock();
+                    break;
+                case 'marcarResuelta':
+                    $controller->marcarResuelta();
+                    break;
+                case 'contarPendientes':
+                    $controller->contarPendientes();
+                    break;
+                default:
+                    $controller->index();
+            }
+            break;
+
+        case 'backups':
+            Auth::requireAuth();
+            Auth::requireRole(['administrador']); // Solo administradores
+            $controller = new BackupSistemaController();
+            switch ($action) {
+                case 'crear':
+                    $controller->crear();
+                    break;
+                case 'eliminar':
+                    $controller->eliminar();
+                    break;
+                case 'restaurar':
+                    $controller->restaurar();
+                    break;
+                case 'descargar':
+                    $controller->descargar();
+                    break;
+                case 'limpiar':
+                    $controller->limpiar();
+                    break;
+                case 'verificarIntegridad':
+                    $controller->verificarIntegridad();
+                    break;
+                default:
+                    $controller->index();
+            }
             break;
 
         case 'subcategorias':

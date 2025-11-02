@@ -17,10 +17,10 @@ if (!isset($user) || !$user) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="<?= BASE_PATH ?>/public/css/main.css">
-    <!-- Rutas de respaldo para entornos donde `public` está en el path -->
-    <link rel="stylesheet" href="<?= BASE_PATH ?>/css/main.css?v=1">
-    <link rel="stylesheet" href="/css/main.css?v=1">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="/CruzMotorSAC/public/css/main.css?v=<?= time() ?>">
     <meta name="robots" content="noindex, nofollow">
     <?php
     // Inyectar token CSRF para ser usado por JavaScript (AJAX)
@@ -100,8 +100,19 @@ if (!isset($user) || !$user) {
             <?php endif; ?>
             <?php if ($rol === 'administrador'): ?>
                 <li class="nav-item">
+                    <a class="nav-link <?= ($_GET['page'] ?? '') == 'alertas' ? 'active' : '' ?>" href="?page=alertas">
+                        <i class="fas fa-bell"></i>Alertas
+                        <span id="alertas-count" class="badge bg-danger ms-1" style="display:none;">0</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link <?= ($_GET['page'] ?? '') == 'reportes' ? 'active' : '' ?>" href="?page=reportes">
                         <i class="fas fa-chart-bar"></i>Reportes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= ($_GET['page'] ?? '') == 'backups' ? 'active' : '' ?>" href="?page=backups">
+                        <i class="fas fa-database"></i>Backups
                     </a>
                 </li>
                 <li class="nav-item">
@@ -130,7 +141,7 @@ if (!isset($user) || !$user) {
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item text-danger" href="?page=logout">
+                    <li><a class="dropdown-item text-danger" href="/auth/logout">
                             <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
                         </a></li>
                 </ul>
@@ -162,7 +173,7 @@ if (!isset($user) || !$user) {
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item text-danger" href="?page=logout">
+                            <li><a class="dropdown-item text-danger" href="/auth/logout">
                                     <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
                                 </a></li>
                         </ul>
@@ -187,3 +198,41 @@ if (!isset($user) || !$user) {
                 unset($_SESSION['flash_messages']);
             endif;
             ?>
+
+            <script>
+                // Función para actualizar el contador de alertas
+                function actualizarContadorAlertas() {
+                    fetch('?page=alertas&action=contarPendientes')
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const contador = document.getElementById('alertas-count');
+                                if (contador) {
+                                    if (data.total > 0) {
+                                        contador.textContent = data.total;
+                                        contador.style.display = 'inline';
+                                        contador.classList.add('animate__animated', 'animate__pulse');
+                                    } else {
+                                        contador.style.display = 'none';
+                                    }
+                                }
+                            }
+                        })
+                        .catch(error => console.error('Error al actualizar contador de alertas:', error));
+                }
+
+                // Actualizar contador al cargar la página
+                document.addEventListener('DOMContentLoaded', function() {
+                    actualizarContadorAlertas();
+
+                    // Actualizar contador cada 30 segundos
+                    setInterval(actualizarContadorAlertas, 30000);
+                });
+
+                // También actualizar cuando se haga clic en el enlace de alertas
+                document.addEventListener('click', function(e) {
+                    if (e.target.closest('a[href*="alertas"]')) {
+                        setTimeout(actualizarContadorAlertas, 1000);
+                    }
+                });
+            </script>
