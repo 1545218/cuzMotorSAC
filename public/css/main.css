@@ -1281,6 +1281,17 @@ html {
     transform: translateY(-2px);
 }
 
+.movement-section .section-header .section-title {
+    color: #2c3e50 !important;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.movement-section .section-header small {
+    color: #6c757d !important;
+    font-weight: 500;
+}
+
 /* Selector de tipo de movimiento */
 .movement-type-selector {
     display: flex;
@@ -1302,11 +1313,25 @@ html {
     border-radius: 12px;
     transition: all 0.3s ease;
     text-align: center;
+    background-color: #ffffff !important;
+    color: #495057 !important;
+    font-weight: 600;
 }
 
 .movement-type-btn:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    color: #2c3e50 !important;
+}
+
+.movement-type-btn span {
+    color: #2c3e50 !important;
+    font-weight: 700;
+}
+
+.movement-type-btn small {
+    color: #6c757d !important;
+    font-weight: 500;
 }
 
 .btn-check:checked + .movement-type-btn {
@@ -1363,9 +1388,10 @@ html {
 
 .info-label {
     font-weight: 600;
-    color: #495057;
+    color: #2c3e50 !important;
     display: flex;
     align-items: center;
+    font-size: 0.95rem;
 }
 
 .info-label i {
@@ -1374,15 +1400,25 @@ html {
 }
 
 .info-value {
-    font-weight: 500;
+    font-weight: 600;
     text-align: right;
+    color: #495057 !important;
+    font-size: 0.95rem;
 }
 
 .info-value code {
-    background: #f8f9fa;
+    background: #e9ecef !important;
+    color: #495057 !important;
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
     font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.info-value .badge {
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    color: white !important;
 }
 
 /* Card de ayuda */
@@ -1401,11 +1437,18 @@ html {
 .help-item {
     padding: 0.75rem 0;
     border-bottom: 1px solid #f8f9fa;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    color: #2c3e50 !important;
+    font-weight: 500;
 }
 
 .help-item:last-child {
     border-bottom: none;
+}
+
+.help-item strong {
+    color: #495057 !important;
+    font-weight: 700;
 }
 
 /* Acciones del movimiento */
@@ -1470,6 +1513,99 @@ html {
     .info-value {
         text-align: left;
     }
+}
+
+/* CORRECCIONES DE CONTRASTE Y LEGIBILIDAD */
+
+/* Texto general con mejor contraste */
+.inventario-movimiento-page {
+    color: #2c3e50 !important;
+}
+
+.inventario-movimiento-page * {
+    color: inherit;
+}
+
+/* Labels y títulos más visibles */
+.form-label {
+    color: #2c3e50 !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+}
+
+/* Inputs con mejor contraste */
+.form-control, .form-select {
+    color: #2c3e50 !important;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.form-control::placeholder {
+    color: #6c757d !important;
+    font-weight: 400;
+}
+
+/* Input group text más visible */
+.input-group-text {
+    background-color: #e9ecef !important;
+    border: 2px solid #e3e6f0;
+    color: #495057 !important;
+    font-weight: 600;
+}
+
+/* Form text más legible */
+.form-text {
+    color: #495057 !important;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+/* Invalid feedback más visible */
+.invalid-feedback {
+    color: #dc3545 !important;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* Botones con mejor contraste */
+.btn {
+    font-weight: 600 !important;
+    border-width: 2px !important;
+}
+
+.btn-primary {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    color: white !important;
+}
+
+.btn-light {
+    background-color: #f8f9fa !important;
+    border-color: #e9ecef !important;
+    color: #2c3e50 !important;
+}
+
+/* Badges más visibles */
+.badge {
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
+    padding: 0.5rem 0.75rem !important;
+}
+
+.badge.bg-success {
+    background-color: #28a745 !important;
+    color: white !important;
+}
+
+.badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+/* Cards con mejor contraste */
+.card-body {
+    background-color: #ffffff !important;
+    color: #2c3e50 !important;
 }
 
 /* Animaciones */
