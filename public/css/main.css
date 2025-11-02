@@ -956,7 +956,7 @@ html {
     background: #ffffff;
     border: 1px solid #e3e6f0;
     border-radius: 12px;
-    padding: 2rem;
+    padding: 2.5rem;
     margin-bottom: 2rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
@@ -969,23 +969,23 @@ html {
 
 /* Headers de sección */
 .section-header {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
     border-bottom: 2px solid #f8f9fa;
 }
 
 .section-title {
     color: #2c3e50;
     font-weight: 600;
-    font-size: 1.2rem;
-    margin-bottom: 0.25rem;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
 }
 
 .section-title i {
-    margin-right: 0.5rem;
-    font-size: 1.1rem;
+    margin-right: 0.75rem;
+    font-size: 1.2rem;
 }
 
 /* Floating labels mejorados */
@@ -1000,6 +1000,28 @@ html {
     font-weight: 600;
 }
 
+/* Labels normales mejorados */
+.form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.form-label.fw-bold {
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.form-label i {
+    margin-right: 0.5rem;
+}
+
+/* Texto de campo requerido */
+.text-danger {
+    font-weight: 700;
+}
+
 /* Inputs y selects modernos */
 .form-control, .form-select {
     border: 2px solid #e3e6f0;
@@ -1007,12 +1029,26 @@ html {
     padding: 0.75rem 1rem;
     font-size: 0.95rem;
     transition: all 0.3s ease;
+    min-height: 48px;
 }
 
 .form-control:focus, .form-select:focus {
     border-color: var(--secondary-color);
     box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.15);
     outline: none;
+}
+
+/* Input group styling */
+.input-group {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.input-group .form-control,
+.input-group .form-select {
+    border-right: none;
+    border-radius: 8px 0 0 8px;
 }
 
 /* Botones de agregar elementos */
@@ -1022,6 +1058,10 @@ html {
     border-radius: 0 8px 8px 0;
     padding: 0.75rem 1rem;
     transition: all 0.3s ease;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .input-group .btn:hover {

@@ -238,17 +238,17 @@ include_once __DIR__ . '/../layout/header.php'; ?>
                                 </h5>
                                 <small class="text-muted">Datos principales del producto</small>
                             </div>
-                            
+
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="form-floating">
-                                        <input type="text" 
-                                               class="form-control" 
-                                               id="nombre" 
-                                               name="nombre" 
-                                               placeholder="Ej: Aceite Motor 15W40"
-                                               value="<?= htmlspecialchars($_POST['nombre'] ?? '') ?>" 
-                                               required>
+                                        <input type="text"
+                                            class="form-control"
+                                            id="nombre"
+                                            name="nombre"
+                                            placeholder="Ej: Aceite Motor 15W40"
+                                            value="<?= htmlspecialchars($_POST['nombre'] ?? '') ?>"
+                                            required>
                                         <label for="nombre">
                                             <i class="fas fa-tag text-primary me-1"></i>
                                             Nombre del Producto <span class="text-danger">*</span>
@@ -258,9 +258,9 @@ include_once __DIR__ . '/../layout/header.php'; ?>
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-3">
-                                    <label for="id_unidad" class="form-label">
+                                    <label for="id_unidad" class="form-label fw-bold">
                                         <i class="fas fa-ruler text-primary me-1"></i>
                                         Unidad <span class="text-danger">*</span>
                                     </label>
@@ -281,15 +281,15 @@ include_once __DIR__ . '/../layout/header.php'; ?>
                                         Seleccione una unidad.
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-3">
                                     <div class="form-floating">
-                                        <input type="text" 
-                                               class="form-control" 
-                                               id="codigo_barras" 
-                                               name="codigo_barras" 
-                                               placeholder="Código de barras"
-                                               value="<?= htmlspecialchars($_POST['codigo_barras'] ?? '') ?>">
+                                        <input type="text"
+                                            class="form-control"
+                                            id="codigo_barras"
+                                            name="codigo_barras"
+                                            placeholder="Código de barras"
+                                            value="<?= htmlspecialchars($_POST['codigo_barras'] ?? '') ?>">
                                         <label for="codigo_barras">
                                             <i class="fas fa-barcode text-primary me-1"></i>
                                             Código de Barras
@@ -297,15 +297,15 @@ include_once __DIR__ . '/../layout/header.php'; ?>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="row g-3 mt-2">
                                 <div class="col-12">
                                     <div class="form-floating">
-                                        <textarea class="form-control" 
-                                                  id="descripcion" 
-                                                  name="descripcion" 
-                                                  placeholder="Descripción detallada del producto"
-                                                  style="height: 100px"><?= htmlspecialchars($_POST['descripcion'] ?? '') ?></textarea>
+                                        <textarea class="form-control"
+                                            id="descripcion"
+                                            name="descripcion"
+                                            placeholder="Descripción detallada del producto"
+                                            style="height: 100px"><?= htmlspecialchars($_POST['descripcion'] ?? '') ?></textarea>
                                         <label for="descripcion">
                                             <i class="fas fa-align-left text-primary me-1"></i>
                                             Descripción
@@ -324,10 +324,10 @@ include_once __DIR__ . '/../layout/header.php'; ?>
                                 </h5>
                                 <small class="text-muted">Organización y clasificación del producto</small>
                             </div>
-                            
+
                             <div class="row g-3">
                                 <div class="col-md-4">
-                                    <label for="id_categoria" class="form-label">
+                                    <label for="id_categoria" class="form-label fw-bold">
                                         <i class="fas fa-folder text-success me-1"></i>
                                         Categoría <span class="text-danger">*</span>
                                     </label>
@@ -349,9 +349,9 @@ include_once __DIR__ . '/../layout/header.php'; ?>
                                         Seleccione una categoría.
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-4">
-                                    <label for="id_subcategoria" class="form-label">
+                                    <label for="id_subcategoria" class="form-label fw-bold">
                                         <i class="fas fa-folder-open text-success me-1"></i>
                                         Subcategoría
                                     </label>
@@ -374,9 +374,9 @@ include_once __DIR__ . '/../layout/header.php'; ?>
                                         </button>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-4">
-                                    <label for="id_marca" class="form-label">
+                                    <label for="id_marca" class="form-label fw-bold">
                                         <i class="fas fa-trademark text-success me-1"></i>
                                         Marca
                                     </label>
@@ -407,10 +407,10 @@ include_once __DIR__ . '/../layout/header.php'; ?>
                                 </h5>
                                 <small class="text-muted">Configuración de almacenamiento y valores</small>
                             </div>
-                            
+
                             <div class="row g-3">
                                 <div class="col-md-4">
-                                    <label for="id_ubicacion" class="form-label">
+                                    <label for="id_ubicacion" class="form-label fw-bold">
                                         <i class="fas fa-map-marker-alt text-warning me-1"></i>
                                         Ubicación
                                     </label>
@@ -429,18 +429,18 @@ include_once __DIR__ . '/../layout/header.php'; ?>
                                         </button>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-4">
                                     <div class="form-floating">
-                                        <input type="number" 
-                                               class="form-control" 
-                                               id="precio_unitario" 
-                                               name="precio_unitario"
-                                               step="0.01" 
-                                               min="0" 
-                                               placeholder="0.00"
-                                               value="<?= htmlspecialchars($_POST['precio_unitario'] ?? '') ?>" 
-                                               required>
+                                        <input type="number"
+                                            class="form-control"
+                                            id="precio_unitario"
+                                            name="precio_unitario"
+                                            step="0.01"
+                                            min="0"
+                                            placeholder="0.00"
+                                            value="<?= htmlspecialchars($_POST['precio_unitario'] ?? '') ?>"
+                                            required>
                                         <label for="precio_unitario">
                                             <i class="fas fa-tag text-warning me-1"></i>
                                             Precio Unitario S/ <span class="text-danger">*</span>
@@ -450,18 +450,18 @@ include_once __DIR__ . '/../layout/header.php'; ?>
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-4">
-                                    <label for="estado" class="form-label">
+                                    <label for="estado" class="form-label fw-bold">
                                         <i class="fas fa-toggle-on text-warning me-1"></i>
                                         Estado
                                     </label>
                                     <select class="form-select" id="estado" name="estado">
                                         <option value="activo" <?= ($_POST['estado'] ?? 'activo') == 'activo' ? 'selected' : '' ?>>
-                                            <i class="fas fa-check-circle"></i> Activo
+                                            ✅ Activo
                                         </option>
                                         <option value="inactivo" <?= ($_POST['estado'] ?? '') == 'inactivo' ? 'selected' : '' ?>>
-                                            <i class="fas fa-times-circle"></i> Inactivo
+                                            ❌ Inactivo
                                         </option>
                                     </select>
                                 </div>
@@ -477,17 +477,17 @@ include_once __DIR__ . '/../layout/header.php'; ?>
                                 </h5>
                                 <small class="text-muted">Configuración inicial de stock</small>
                             </div>
-                            
+
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="form-floating">
-                                        <input type="number" 
-                                               class="form-control" 
-                                               id="stock_actual" 
-                                               name="stock_actual"
-                                               min="0" 
-                                               placeholder="0"
-                                               value="<?= htmlspecialchars($_POST['stock_actual'] ?? '0') ?>">
+                                        <input type="number"
+                                            class="form-control"
+                                            id="stock_actual"
+                                            name="stock_actual"
+                                            min="0"
+                                            placeholder="0"
+                                            value="<?= htmlspecialchars($_POST['stock_actual'] ?? '0') ?>">
                                         <label for="stock_actual">
                                             <i class="fas fa-cubes text-info me-1"></i>
                                             Stock Inicial
@@ -498,16 +498,16 @@ include_once __DIR__ . '/../layout/header.php'; ?>
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-6">
                                     <div class="form-floating">
-                                        <input type="number" 
-                                               class="form-control" 
-                                               id="stock_minimo" 
-                                               name="stock_minimo"
-                                               min="0" 
-                                               placeholder="10"
-                                               value="<?= htmlspecialchars($_POST['stock_minimo'] ?? '0') ?>">
+                                        <input type="number"
+                                            class="form-control"
+                                            id="stock_minimo"
+                                            name="stock_minimo"
+                                            min="0"
+                                            placeholder="10"
+                                            value="<?= htmlspecialchars($_POST['stock_minimo'] ?? '0') ?>">
                                         <label for="stock_minimo">
                                             <i class="fas fa-exclamation-triangle text-info me-1"></i>
                                             Stock Mínimo
@@ -528,7 +528,7 @@ include_once __DIR__ . '/../layout/header.php'; ?>
                                     <i class="fas fa-arrow-left me-2"></i>
                                     Cancelar
                                 </a>
-                                
+
                                 <div class="action-buttons">
                                     <button type="reset" class="btn btn-outline-secondary btn-lg me-2">
                                         <i class="fas fa-eraser me-2"></i>
@@ -668,134 +668,137 @@ include_once __DIR__ . '/../layout/header.php'; ?>
 
 <!-- Script de validación y mejoras del formulario -->
 <script>
-// Validación en tiempo real del formulario
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('.needs-validation');
-    const submitBtn = form.querySelector('button[type="submit"]');
-    
-    // Validación automática al escribir
-    const inputs = form.querySelectorAll('input[required], select[required]');
-    inputs.forEach(input => {
-        input.addEventListener('input', validateField);
-        input.addEventListener('blur', validateField);
-    });
-    
-    function validateField(e) {
-        const field = e.target;
-        const isValid = field.checkValidity();
-        
-        field.classList.remove('is-valid', 'is-invalid');
-        
-        if (field.value.trim()) {
-            field.classList.add(isValid ? 'is-valid' : 'is-invalid');
-        }
-        
-        updateSubmitButton();
-    }
-    
-    function updateSubmitButton() {
-        const isFormValid = form.checkValidity();
-        submitBtn.disabled = !isFormValid;
-        
-        if (isFormValid) {
-            submitBtn.classList.remove('btn-secondary');
-            submitBtn.classList.add('btn-primary');
-        } else {
-            submitBtn.classList.remove('btn-primary');
-            submitBtn.classList.add('btn-secondary');
-        }
-    }
-    
-    // Validación al enviar
-    form.addEventListener('submit', function(e) {
-        if (!form.checkValidity()) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Mostrar primera sección con error
-            const firstInvalid = form.querySelector('.is-invalid');
-            if (firstInvalid) {
-                firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                firstInvalid.focus();
-            }
-        }
-        
-        form.classList.add('was-validated');
-    });
-    
-    // Mejorar experiencia con tooltips
-    const buttons = document.querySelectorAll('[title]');
-    buttons.forEach(btn => {
-        new bootstrap.Tooltip(btn);
-    });
-    
-    // Auto-generar código de barras si está vacío
-    const nombreInput = document.getElementById('nombre');
-    const codigoInput = document.getElementById('codigo_barras');
-    
-    if (nombreInput && codigoInput) {
-        nombreInput.addEventListener('blur', function() {
-            if (!codigoInput.value && nombreInput.value) {
-                const codigo = generateBarcode(nombreInput.value);
-                codigoInput.value = codigo;
-            }
-        });
-    }
-    
-    function generateBarcode(nombre) {
-        // Generar código de barras basado en nombre + timestamp
-        const cleanName = nombre.toUpperCase()
-            .replace(/[^A-Z0-9]/g, '')
-            .substring(0, 6);
-        const timestamp = Date.now().toString().slice(-6);
-        return cleanName + timestamp;
-    }
-    
-    // Mejora para el campo de precio
-    const precioInput = document.getElementById('precio_unitario');
-    if (precioInput) {
-        precioInput.addEventListener('input', function() {
-            let value = this.value;
-            if (value && !isNaN(value)) {
-                this.value = parseFloat(value).toFixed(2);
-            }
-        });
-    }
-    
-    // Actualizar estado inicial
-    updateSubmitButton();
-    
-    // Animar las secciones al cargar
-    const sections = document.querySelectorAll('.form-section');
-    sections.forEach((section, index) => {
-        setTimeout(() => {
-            section.style.opacity = '0';
-            section.style.transform = 'translateY(20px)';
-            section.offsetHeight; // Trigger reflow
-            section.style.transition = 'all 0.5s ease';
-            section.style.opacity = '1';
-            section.style.transform = 'translateY(0)';
-        }, index * 100);
-    });
-});
+    // Validación en tiempo real del formulario
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('.needs-validation');
+        const submitBtn = form.querySelector('button[type="submit"]');
 
-// Función para mostrar notificaciones de éxito
-function showSuccessNotification(message) {
-    const alert = document.createElement('div');
-    alert.className = 'alert alert-success alert-dismissible fade show position-fixed';
-    alert.style.cssText = 'top: 20px; right: 20px; z-index: 2000; min-width: 300px;';
-    alert.innerHTML = `
+        // Validación automática al escribir
+        const inputs = form.querySelectorAll('input[required], select[required]');
+        inputs.forEach(input => {
+            input.addEventListener('input', validateField);
+            input.addEventListener('blur', validateField);
+        });
+
+        function validateField(e) {
+            const field = e.target;
+            const isValid = field.checkValidity();
+
+            field.classList.remove('is-valid', 'is-invalid');
+
+            if (field.value.trim()) {
+                field.classList.add(isValid ? 'is-valid' : 'is-invalid');
+            }
+
+            updateSubmitButton();
+        }
+
+        function updateSubmitButton() {
+            const isFormValid = form.checkValidity();
+            submitBtn.disabled = !isFormValid;
+
+            if (isFormValid) {
+                submitBtn.classList.remove('btn-secondary');
+                submitBtn.classList.add('btn-primary');
+            } else {
+                submitBtn.classList.remove('btn-primary');
+                submitBtn.classList.add('btn-secondary');
+            }
+        }
+
+        // Validación al enviar
+        form.addEventListener('submit', function(e) {
+            if (!form.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Mostrar primera sección con error
+                const firstInvalid = form.querySelector('.is-invalid');
+                if (firstInvalid) {
+                    firstInvalid.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                    firstInvalid.focus();
+                }
+            }
+
+            form.classList.add('was-validated');
+        });
+
+        // Mejorar experiencia con tooltips
+        const buttons = document.querySelectorAll('[title]');
+        buttons.forEach(btn => {
+            new bootstrap.Tooltip(btn);
+        });
+
+        // Auto-generar código de barras si está vacío
+        const nombreInput = document.getElementById('nombre');
+        const codigoInput = document.getElementById('codigo_barras');
+
+        if (nombreInput && codigoInput) {
+            nombreInput.addEventListener('blur', function() {
+                if (!codigoInput.value && nombreInput.value) {
+                    const codigo = generateBarcode(nombreInput.value);
+                    codigoInput.value = codigo;
+                }
+            });
+        }
+
+        function generateBarcode(nombre) {
+            // Generar código de barras basado en nombre + timestamp
+            const cleanName = nombre.toUpperCase()
+                .replace(/[^A-Z0-9]/g, '')
+                .substring(0, 6);
+            const timestamp = Date.now().toString().slice(-6);
+            return cleanName + timestamp;
+        }
+
+        // Mejora para el campo de precio
+        const precioInput = document.getElementById('precio_unitario');
+        if (precioInput) {
+            precioInput.addEventListener('input', function() {
+                let value = this.value;
+                if (value && !isNaN(value)) {
+                    this.value = parseFloat(value).toFixed(2);
+                }
+            });
+        }
+
+        // Actualizar estado inicial
+        updateSubmitButton();
+
+        // Animar las secciones al cargar
+        const sections = document.querySelectorAll('.form-section');
+        sections.forEach((section, index) => {
+            setTimeout(() => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.offsetHeight; // Trigger reflow
+                section.style.transition = 'all 0.5s ease';
+                section.style.opacity = '1';
+                section.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    });
+
+    // Función para mostrar notificaciones de éxito
+    function showSuccessNotification(message) {
+        const alert = document.createElement('div');
+        alert.className = 'alert alert-success alert-dismissible fade show position-fixed';
+        alert.style.cssText = 'top: 20px; right: 20px; z-index: 2000; min-width: 300px;';
+        alert.innerHTML = `
         <i class="fas fa-check-circle me-2"></i>
         ${message}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     `;
-    
-    document.body.appendChild(alert);
-    
-    setTimeout(() => {
-        alert.remove();
-    }, 5000);
-}
+
+        document.body.appendChild(alert);
+
+        setTimeout(() => {
+            alert.remove();
+        }, 5000);
+    }
 </script>
 
 <!-- No hay carga dinámica de subcategorías: campo eliminado -->
