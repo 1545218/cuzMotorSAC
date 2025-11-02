@@ -46,6 +46,9 @@ class Controller
      */
     protected function view($view, $data = [])
     {
+        // Iniciar output buffering para evitar espacios en blanco
+        ob_start();
+        
         // Extraer datos para usar en la vista
         extract($data);
 
@@ -74,6 +77,10 @@ class Controller
 
         // Cargar footer
         include APP_PATH . '/views/layout/footer.php';
+        
+        // Limpiar y enviar el output buffer
+        $output = ob_get_clean();
+        echo trim($output);
     }
 
     /**

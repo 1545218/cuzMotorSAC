@@ -69,7 +69,7 @@ class ProductoController extends Controller
             'marca' => $marca,
             'estado' => $estado
         ];
-        
+
         // Filtros de stock mejorados
         if ($stock_filter === 'bajo') $filters['stock_bajo'] = true;
         if ($stock_filter === 'sin_stock') $filters['sin_stock'] = true;

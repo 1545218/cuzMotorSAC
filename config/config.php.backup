@@ -1,3 +1,4 @@
+
 <?php
 // Configuración principal del sistema Cruz Motor SAC
 
@@ -12,7 +13,6 @@ if (file_exists($envPath)) {
         $_ENV[$name] = $value;
     }
 }
-
 
 // Información de la base de datos desde .env
 define('DB_HOST', $_ENV['DB_HOST'] ?? 'localhost');
