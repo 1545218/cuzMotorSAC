@@ -5,6 +5,7 @@ class CotizacionController extends Controller
     private $cotizacionModel;
     private $clienteModel;
     private $productoModel;
+    private $vehiculoModel;
 
     public function __construct()
     {
@@ -14,6 +15,7 @@ class CotizacionController extends Controller
         $this->cotizacionModel = new Cotizacion();
         $this->clienteModel = new Cliente();
         $this->productoModel = new Producto();
+        $this->vehiculoModel = new Vehiculo();
 
         // Verificar autenticación para todas las acciones
         Auth::requireAuth();
@@ -51,11 +53,13 @@ class CotizacionController extends Controller
         try {
             $clientes = $this->clienteModel->getActive();
             $productos = $this->productoModel->getActive();
+            $vehiculos = $this->vehiculoModel->getAllWithClientes(); // Incluir vehículos
 
             $this->view('cotizaciones/create', [
                 'title' => 'Crear Cotización',
                 'clientes' => $clientes,
-                'productos' => $productos
+                'productos' => $productos,
+                'vehiculos' => $vehiculos
             ]);
         } catch (Exception $e) {
             Logger::error("Error en CotizacionController::create - " . $e->getMessage());
@@ -384,6 +388,92 @@ class CotizacionController extends Controller
     }
 
     /**
+     * Aceptar cotización
+     */
+    public function aceptar()
+    {
+        try {
+            $id = $_GET['id'] ?? null;
+            if (!$id) {
+                $this->setFlash('error', 'ID de cotización no válido');
+                $this->redirect('?page=cotizaciones');
+                return;
+            }
+
+            $cotizacion = $this->cotizacionModel->getWithDetails($id);
+            if (!$cotizacion) {
+                $this->setFlash('error', 'Cotización no encontrada');
+                $this->redirect('?page=cotizaciones');
+                return;
+            }
+
+            if ($cotizacion['estado'] !== 'pendiente') {
+                $this->setFlash('warning', 'Solo se pueden aceptar cotizaciones pendientes');
+                $this->redirect('?page=cotizaciones');
+                return;
+            }
+
+            $result = $this->cotizacionModel->changeStatus($id, 'aprobada', $_SESSION['user_id']);
+
+            if ($result) {
+                Logger::info("Cotización aceptada: {$cotizacion['id_cotizacion']} por usuario ID: " . $_SESSION['user_id']);
+                $this->setFlash('success', 'Cotización aceptada exitosamente');
+            } else {
+                $this->setFlash('error', 'Error al aceptar la cotización');
+            }
+
+            $this->redirect('?page=cotizaciones');
+        } catch (Exception $e) {
+            Logger::error("Error en CotizacionController::aceptar - " . $e->getMessage());
+            $this->setFlash('error', 'Error interno del servidor');
+            $this->redirect('?page=cotizaciones');
+        }
+    }
+
+    /**
+     * Rechazar cotización
+     */
+    public function rechazar()
+    {
+        try {
+            $id = $_GET['id'] ?? null;
+            if (!$id) {
+                $this->setFlash('error', 'ID de cotización no válido');
+                $this->redirect('?page=cotizaciones');
+                return;
+            }
+
+            $cotizacion = $this->cotizacionModel->getWithDetails($id);
+            if (!$cotizacion) {
+                $this->setFlash('error', 'Cotización no encontrada');
+                $this->redirect('?page=cotizaciones');
+                return;
+            }
+
+            if ($cotizacion['estado'] !== 'pendiente') {
+                $this->setFlash('warning', 'Solo se pueden rechazar cotizaciones pendientes');
+                $this->redirect('?page=cotizaciones');
+                return;
+            }
+
+            $result = $this->cotizacionModel->changeStatus($id, 'rechazada', $_SESSION['user_id']);
+
+            if ($result) {
+                Logger::info("Cotización rechazada: {$cotizacion['id_cotizacion']} por usuario ID: " . $_SESSION['user_id']);
+                $this->setFlash('success', 'Cotización rechazada exitosamente');
+            } else {
+                $this->setFlash('error', 'Error al rechazar la cotización');
+            }
+
+            $this->redirect('?page=cotizaciones');
+        } catch (Exception $e) {
+            Logger::error("Error en CotizacionController::rechazar - " . $e->getMessage());
+            $this->setFlash('error', 'Error interno del servidor');
+            $this->redirect('?page=cotizaciones');
+        }
+    }
+
+    /**
      * Eliminar cotización
      */
     public function delete($id)
@@ -671,5 +761,35 @@ class CotizacionController extends Controller
             'recordsFiltered' => $totalRecords,
             'data' => $data
         ]);
+    }
+
+    /**
+     * Obtener vehículos de un cliente específico (AJAX)
+     */
+    public function vehiculosPorCliente()
+    {
+        try {
+            header('Content-Type: application/json');
+
+            $clienteId = $_GET['cliente_id'] ?? null;
+
+            if (!$clienteId) {
+                echo json_encode(['success' => false, 'message' => 'ID de cliente requerido']);
+                return;
+            }
+
+            $vehiculos = $this->vehiculoModel->getByCliente($clienteId);
+
+            echo json_encode([
+                'success' => true,
+                'vehiculos' => $vehiculos
+            ]);
+        } catch (Exception $e) {
+            Logger::error("Error al obtener vehículos por cliente: " . $e->getMessage());
+            echo json_encode([
+                'success' => false,
+                'message' => 'Error al cargar vehículos'
+            ]);
+        }
     }
 }

@@ -5,19 +5,27 @@ class Cliente extends Model
     protected $table = 'clientes';
     protected $primaryKey = 'id_cliente';
     protected $fillable = [
+        'nombres',
+        'apellidos',
         'nombre',
         'apellido',
-        'email',
-        'telefono',
-        'estado',
+        'dni_ruc',
         'numero_documento',
+        'telefono',
+        'correo',
+        'email',
+        'direccion',
+        'estado',
         'tipo_documento',
-        'direccion'
+        'distrito',
+        'provincia',
+        'departamento',
+        'fecha_nacimiento'
     ];
 
     public function getActive()
     {
-        return $this->where("estado = ?", ['activo'], 'nombre ASC');
+        return $this->db->select("SELECT * FROM {$this->table} WHERE estado = 'activo' ORDER BY nombres ASC, nombre ASC");
     }
 
     public function obtenerPorId($id)
@@ -28,7 +36,18 @@ class Cliente extends Model
     public function getNombreCompleto($cliente)
     {
         if (is_array($cliente)) {
-            return trim($cliente['nombre'] . ' ' . $cliente['apellido']);
+            // Priorizar campos más específicos
+            $nombre = '';
+            if (!empty($cliente['nombres']) && !empty($cliente['apellidos'])) {
+                $nombre = trim($cliente['nombres'] . ' ' . $cliente['apellidos']);
+            } elseif (!empty($cliente['nombre']) && !empty($cliente['apellido'])) {
+                $nombre = trim($cliente['nombre'] . ' ' . $cliente['apellido']);
+            } elseif (!empty($cliente['nombres'])) {
+                $nombre = trim($cliente['nombres']);
+            } elseif (!empty($cliente['nombre'])) {
+                $nombre = trim($cliente['nombre']);
+            }
+            return $nombre;
         }
         return '';
     }
@@ -39,10 +58,11 @@ class Cliente extends Model
         $result = [];
 
         foreach ($clientes as $cliente) {
+            $documento = $cliente['dni_ruc'] ?? $cliente['numero_documento'] ?? '';
             $result[] = [
                 'id' => $cliente['id_cliente'],
                 'text' => $this->getNombreCompleto($cliente),
-                'documento' => $cliente['numero_documento'] ?? ''
+                'documento' => $documento
             ];
         }
 
@@ -55,7 +75,7 @@ class Cliente extends Model
     public function getVehiculos($idCliente)
     {
         $sql = "SELECT * FROM vehiculoscliente WHERE id_cliente = ? ORDER BY placa ASC";
-        return $this->db->fetch($sql, [$idCliente]);
+        return $this->db->select($sql, [$idCliente]);
     }
 
     /**

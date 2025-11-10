@@ -126,7 +126,7 @@
                                                 if ($stock === 0) {
                                                     echo '<span class="badge bg-danger"><i class="fas fa-exclamation-triangle"></i> Sin stock</span>';
                                                 } elseif ($stockMin > 0 && $stock <= $stockMin) {
-                                                    echo '<span class="badge bg-warning text-dark"><i class="fas fa-exclamation-circle"></i> ' . number_format($stock) . ' (Bajo)</span>';
+                                                    echo '<span class="badge bg-warning"><i class="fas fa-exclamation-circle"></i> ' . number_format($stock) . ' (Bajo)</span>';
                                                 } else {
                                                     echo '<span class="badge bg-success"><i class="fas fa-check-circle"></i> ' . number_format($stock) . '</span>';
                                                 }
@@ -184,3 +184,72 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Función para confirmar eliminación de productos
+    function confirmarEliminacion(productoId) {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Esta acción no se puede deshacer. El producto será eliminado permanentemente.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Mostrar loading
+                Swal.fire({
+                    title: 'Eliminando...',
+                    text: 'Por favor espera mientras se elimina el producto',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // Navegar a la URL de eliminación
+                window.location.href = `?page=productos&action=delete&id=${productoId}`;
+            }
+        });
+    }
+
+    // Mejorar tooltips de botones
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar tooltips si Bootstrap está disponible
+        if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"], [title]'));
+            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
+
+        // Mejorar accesibilidad de botones
+        const buttons = document.querySelectorAll('.btn-group .btn');
+        buttons.forEach(button => {
+            button.addEventListener('focus', function() {
+                this.style.outline = '2px solid #3b82f6';
+                this.style.outlineOffset = '2px';
+            });
+
+            button.addEventListener('blur', function() {
+                this.style.outline = 'none';
+            });
+        });
+
+        // Mejorar feedback visual en hover
+        const actionButtons = document.querySelectorAll('.btn-group .btn');
+        actionButtons.forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    });
+</script>

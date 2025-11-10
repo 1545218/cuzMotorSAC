@@ -420,7 +420,7 @@
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                    
+
                     // Intentar obtener el texto primero para debugging
                     return response.text().then(text => {
                         console.log('Respuesta del servidor:', text);
@@ -441,7 +441,7 @@
                         if (data.alerta) {
                             mensaje += '\n\n' + data.alerta;
                         }
-                        
+
                         Swal.fire({
                             icon: 'success',
                             title: '¡Registrado exitosamente!',

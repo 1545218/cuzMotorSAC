@@ -31,7 +31,7 @@ class ConfiguracionAlmacen extends Model
                 LEFT JOIN usuarios u ON ca.responsable = u.id_usuario
                 ORDER BY ca.nombre_almacen";
 
-        return $this->db->fetch($sql);
+        return $this->db->select($sql);
     }
 
     /**
@@ -87,7 +87,7 @@ class ConfiguracionAlmacen extends Model
                 LEFT JOIN usuarios u ON ca.responsable = u.id_usuario
                 LIMIT 1";
 
-        $result = $this->db->fetch($sql);
+        $result = $this->db->select($sql);
         return $result[0] ?? null;
     }
 
@@ -134,8 +134,8 @@ class ConfiguracionAlmacen extends Model
 
         // Obtener stock total actual
         $sqlStock = "SELECT SUM(stock_actual) as stock_total FROM productos WHERE estado = 'activo'";
-        $resultStock = $this->db->fetch($sqlStock);
-        $stockTotal = $resultStock[0]['stock_total'] ?? 0;
+        $resultStock = $this->db->selectOne($sqlStock);
+        $stockTotal = $resultStock['stock_total'] ?? 0;
 
         $capacidadMaxima = $config['capacidad_maxima'];
         $porcentajeUtilizacion = $capacidadMaxima > 0 ? ($stockTotal / $capacidadMaxima) * 100 : 0;
@@ -166,14 +166,14 @@ class ConfiguracionAlmacen extends Model
                          WHERE p.estado = 'activo'
                          GROUP BY c.id_categoria, c.nombre
                          ORDER BY stock DESC";
-        $categorias = $this->db->fetch($sqlCategorias);
+        $categorias = $this->db->select($sqlCategorias);
 
         // Productos con stock bajo
         $sqlStockBajo = "SELECT COUNT(*) as productos_stock_bajo
                         FROM productos 
                         WHERE stock_actual <= stock_minimo AND estado = 'activo'";
-        $resultStockBajo = $this->db->fetch($sqlStockBajo);
-        $productosStockBajo = $resultStockBajo[0]['productos_stock_bajo'] ?? 0;
+        $resultStockBajo = $this->db->selectOne($sqlStockBajo);
+        $productosStockBajo = $resultStockBajo['productos_stock_bajo'] ?? 0;
 
         return [
             'almacen' => $config,

@@ -80,15 +80,18 @@ class Inventario extends Model
             $tipo = $datos['tipo_movimiento'] ?? ($datos['tipo'] ?? 'entrada');
             $cantidad = (int)($datos['cantidad'] ?? 0);
 
-            // Registrar en registrosstock
-            $this->db->insert('registrosstock', [
-                'id_producto' => $datos['producto_id'],
-                'tipo' => $tipo,
-                'cantidad' => $cantidad,
-                'origen' => $datos['referencia'] ?? ($datos['motivo'] ?? null),
-                'referencia_id' => $datos['referencia_id'] ?? null,
-                'id_usuario' => $datos['usuario_id'] ?? ($_SESSION['user_id'] ?? null)
-            ]);
+            // Registrar en registrosstock usando SQL directo
+            $sql = "INSERT INTO registrosstock (id_producto, tipo, cantidad, origen, referencia_id, id_usuario, fecha) 
+                    VALUES (?, ?, ?, ?, ?, ?, NOW())";
+            $params = [
+                $datos['producto_id'],
+                $tipo,
+                $cantidad,
+                $datos['referencia'] ?? ($datos['motivo'] ?? null),
+                $datos['referencia_id'] ?? null,
+                $datos['usuario_id'] ?? ($_SESSION['user_id'] ?? null)
+            ];
+            $this->db->insert($sql, $params);
 
             // Actualizar stock en productos
             $producto = $this->db->selectOne("SELECT stock_actual FROM productos WHERE id_producto = ?", [$datos['producto_id']]);
@@ -120,24 +123,34 @@ class Inventario extends Model
         // Registrar ajuste usando tablas existentes: insertar en ajustesinventario y registrosstock, y actualizar productos
         $this->db->beginTransaction();
         try {
-            // Guardar en ajustesinventario para mantener compatibilidad
-            $this->db->insert('ajustesinventario', [
-                'id_producto' => $movimientoData['producto_id'],
-                'tipo' => $movimientoData['cantidad'] > 0 ? 'aumento' : 'disminucion',
-                'cantidad' => abs((int)$movimientoData['cantidad']),
-                'motivo' => $movimientoData['motivo'] ?? null,
-                'id_usuario' => $movimientoData['user_id'] ?? ($_SESSION['user_id'] ?? null)
-            ]);
+            // Guardar en ajustesinventario para mantener compatibilidad (si existe)
+            try {
+                $sql = "INSERT INTO ajustesinventario (id_producto, tipo, cantidad, motivo, id_usuario, fecha) 
+                        VALUES (?, ?, ?, ?, ?, NOW())";
+                $params = [
+                    $movimientoData['producto_id'],
+                    $movimientoData['cantidad'] > 0 ? 'aumento' : 'disminucion',
+                    abs((int)$movimientoData['cantidad']),
+                    $movimientoData['motivo'] ?? null,
+                    $movimientoData['user_id'] ?? ($_SESSION['user_id'] ?? null)
+                ];
+                $this->db->insert($sql, $params);
+            } catch (Exception $e) {
+                // Si la tabla no existe, continuar sin fallar
+            }
 
             // Registrar en registrosstock
-            $this->db->insert('registrosstock', [
-                'id_producto' => $movimientoData['producto_id'],
-                'tipo' => 'ajuste',
-                'cantidad' => abs((int)$movimientoData['cantidad']),
-                'origen' => 'ajuste',
-                'referencia_id' => null,
-                'id_usuario' => $movimientoData['user_id'] ?? ($_SESSION['user_id'] ?? null)
-            ]);
+            $sql = "INSERT INTO registrosstock (id_producto, tipo, cantidad, origen, referencia_id, id_usuario, fecha) 
+                    VALUES (?, ?, ?, ?, ?, ?, NOW())";
+            $params = [
+                $movimientoData['producto_id'],
+                'ajuste',
+                abs((int)$movimientoData['cantidad']),
+                'ajuste',
+                null,
+                $movimientoData['user_id'] ?? ($_SESSION['user_id'] ?? null)
+            ];
+            $this->db->insert($sql, $params);
 
             // Actualizar stock en productos
             $this->db->execute("UPDATE productos SET stock_actual = ? WHERE id_producto = ?", [$nuevoStock, $movimientoData['producto_id']]);

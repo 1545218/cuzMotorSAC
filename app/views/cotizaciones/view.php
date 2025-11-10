@@ -367,5 +367,5 @@ $detalles = isset($detalles) && is_array($detalles) ? $detalles : [];
     </div>
 </div>
 
-<?php // footer incluido desde Controller->view() - eliminar renderFooter() para evitar duplicado 
-?>
+<?php 
+// El footer se incluye automáticamente desde el controlador

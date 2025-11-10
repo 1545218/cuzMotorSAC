@@ -97,7 +97,7 @@ class Reporte extends Model
                 WHERE rs.id_reporte = ?
                 ORDER BY p.nombre";
 
-        return $this->db->fetch($sql, [$idReporte]);
+        return $this->db->select($sql, [$idReporte]);
     }
 
     /**
@@ -111,7 +111,7 @@ class Reporte extends Model
                 WHERE rm.id_reporte = ?
                 ORDER BY rm.fecha DESC";
 
-        return $this->db->fetch($sql, [$idReporte]);
+        return $this->db->select($sql, [$idReporte]);
     }
 
     /**
@@ -126,7 +126,7 @@ class Reporte extends Model
                 WHERE rc.id_reporte = ?
                 ORDER BY rc.cantidad_total DESC";
 
-        return $this->db->fetch($sql, [$idReporte]);
+        return $this->db->select($sql, [$idReporte]);
     }
 
     /**
@@ -170,7 +170,7 @@ class Reporte extends Model
         $params[] = $limite;
         $params[] = $offset;
 
-        return $this->db->fetch($sql, $params);
+        return $this->db->select($sql, $params);
     }
 
     /**

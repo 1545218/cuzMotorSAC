@@ -339,7 +339,9 @@ class ClienteController extends Controller
     {
         try {
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                $this->json(['error' => 'Método no permitido'], 405);
+                header('Content-Type: application/json');
+                http_response_code(405);
+                echo json_encode(['error' => 'Método no permitido']);
                 return;
             }
 
@@ -350,7 +352,9 @@ class ClienteController extends Controller
             $id = $_POST['id'] ?? null;
             if (!$id) {
                 if ($isAjax) {
-                    $this->json(['success' => false, 'message' => 'ID de cliente requerido'], 400);
+                    header('Content-Type: application/json');
+                    http_response_code(400);
+                    echo json_encode(['success' => false, 'message' => 'ID de cliente requerido']);
                 } else {
                     $this->setFlash('error', 'ID de cliente requerido');
                     $this->redirect('?page=clientes');
@@ -370,7 +374,9 @@ class ClienteController extends Controller
 
             if ($hasMovements && $hasMovements['total'] > 0) {
                 if ($isAjax) {
-                    $this->json(['success' => false, 'message' => 'No se puede eliminar un cliente con movimientos asociados'], 400);
+                    header('Content-Type: application/json');
+                    http_response_code(400);
+                    echo json_encode(['success' => false, 'message' => 'No se puede eliminar un cliente con movimientos asociados']);
                 } else {
                     $this->setFlash('error', 'No se puede eliminar un cliente con movimientos asociados');
                     $this->redirect('?page=clientes');
@@ -382,14 +388,17 @@ class ClienteController extends Controller
             if ($result) {
                 Logger::info('Cliente eliminado exitosamente', ['id_cliente' => $id]);
                 if ($isAjax) {
-                    $this->json(['success' => true, 'message' => 'Cliente eliminado correctamente']);
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => true, 'message' => 'Cliente eliminado correctamente']);
                 } else {
                     $this->setFlash('success', 'Cliente eliminado correctamente');
                     $this->redirect('?page=clientes');
                 }
             } else {
                 if ($isAjax) {
-                    $this->json(['success' => false, 'message' => 'Error al eliminar el cliente'], 500);
+                    header('Content-Type: application/json');
+                    http_response_code(500);
+                    echo json_encode(['success' => false, 'message' => 'Error al eliminar el cliente']);
                 } else {
                     $this->setFlash('error', 'Error al eliminar el cliente');
                     $this->redirect('?page=clientes');
@@ -401,7 +410,9 @@ class ClienteController extends Controller
                 'id' => $_POST['id'] ?? null
             ]);
             if (!empty($isAjax)) {
-                $this->json(['success' => false, 'message' => 'Error interno del servidor'], 500);
+                header('Content-Type: application/json');
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => 'Error interno del servidor']);
             } else {
                 $this->setFlash('error', 'Error interno del servidor');
                 $this->redirect('?page=clientes');
@@ -416,12 +427,15 @@ class ClienteController extends Controller
     {
         try {
             $clientes = $this->clienteModel->getActive();
-            $this->json($clientes);
+            header('Content-Type: application/json');
+            echo json_encode($clientes);
         } catch (Exception $e) {
             Logger::error('Error en ClienteController::getForSelect', [
                 'error' => $e->getMessage()
             ]);
-            $this->json(['error' => 'Error al obtener clientes'], 500);
+            header('Content-Type: application/json');
+            http_response_code(500);
+            echo json_encode(['error' => 'Error al obtener clientes']);
         }
     }
 

@@ -425,4 +425,113 @@ abstract class Model
     {
         return $this->where('activo = ?', [0]);
     }
+
+    // ====================================================================
+    // SISTEMA DE AUDITORÍA AUTOMÁTICA
+    // ====================================================================
+
+    /**
+     * Indica si este modelo debe ser auditado automáticamente
+     */
+    protected $auditoria_activa = true;
+
+    /**
+     * Campos que deben ser excluidos de la auditoría
+     */
+    protected $auditoria_excluir = ['password', 'token', 'created_at', 'updated_at'];
+
+    /**
+     * Registra un cambio en el historial de auditoría
+     */
+    protected function registrarCambioAuditoria($registroId, $campoModificado, $valorAnterior, $valorNuevo)
+    {
+        // Solo auditar si está activo para este modelo
+        if (!$this->auditoria_activa) {
+            return;
+        }
+
+        // No auditar cambios en campos excluidos
+        if (in_array($campoModificado, $this->auditoria_excluir)) {
+            return;
+        }
+
+        // No auditar si los valores son iguales
+        if ($valorAnterior === $valorNuevo) {
+            return;
+        }
+
+        try {
+            // Obtener ID del usuario actual
+            $idUsuario = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+
+            // Solo auditar si hay un usuario logueado
+            if (!$idUsuario) {
+                return;
+            }
+
+            $sql = "INSERT INTO historialcambios (id_usuario, tabla_afectada, registro_id, campo_modificado, valor_anterior, valor_nuevo, fecha) 
+                    VALUES (?, ?, ?, ?, ?, ?, NOW())";
+
+            $this->db->execute($sql, [
+                $idUsuario,
+                $this->table,
+                $registroId,
+                $campoModificado,
+                $valorAnterior,
+                $valorNuevo
+            ]);
+        } catch (Exception $e) {
+            // Error en auditoría no debe interrumpir la operación principal
+            Logger::error("Error en auditoría automática: " . $e->getMessage(), [
+                'tabla' => $this->table,
+                'registro_id' => $registroId,
+                'campo' => $campoModificado
+            ]);
+        }
+    }
+
+    /**
+     * Auditoría wrapper para el método update existente
+     */
+    public function updateWithAudit($id, $data)
+    {
+        // Obtener datos anteriores para auditoría
+        $datosAnteriores = null;
+        if ($this->auditoria_activa) {
+            $datosAnteriores = $this->find($id);
+        }
+
+        // Ejecutar la actualización usando el método original
+        $resultado = $this->update($id, $data);
+
+        // Registrar cambios en auditoría
+        if ($resultado && $this->auditoria_activa && $datosAnteriores) {
+            foreach ($data as $campo => $valorNuevo) {
+                if (isset($datosAnteriores[$campo])) {
+                    $valorAnterior = $datosAnteriores[$campo];
+                    $this->registrarCambioAuditoria($id, $campo, $valorAnterior, $valorNuevo);
+                }
+            }
+        }
+
+        return $resultado;
+    }
+
+    /**
+     * Deshabilita auditoría para este modelo
+     */
+    protected function deshabilitarAuditoria()
+    {
+        $this->auditoria_activa = false;
+        return $this;
+    }
+
+    /**
+     * Habilita auditoría para este modelo
+     */
+    protected function habilitarAuditoria()
+    {
+        $this->auditoria_activa = true;
+        return $this;
+    }
 }

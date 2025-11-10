@@ -33,11 +33,14 @@ $title = 'Configuración del Sistema';
                                     <a href="?page=config&action=empresa" class="list-group-item list-group-item-action">
                                         <i class="fas fa-building mr-2"></i>Datos de la Empresa
                                     </a>
-                                    <a href="?page=config&action=sistema" class="list-group-item list-group-item-action">
-                                        <i class="fas fa-cogs mr-2"></i>Configuración del Sistema
+                                    <a href="?page=config&action=almacen" class="list-group-item list-group-item-action">
+                                        <i class="fas fa-warehouse mr-2"></i>Configuración de Almacenes
                                     </a>
-                                    <a href="?page=config&action=usuarios" class="list-group-item list-group-item-action">
-                                        <i class="fas fa-users-cog mr-2"></i>Configuración de Usuarios
+                                    <a href="?page=config&action=sistema" class="list-group-item list-group-item-action">
+                                        <i class="fas fa-cogs mr-2"></i>Parámetros del Sistema
+                                    </a>
+                                    <a href="?page=usuarios" class="list-group-item list-group-item-action">
+                                        <i class="fas fa-users-cog mr-2"></i>Gestión de Usuarios
                                     </a>
                                 </div>
                             </div>

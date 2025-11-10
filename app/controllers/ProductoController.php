@@ -7,24 +7,6 @@
 
 class ProductoController extends Controller
 {
-    public function toggleEstado()
-    {
-        $this->requireRole(['admin']);
-        $id = $_GET['id'] ?? 0;
-        $estado = $_GET['estado'] ?? '';
-        if (!$id || ($estado !== 'activo' && $estado !== 'inactivo')) {
-            $this->setFlash('error', 'Datos inválidos para cambiar estado');
-            $this->redirect('?page=productos');
-            return;
-        }
-        try {
-            $this->productoModel->cambiarEstado($id, $estado);
-            $this->setFlash('success', 'Estado actualizado correctamente');
-        } catch (Exception $e) {
-            $this->setFlash('error', 'Error al actualizar estado: ' . $e->getMessage());
-        }
-        $this->redirect('?page=productos');
-    }
     private $productoModel;
     private $categoriaModel;
     private $subcategoriaModel;
@@ -53,8 +35,38 @@ class ProductoController extends Controller
         }
     }
 
+    public function toggleEstado()
+    {
+        // Verificar que el usuario esté autenticado
+        if (!Auth::isLoggedIn()) {
+            $this->redirect('?page=login');
+            return;
+        }
+
+        $id = $_GET['id'] ?? 0;
+        $estado = $_GET['estado'] ?? '';
+        if (!$id || ($estado !== 'activo' && $estado !== 'inactivo')) {
+            $this->setFlash('error', 'Datos inválidos para cambiar estado');
+            $this->redirect('?page=productos');
+            return;
+        }
+        try {
+            $this->productoModel->cambiarEstado($id, $estado);
+            $this->setFlash('success', 'Estado actualizado correctamente');
+        } catch (Exception $e) {
+            $this->setFlash('error', 'Error al actualizar estado: ' . $e->getMessage());
+        }
+        $this->redirect('?page=productos');
+    }
+
     public function index()
     {
+        // Verificar que el usuario esté autenticado
+        if (!Auth::isLoggedIn()) {
+            $this->redirect('?page=login');
+            return;
+        }
+
         $search = $_GET['search'] ?? '';
         $categoria = $_GET['categoria'] ?? '';
         $subcategoria = $_GET['subcategoria'] ?? '';
@@ -104,6 +116,12 @@ class ProductoController extends Controller
 
     public function create()
     {
+        // Verificar que el usuario esté autenticado
+        if (!Auth::isLoggedIn()) {
+            $this->redirect('?page=login');
+            return;
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->validateCSRF();
 
@@ -244,6 +262,12 @@ class ProductoController extends Controller
 
     public function edit($id)
     {
+        // Verificar que el usuario esté autenticado
+        if (!Auth::isLoggedIn()) {
+            $this->redirect('?page=login');
+            return;
+        }
+
         $producto = $this->productoModel->find($id);
         if (!$producto) {
             $this->redirect('/productos', 'error', 'Producto no encontrado');
@@ -353,15 +377,13 @@ class ProductoController extends Controller
         ]);
     }
 
-    public function update()
-    {
-        $id = $_GET['id'] ?? $_POST['id'] ?? 0;
-        $this->edit($id); // Redirigir al método edit que ya maneja POST
-    }
-
     public function delete($id)
     {
-        $this->requireRole(['admin']);
+        // Verificar que el usuario esté autenticado
+        if (!Auth::isLoggedIn()) {
+            $this->redirect('?page=login');
+            return;
+        }
         $this->validateCSRF();
 
         try {

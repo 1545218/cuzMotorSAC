@@ -4,17 +4,19 @@ class InventarioController extends Controller
 {
     private $inventarioModel;
     private $productoModel;
+    private $conteoModel;
 
     public function __construct()
     {
         parent::__construct();
         $this->inventarioModel = new Inventario();
         $this->productoModel = new Producto();
+        $this->conteoModel = new InventarioConteo();
 
         // Verificar autenticación para todas las acciones
         Auth::requireAuth();
     }
-    
+
     /**
      * Validar token CSRF para endpoints AJAX
      */
@@ -23,7 +25,7 @@ class InventarioController extends Controller
         $csrfName = defined('CSRF_TOKEN_NAME') ? CSRF_TOKEN_NAME : 'csrf_token';
         $receivedToken = $_POST[$csrfName] ?? '';
         $sessionToken = $_SESSION['csrf_token'] ?? '';
-        
+
         return !empty($receivedToken) && !empty($sessionToken) && hash_equals($sessionToken, $receivedToken);
     }
 
@@ -87,6 +89,48 @@ class InventarioController extends Controller
     }
 
     /**
+     * Mostrar detalle de inventario por conteos
+     */
+    public function detalle()
+    {
+        try {
+            include_once APP_PATH . '/models/InventarioConteo.php';
+            $inventarioConteoModel = new InventarioConteo();
+
+            // Obtener todos los inventarios
+            $inventarios = $inventarioConteoModel->getAll();
+
+            // Si hay un ID específico, obtener detalles
+            $idInventario = $_GET['id'] ?? null;
+            $detalles = [];
+            $inventarioSeleccionado = null;
+
+            if ($idInventario) {
+                $detalles = $inventarioConteoModel->getDetalles($idInventario);
+
+                // Buscar el inventario seleccionado
+                foreach ($inventarios as $inv) {
+                    if ($inv['id_inventario'] == $idInventario) {
+                        $inventarioSeleccionado = $inv;
+                        break;
+                    }
+                }
+            }
+
+            $this->view('inventario/detalle', [
+                'title' => 'Detalle de Inventario',
+                'inventarios' => $inventarios,
+                'detalles' => $detalles,
+                'inventarioSeleccionado' => $inventarioSeleccionado,
+                'idInventario' => $idInventario
+            ]);
+        } catch (Exception $e) {
+            Logger::error("Error en InventarioController::detalle - " . $e->getMessage());
+            $this->view('errors/500', ['error' => 'Error al cargar detalle de inventario']);
+        }
+    }
+
+    /**
      * Registrar entrada de productos al inventario
      */
     public function registrarEntrada()
@@ -94,7 +138,7 @@ class InventarioController extends Controller
         // Limpiar cualquier salida previa y establecer headers JSON
         ob_clean();
         header('Content-Type: application/json; charset=utf-8');
-        
+
         try {
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 throw new Exception('Método no permitido');
@@ -114,7 +158,7 @@ class InventarioController extends Controller
             if ($producto_id <= 0) {
                 throw new Exception('ID de producto inválido');
             }
-            
+
             if ($cantidad <= 0) {
                 throw new Exception('La cantidad debe ser mayor a 0');
             }
@@ -148,19 +192,18 @@ class InventarioController extends Controller
             if (!$this->inventarioModel->registrarMovimiento($movimiento_data)) {
                 throw new Exception('Error al registrar el movimiento');
             }
-            
+
             Logger::info("Entrada registrada: Producto {$producto_id}, Cantidad {$cantidad}");
-            
+
             echo json_encode([
-                'success' => true, 
+                'success' => true,
                 'message' => 'Entrada registrada correctamente',
                 'stock_nuevo' => $stock_nuevo
             ]);
-            
         } catch (Exception $e) {
             Logger::error("Error en registrarEntrada: " . $e->getMessage());
             echo json_encode([
-                'success' => false, 
+                'success' => false,
                 'error' => $e->getMessage()
             ]);
         }
@@ -175,7 +218,7 @@ class InventarioController extends Controller
         // Limpiar cualquier salida previa y establecer headers JSON
         ob_clean();
         header('Content-Type: application/json; charset=utf-8');
-        
+
         try {
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 throw new Exception('Método no permitido');
@@ -195,7 +238,7 @@ class InventarioController extends Controller
             if ($producto_id <= 0) {
                 throw new Exception('ID de producto inválido');
             }
-            
+
             if ($cantidad <= 0) {
                 throw new Exception('La cantidad debe ser mayor a 0');
             }
@@ -235,26 +278,25 @@ class InventarioController extends Controller
             if (!$this->inventarioModel->registrarMovimiento($movimiento_data)) {
                 throw new Exception('Error al registrar el movimiento');
             }
-            
+
             Logger::info("Salida registrada: Producto {$producto_id}, Cantidad {$cantidad}");
-            
+
             // Verificar si quedó en stock bajo
             $alerta_stock = '';
             if (isset($producto['stock_minimo']) && $stock_nuevo <= (int)$producto['stock_minimo']) {
                 $alerta_stock = "⚠️ ALERTA: El producto quedó con stock bajo ({$stock_nuevo} unidades)";
             }
-            
+
             echo json_encode([
-                'success' => true, 
+                'success' => true,
                 'message' => 'Salida registrada correctamente',
                 'stock_nuevo' => $stock_nuevo,
                 'alerta' => $alerta_stock
             ]);
-            
         } catch (Exception $e) {
             Logger::error("Error en registrarSalida: " . $e->getMessage());
             echo json_encode([
-                'success' => false, 
+                'success' => false,
                 'error' => $e->getMessage()
             ]);
         }
@@ -269,7 +311,7 @@ class InventarioController extends Controller
         // Limpiar cualquier salida previa y establecer headers JSON
         ob_clean();
         header('Content-Type: application/json; charset=utf-8');
-        
+
         try {
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 throw new Exception('Método no permitido');
@@ -289,7 +331,7 @@ class InventarioController extends Controller
             if ($producto_id <= 0) {
                 throw new Exception('ID de producto inválido');
             }
-            
+
             if ($cantidad < 0) {
                 throw new Exception('La cantidad no puede ser negativa');
             }
@@ -306,7 +348,7 @@ class InventarioController extends Controller
             // Si no hay cambio, no hacer nada
             if ($diferencia == 0) {
                 echo json_encode([
-                    'success' => true, 
+                    'success' => true,
                     'message' => 'No hay cambios en el stock',
                     'stock_nuevo' => $stock_anterior
                 ]);
@@ -336,20 +378,19 @@ class InventarioController extends Controller
             if (!$this->inventarioModel->registrarMovimiento($movimiento_data)) {
                 throw new Exception('Error al registrar el movimiento');
             }
-            
+
             Logger::info("Ajuste registrado: Producto {$producto_id}, Stock anterior {$stock_anterior}, Stock nuevo {$cantidad}");
-            
+
             echo json_encode([
-                'success' => true, 
+                'success' => true,
                 'message' => 'Ajuste registrado correctamente',
                 'stock_nuevo' => $cantidad,
                 'diferencia' => $diferencia
             ]);
-            
         } catch (Exception $e) {
             Logger::error("Error en registrarAjuste: " . $e->getMessage());
             echo json_encode([
-                'success' => false, 
+                'success' => false,
                 'error' => $e->getMessage()
             ]);
         }
@@ -465,7 +506,7 @@ class InventarioController extends Controller
             }
 
             // Solo administradores y almacén pueden registrar entradas
-            if (!in_array($_SESSION['user_role'], ['admin', 'almacen'])) {
+            if (!in_array($_SESSION['rol'] ?? '', ['administrador', 'almacen'])) {
                 echo json_encode(['success' => false, 'errors' => ['general' => 'No tienes permisos para esta acción']]);
                 return;
             }
@@ -580,7 +621,7 @@ class InventarioController extends Controller
             }
 
             // Solo administradores pueden hacer ajustes
-            if ($_SESSION['user_role'] !== 'admin') {
+            if ($_SESSION['rol'] ?? '' !== 'administrador') {
                 echo json_encode(['success' => false, 'errors' => ['general' => 'No tienes permisos para esta acción']]);
                 return;
             }
@@ -815,7 +856,7 @@ class InventarioController extends Controller
                     </button>';
 
             // Solo administradores pueden ajustar
-            if ($_SESSION['user_role'] === 'admin') {
+            if ($_SESSION['rol'] ?? '' === 'administrador') {
                 $actions .= '
                     <button type="button" class="btn btn-sm btn-outline-primary" onclick="ajustarStock(' . $producto['id'] . ')" title="Ajustar">
                         <i class="fas fa-edit"></i>
@@ -925,5 +966,239 @@ class InventarioController extends Controller
             $correoModel->delete($id);
         }
         $this->redirect('?page=inventario&action=alertas');
+    }
+
+    /**
+     * Mostrar vista principal de conteos físicos
+     */
+    public function conteo()
+    {
+        try {
+            $conteos = $this->conteoModel->getListaConteos();
+            $estadisticas = $this->conteoModel->getEstadisticas();
+
+            $this->view('inventario/conteo', [
+                'title' => 'Conteo Físico de Inventario',
+                'conteos' => $conteos,
+                'estadisticas' => $estadisticas
+            ]);
+        } catch (Exception $e) {
+            Logger::error('Error en InventarioController::conteo: ' . $e->getMessage());
+            $this->view('errors/500', ['error' => 'Error al cargar conteos físicos']);
+        }
+    }
+
+    /**
+     * Iniciar nuevo conteo físico
+     */
+    public function nuevoConteo()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $observaciones = trim($_POST['observaciones'] ?? '');
+
+                $idConteo = $this->conteoModel->iniciarConteo($_SESSION['user_id'], $observaciones);
+
+                if ($idConteo) {
+                    $_SESSION['success'] = 'Conteo físico iniciado exitosamente';
+                    Logger::info('Conteo físico iniciado', [
+                        'id_conteo' => $idConteo,
+                        'usuario' => $_SESSION['user_id']
+                    ]);
+                    header('Location: ?page=inventario&action=realizarConteo&id=' . $idConteo);
+                } else {
+                    $_SESSION['error'] = 'Error al iniciar conteo físico';
+                    header('Location: ?page=inventario&action=conteo');
+                }
+            } catch (Exception $e) {
+                Logger::error('Error al iniciar conteo: ' . $e->getMessage());
+                $_SESSION['error'] = 'Error interno del servidor';
+                header('Location: ?page=inventario&action=conteo');
+            }
+            exit;
+        }
+
+        // Mostrar formulario para nuevo conteo
+        $this->view('inventario/nuevo_conteo', [
+            'title' => 'Iniciar Nuevo Conteo Físico'
+        ]);
+    }
+
+    /**
+     * Realizar conteo físico - vista para contar productos
+     */
+    public function realizarConteo($id = 0)
+    {
+        try {
+            if (!$id) {
+                $id = $_GET['id'] ?? 0;
+            }
+
+            $conteo = $this->conteoModel->getConteoConUsuario($id);
+            if (!$conteo) {
+                $_SESSION['error'] = 'Conteo no encontrado';
+                header('Location: ?page=inventario&action=conteo');
+                exit;
+            }
+
+            // Obtener productos para contar
+            $productos = $this->productoModel->getProductsWithDetails();
+
+            // Obtener detalles ya ingresados
+            $detallesConteo = $this->conteoModel->getDetalles($id);
+
+            $this->view('inventario/realizar_conteo', [
+                'title' => 'Realizando Conteo Físico #' . $id,
+                'conteo' => $conteo,
+                'productos' => $productos,
+                'detalles' => $detallesConteo
+            ]);
+        } catch (Exception $e) {
+            Logger::error('Error en InventarioController::realizarConteo: ' . $e->getMessage());
+            $this->view('errors/500', ['error' => 'Error al cargar conteo físico']);
+        }
+    }
+
+    /**
+     * Guardar conteo de un producto específico
+     */
+    public function guardarConteoProducto()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $idInventario = $_POST['id_inventario'] ?? 0;
+                $idProducto = $_POST['id_producto'] ?? 0;
+                $stockFisico = (int)($_POST['stock_fisico'] ?? 0);
+
+                if (!$idInventario || !$idProducto) {
+                    echo json_encode(['success' => false, 'message' => 'Datos incompletos']);
+                    exit;
+                }
+
+                $resultado = $this->conteoModel->agregarDetalle(
+                    $idInventario,
+                    $idProducto,
+                    $stockFisico
+                );
+
+                if ($resultado) {
+                    // Obtener stock actual del sistema para calcular diferencia
+                    $producto = $this->productoModel->find($idProducto);
+                    $stockSistema = $producto['stock'] ?? 0;
+                    $diferencia = $stockFisico - $stockSistema;
+
+                    echo json_encode([
+                        'success' => true,
+                        'message' => 'Conteo guardado exitosamente',
+                        'diferencia' => $diferencia
+                    ]);
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Error al guardar conteo']);
+                }
+            } catch (Exception $e) {
+                Logger::error('Error al guardar conteo producto: ' . $e->getMessage());
+                echo json_encode(['success' => false, 'message' => 'Error interno del servidor']);
+            }
+        }
+        exit;
+    }
+
+    /**
+     * Finalizar conteo y mostrar diferencias
+     */
+    public function finalizarConteo($id = 0)
+    {
+        try {
+            if (!$id) {
+                $id = $_GET['id'] ?? 0;
+            }
+
+            $conteo = $this->conteoModel->getConteoConUsuario($id);
+            if (!$conteo) {
+                $_SESSION['error'] = 'Conteo no encontrado';
+                header('Location: ?page=inventario&action=conteo');
+                exit;
+            }
+
+            // Obtener detalles del conteo
+            $detalles = $this->conteoModel->getDetalles($id);
+
+            $this->view('inventario/finalizar_conteo', [
+                'title' => 'Finalizar Conteo #' . $id,
+                'conteo' => $conteo,
+                'detalles' => $detalles
+            ]);
+        } catch (Exception $e) {
+            Logger::error('Error en InventarioController::finalizarConteo: ' . $e->getMessage());
+            $this->view('errors/500', ['error' => 'Error al finalizar conteo']);
+        }
+    }
+
+    /**
+     * Aplicar ajustes de diferencias encontradas en el conteo
+     */
+    public function aplicarAjustes()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $idInventario = $_POST['id_inventario'] ?? 0;
+
+                if (!$idInventario) {
+                    $errorMsg = 'ID de inventario requerido';
+                    if ($this->isAjaxRequest()) {
+                        echo json_encode(['success' => false, 'message' => $errorMsg]);
+                        exit;
+                    } else {
+                        $_SESSION['error'] = $errorMsg;
+                        header('Location: ?page=inventario&action=conteo');
+                        exit;
+                    }
+                }
+
+                $resultado = $this->conteoModel->aplicarAjustes($idInventario, $_SESSION['user_id']);
+
+                if ($this->isAjaxRequest()) {
+                    if (is_array($resultado) && isset($resultado['success']) && $resultado['success']) {
+                        echo json_encode(['success' => true, 'message' => 'Ajustes de conteo aplicados exitosamente']);
+                    } else {
+                        $msg = is_array($resultado) && isset($resultado['error']) ? $resultado['error'] : 'Error al aplicar ajustes de conteo';
+                        echo json_encode(['success' => false, 'message' => $msg]);
+                    }
+                    exit;
+                } else {
+                    if ($resultado) {
+                        $_SESSION['success'] = 'Ajustes de conteo aplicados exitosamente';
+                        Logger::info('Ajustes de conteo aplicados', [
+                            'id_conteo' => $idInventario,
+                            'usuario' => $_SESSION['user_id']
+                        ]);
+                    } else {
+                        $_SESSION['error'] = 'Error al aplicar ajustes de conteo';
+                    }
+                }
+            } catch (Exception $e) {
+                if ($this->isAjaxRequest()) {
+                    echo json_encode(['success' => false, 'message' => 'Error interno del servidor']);
+                    exit;
+                } else {
+                    Logger::error('Error al aplicar ajustes: ' . $e->getMessage());
+                    $_SESSION['error'] = 'Error interno del servidor';
+                }
+            }
+        }
+
+        header('Location: ?page=inventario&action=conteo');
+        exit;
+    }
+
+    /**
+     * Detecta si la petición es AJAX
+     */
+    private function isAjaxRequest()
+    {
+        return (
+            !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'
+        );
     }
 }

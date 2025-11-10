@@ -1,45 +1,13 @@
 <?php
-require_once __DIR__ . '/../core/Model.php';
 
 class MantenimientoSistema extends Model
 {
     protected $table = 'mantenimientosistema';
     protected $primaryKey = 'id_parametro';
 
-    /**
-     * Obtiene el valor de un parámetro del sistema
-     */
-    public function getParametro($clave, $valorDefecto = null)
+    public function __construct()
     {
-        $sql = "SELECT valor FROM mantenimientosistema WHERE clave = ?";
-        $result = $this->db->fetch($sql, [$clave]);
-
-        if (!empty($result)) {
-            return $result[0]['valor'];
-        }
-
-        return $valorDefecto;
-    }
-
-    /**
-     * Establece el valor de un parámetro del sistema
-     */
-    public function setParametro($clave, $valor, $descripcion = null)
-    {
-        // Verificar si el parámetro ya existe
-        $existe = $this->getParametro($clave);
-
-        if ($existe !== null) {
-            // Actualizar parámetro existente
-            $sql = "UPDATE mantenimientosistema SET valor = ?, descripcion = ? WHERE clave = ?";
-            $params = [$valor, $descripcion, $clave];
-        } else {
-            // Crear nuevo parámetro
-            $sql = "INSERT INTO mantenimientosistema (clave, valor, descripcion) VALUES (?, ?, ?)";
-            $params = [$clave, $valor, $descripcion];
-        }
-
-        return $this->db->execute($sql, $params);
+        parent::__construct();
     }
 
     /**
@@ -47,60 +15,196 @@ class MantenimientoSistema extends Model
      */
     public function getTodosParametros()
     {
-        $sql = "SELECT * FROM mantenimientosistema ORDER BY clave ASC";
-        return $this->db->fetch($sql);
+        $sql = "SELECT * FROM mantenimientosistema ORDER BY clave";
+        return $this->db->select($sql);
     }
 
     /**
-     * Elimina un parámetro del sistema
+     * Obtiene un parámetro por clave
      */
-    public function eliminarParametro($clave)
+    public function getParametroPorClave($clave)
     {
-        $sql = "DELETE FROM mantenimientosistema WHERE clave = ?";
-        return $this->db->execute($sql, [$clave]);
+        $sql = "SELECT * FROM mantenimientosistema WHERE clave = ?";
+        $result = $this->db->select($sql, [$clave]);
+        return !empty($result) ? $result[0] : null;
     }
 
     /**
-     * Obtiene parámetros relacionados con inventario
+     * Obtiene el valor de un parámetro por clave
      */
-    public function getParametrosInventario()
+    public function getValorParametro($clave, $valorDefecto = null)
     {
-        $parametros = [
-            'stock_minimo_alerta' => $this->getParametro('stock_minimo_alerta', '5'),
-            'dias_reporte_automatico' => $this->getParametro('dias_reporte_automatico', '30'),
-            'email_notificaciones' => $this->getParametro('email_notificaciones', ''),
-            'moneda_sistema' => $this->getParametro('moneda_sistema', 'PEN'),
-            'iva_porcentaje' => $this->getParametro('iva_porcentaje', '18')
+        $parametro = $this->getParametroPorClave($clave);
+        return $parametro ? $parametro['valor'] : $valorDefecto;
+    }
+
+    /**
+     * Crea un nuevo parámetro
+     */
+    public function crearParametro($clave, $valor, $descripcion = null)
+    {
+        // Validar datos de entrada
+        if (empty($clave)) {
+            throw new Exception("La clave no puede estar vacía");
+        }
+
+        if (strlen($clave) > 100) {
+            throw new Exception("La clave no puede exceder 100 caracteres");
+        }
+
+        if (strlen($valor) > 255) {
+            throw new Exception("El valor no puede exceder 255 caracteres");
+        }
+
+        // Verificar que no exista la clave
+        if ($this->getParametroPorClave($clave)) {
+            throw new Exception("La clave '{$clave}' ya existe");
+        }
+
+        try {
+            $sql = "INSERT INTO mantenimientosistema (clave, valor, descripcion) VALUES (?, ?, ?)";
+            $result = $this->db->execute($sql, [$clave, $valor, $descripcion]);
+
+            if ($result) {
+                return $this->db->getConnection()->lastInsertId();
+            } else {
+                throw new Exception("Error al ejecutar la consulta de inserción");
+            }
+        } catch (Exception $e) {
+            throw new Exception("Error al crear parámetro: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Actualiza un parámetro por ID
+     */
+    public function actualizarParametro($id, $datos)
+    {
+        if (empty($id) || !is_numeric($id)) {
+            throw new Exception("ID de parámetro inválido");
+        }
+
+        $fields = [];
+        $params = [];
+
+        if (isset($datos['clave'])) {
+            if (empty($datos['clave'])) {
+                throw new Exception("La clave no puede estar vacía");
+            }
+            if (strlen($datos['clave']) > 100) {
+                throw new Exception("La clave no puede exceder 100 caracteres");
+            }
+            $fields[] = "clave = ?";
+            $params[] = $datos['clave'];
+        }
+
+        if (isset($datos['valor'])) {
+            if (strlen($datos['valor']) > 255) {
+                throw new Exception("El valor no puede exceder 255 caracteres");
+            }
+            $fields[] = "valor = ?";
+            $params[] = $datos['valor'];
+        }
+
+        if (isset($datos['descripcion'])) {
+            $fields[] = "descripcion = ?";
+            $params[] = $datos['descripcion'];
+        }
+
+        if (empty($fields)) {
+            return true; // No hay nada que actualizar
+        }
+
+        try {
+            $params[] = $id;
+            $sql = "UPDATE mantenimientosistema SET " . implode(", ", $fields) . " WHERE id_parametro = ?";
+
+            return $this->db->execute($sql, $params);
+        } catch (Exception $e) {
+            throw new Exception("Error al actualizar parámetro: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Actualiza el valor de un parámetro por clave
+     */
+    public function actualizarValorPorClave($clave, $valor)
+    {
+        $sql = "UPDATE mantenimientosistema SET valor = ? WHERE clave = ?";
+        return $this->db->execute($sql, [$valor, $clave]);
+    }
+
+    /**
+     * Elimina un parámetro
+     */
+    public function eliminarParametro($id)
+    {
+        $sql = "DELETE FROM mantenimientosistema WHERE id_parametro = ?";
+        return $this->db->execute($sql, [$id]);
+    }
+
+    /**
+     * Busca parámetros por clave o descripción
+     */
+    public function buscarParametros($busqueda)
+    {
+        $sql = "SELECT * FROM mantenimientosistema 
+                WHERE clave LIKE ? OR descripcion LIKE ? 
+                ORDER BY clave";
+        $termino = '%' . $busqueda . '%';
+        return $this->db->select($sql, [$termino, $termino]);
+    }
+
+    /**
+     * Inicializa parámetros predeterminados del sistema
+     */
+    public function inicializarParametrosPredeterminados()
+    {
+        $parametrosPredeterminados = [
+            [
+                'clave' => 'STOCK_MINIMO_GLOBAL',
+                'valor' => '5',
+                'descripcion' => 'Cantidad mínima de stock por defecto para todos los productos'
+            ],
+            [
+                'clave' => 'DIAS_BACKUP_AUTOMATICO',
+                'valor' => '7',
+                'descripcion' => 'Cada cuántos días realizar backup automático del sistema'
+            ],
+            [
+                'clave' => 'HORAS_SESION_MAXIMA',
+                'valor' => '8',
+                'descripcion' => 'Máximo de horas que puede durar una sesión de usuario'
+            ],
+            [
+                'clave' => 'NOTIFICAR_STOCK_BAJO',
+                'valor' => '1',
+                'descripcion' => 'Enviar notificaciones cuando productos tengan stock bajo (1=Sí, 0=No)'
+            ],
+            [
+                'clave' => 'PRECIO_IVA_INCLUIDO',
+                'valor' => '1',
+                'descripcion' => 'Los precios incluyen IVA por defecto (1=Sí, 0=No)'
+            ],
+            [
+                'clave' => 'PORCENTAJE_IVA',
+                'valor' => '18',
+                'descripcion' => 'Porcentaje de IVA aplicable'
+            ]
         ];
 
-        return $parametros;
-    }
-
-    /**
-     * Inicializa parámetros por defecto del sistema
-     */
-    public function inicializarParametrosDefecto()
-    {
-        $parametrosDefecto = [
-            'stock_minimo_alerta' => ['valor' => '5', 'descripcion' => 'Cantidad mínima de stock para generar alertas'],
-            'dias_reporte_automatico' => ['valor' => '30', 'descripcion' => 'Días para generar reportes automáticos'],
-            'email_notificaciones' => ['valor' => '', 'descripcion' => 'Email principal para notificaciones del sistema'],
-            'moneda_sistema' => ['valor' => 'PEN', 'descripcion' => 'Moneda principal del sistema'],
-            'iva_porcentaje' => ['valor' => '18', 'descripcion' => 'Porcentaje de IVA/IGV aplicado'],
-            'nombre_empresa' => ['valor' => 'Cruz Motor S.A.C.', 'descripcion' => 'Nombre de la empresa'],
-            'direccion_empresa' => ['valor' => '', 'descripcion' => 'Dirección de la empresa'],
-            'telefono_empresa' => ['valor' => '', 'descripcion' => 'Teléfono principal de la empresa'],
-            'backup_automatico' => ['valor' => '1', 'descripcion' => '1 para activar backup automático, 0 para desactivar'],
-            'dias_conservar_logs' => ['valor' => '90', 'descripcion' => 'Días para conservar logs del sistema']
-        ];
-
-        foreach ($parametrosDefecto as $clave => $config) {
-            $existe = $this->getParametro($clave);
-            if ($existe === null) {
-                $this->setParametro($clave, $config['valor'], $config['descripcion']);
+        $insertados = 0;
+        foreach ($parametrosPredeterminados as $parametro) {
+            try {
+                if (!$this->getParametroPorClave($parametro['clave'])) {
+                    $this->crearParametro($parametro['clave'], $parametro['valor'], $parametro['descripcion']);
+                    $insertados++;
+                }
+            } catch (Exception $e) {
+                // Continuar con el siguiente parámetro
             }
         }
 
-        return true;
+        return $insertados;
     }
 }

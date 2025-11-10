@@ -86,7 +86,7 @@ class EntradaProducto extends Model
         $params[] = $limite;
         $params[] = $offset;
 
-        return $this->db->fetch($sql, $params);
+        return $this->db->select($sql, $params);
     }
 
     /**
@@ -103,8 +103,8 @@ class EntradaProducto extends Model
                     COUNT(DISTINCT id_producto) as productos_diferentes
                 FROM entradasproductos";
 
-        $result = $this->db->fetch($sql);
-        return $result[0] ?? [];
+        $result = $this->db->selectOne($sql);
+        return $result ?? [];
     }
 }
 
@@ -121,8 +121,8 @@ class SalidaProducto extends Model
         try {
             // Verificar stock disponible
             $sqlStock = "SELECT stock_actual FROM productos WHERE id_producto = ?";
-            $resultStock = $this->db->fetch($sqlStock, [$idProducto]);
-            $stockActual = $resultStock[0]['stock_actual'] ?? 0;
+            $resultStock = $this->db->selectOne($sqlStock, [$idProducto]);
+            $stockActual = $resultStock['stock_actual'] ?? 0;
 
             if ($stockActual < $cantidad) {
                 return [
@@ -219,7 +219,7 @@ class SalidaProducto extends Model
         $params[] = $limite;
         $params[] = $offset;
 
-        return $this->db->fetch($sql, $params);
+        return $this->db->select($sql, $params);
     }
 
     /**
@@ -237,7 +237,7 @@ class SalidaProducto extends Model
                     COUNT(DISTINCT destino) as destinos_diferentes
                 FROM salidasproductos";
 
-        $result = $this->db->fetch($sql);
-        return $result[0] ?? [];
+        $result = $this->db->selectOne($sql);
+        return $result ?? [];
     }
 }

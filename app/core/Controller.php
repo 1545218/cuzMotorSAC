@@ -116,10 +116,20 @@ class Controller
     /**
      * Redirecciona a una URL
      */
-    protected function redirect($url, $statusCode = 302)
+    protected function redirect($url, $statusCode = 302, $message = null)
     {
         if (strpos($url, 'http') !== 0) {
             $url = BASE_PATH . '/' . ltrim($url, '/');
+        }
+
+        // Convertir statusCode a entero si es string
+        if (is_string($statusCode)) {
+            $statusCode = 302; // Por defecto si es string
+        }
+
+        // Si hay mensaje, guardarlo como flash
+        if ($message) {
+            $this->setFlash('error', $message);
         }
 
         http_response_code($statusCode);
@@ -321,8 +331,10 @@ class Controller
         $notifications = [];
 
         if ($this->auth && $this->auth->isLoggedIn()) {
-            // Verificar productos con stock bajo
+            // Verificar productos con stock bajo - TEMPORALMENTE DESHABILITADO
             try {
+                // TODO: Habilitar cuando tabla productos esté lista
+                /*
                 $lowStockProducts = $this->db->select(
                     "SELECT COUNT(*) as count FROM productos WHERE stock_actual <= stock_minimo AND estado = 'activo'"
                 );
@@ -335,6 +347,7 @@ class Controller
                         'url' => 'productos/stock-bajo'
                     ];
                 }
+                */
             } catch (Exception $e) {
                 // Log error pero no romper la página
                 Logger::warning("Error al verificar productos con stock bajo: " . $e->getMessage(), [

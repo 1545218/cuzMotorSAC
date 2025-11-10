@@ -384,13 +384,35 @@ html {
 /* Sidebar: forzar color blanco en enlaces, íconos y textos */
 .sidebar, .sidebar * {
     color: #fff !important;
-    text-shadow: none !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
 }
+
+/* Información de usuario con mejor contraste */
+.sidebar .user-info {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem;
+}
+
+.sidebar .user-info .fw-bold {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.7) !important;
+}
+
+.sidebar .user-info .text-muted {
+    color: rgba(255, 255, 255, 0.95) !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.7) !important;
+}
+
 .sidebar .nav-link,
 .sidebar .nav-link:visited,
 .sidebar .nav-link:active {
     color: #fff !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6) !important;
 }
+
 .sidebar .nav-link:hover,
 .sidebar .nav-link.active {
     color: #fff !important;
@@ -398,6 +420,54 @@ html {
     border-left-color: var(--secondary-color);
     transform: translateX(5px);
 }
+
+/* Mejoras generales para contraste de texto */
+.breadcrumb {
+    background: rgba(248, 249, 250, 0.8) !important;
+    border-radius: 8px !important;
+    padding: 0.75rem 1rem !important;
+}
+
+.breadcrumb-item {
+    color: #495057 !important;
+}
+
+.breadcrumb-item.active {
+    color: #6c757d !important;
+    font-weight: 500 !important;
+}
+
+.breadcrumb-item a {
+    color: #007bff !important;
+    text-decoration: none !important;
+}
+
+.breadcrumb-item a:hover {
+    color: #0056b3 !important;
+    text-decoration: underline !important;
+}
+
+/* Arreglar contraste del texto muted que no se ve */
+.text-muted {
+    color: #6c757d !important;
+}
+
+.card .text-muted {
+    color: #6c757d !important;
+    font-weight: 500 !important;
+}
+
+.btn .text-muted {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.btn-outline-primary .text-muted,
+.btn-outline-info .text-muted,
+.btn-outline-warning .text-muted,
+.btn-outline-secondary .text-muted {
+    color: #495057 !important;
+}
+
 .sidebar i, .sidebar .fa, .sidebar .fas, .sidebar .far, .sidebar .fab {
     color: #fff !important;
 }
@@ -1606,6 +1676,490 @@ html {
 .card-body {
     background-color: #ffffff !important;
     color: #2c3e50 !important;
+}
+
+/* Estilos específicos para tabla de productos */
+.productos-page .table {
+    background-color: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+}
+
+.productos-page .table thead th {
+    background-color: #374151 !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 1rem 0.75rem !important;
+    font-weight: 600 !important;
+    font-size: 0.875rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+}
+
+.productos-page .table tbody tr {
+    border-bottom: 1px solid #e5e7eb !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.productos-page .table tbody tr:hover {
+    background-color: #f8fafc !important;
+}
+
+.productos-page .table tbody td {
+    padding: 1rem 0.75rem !important;
+    vertical-align: middle !important;
+    color: #374151 !important;
+    font-size: 0.875rem !important;
+    border: none !important;
+}
+
+/* Mejorar códigos de productos */
+.productos-page .table tbody td code {
+    background-color: #f1f5f9 !important;
+    color: #1e293b !important;
+    padding: 0.25rem 0.5rem !important;
+    border-radius: 4px !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+/* Mejorar badges de stock */
+.productos-page .badge {
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 12px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.025em !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.25rem !important;
+}
+
+.productos-page .badge.bg-danger {
+    background-color: #dc2626 !important;
+    color: #ffffff !important;
+    border: 1px solid #b91c1c !important;
+    box-shadow: 0 1px 3px rgba(220, 38, 38, 0.3) !important;
+}
+
+.productos-page .badge.bg-warning {
+    background-color: #d97706 !important;
+    color: #ffffff !important;
+    border: 1px solid #b45309 !important;
+    box-shadow: 0 1px 3px rgba(217, 119, 6, 0.3) !important;
+}
+
+.productos-page .badge.bg-success {
+    background-color: #059669 !important;
+    color: #ffffff !important;
+    border: 1px solid #047857 !important;
+    box-shadow: 0 1px 3px rgba(5, 150, 105, 0.3) !important;
+}
+
+.productos-page .badge.badge-info {
+    background-color: #0ea5e9 !important;
+    color: #ffffff !important;
+    border: 1px solid #0284c7 !important;
+    box-shadow: 0 1px 3px rgba(14, 165, 233, 0.3) !important;
+}
+
+.productos-page .badge.bg-secondary {
+    background-color: #6b7280 !important;
+    color: #ffffff !important;
+    border: 1px solid #4b5563 !important;
+    box-shadow: 0 1px 3px rgba(107, 114, 128, 0.3) !important;
+}
+
+/* Mejorar botones de acción */
+.productos-page .btn-group .btn {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.8rem !important;
+    border-radius: 4px !important;
+    margin: 0 1px !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+}
+
+.productos-page .btn-info {
+    background-color: #0ea5e9 !important;
+    border-color: #0ea5e9 !important;
+    color: #ffffff !important;
+}
+
+.productos-page .btn-info:hover {
+    background-color: #0284c7 !important;
+    border-color: #0284c7 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(14, 165, 233, 0.3) !important;
+}
+
+.productos-page .btn-warning {
+    background-color: #f59e0b !important;
+    border-color: #f59e0b !important;
+    color: #ffffff !important;
+}
+
+.productos-page .btn-warning:hover {
+    background-color: #d97706 !important;
+    border-color: #d97706 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3) !important;
+}
+
+.productos-page .btn-danger {
+    background-color: #dc2626 !important;
+    border-color: #dc2626 !important;
+    color: #ffffff !important;
+}
+
+.productos-page .btn-danger:hover {
+    background-color: #b91c1c !important;
+    border-color: #b91c1c !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3) !important;
+}
+
+.productos-page .btn-success {
+    background-color: #059669 !important;
+    border-color: #059669 !important;
+    color: #ffffff !important;
+}
+
+.productos-page .btn-success:hover {
+    background-color: #047857 !important;
+    border-color: #047857 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(5, 150, 105, 0.3) !important;
+}
+
+/* Mejorar texto descriptivo */
+.productos-page .text-muted {
+    color: #6b7280 !important;
+    font-weight: 500 !important;
+}
+
+.productos-page small.text-muted {
+    color: #9ca3af !important;
+    font-size: 0.75rem !important;
+    font-weight: 500 !important;
+}
+
+/* Mejorar precios */
+.productos-page td strong {
+    color: #1f2937 !important;
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+}
+
+/* Mejorar nombres de productos */
+.productos-page td strong {
+    color: #1f2937 !important;
+    font-weight: 700 !important;
+}
+
+/* Mejorar descripciones de productos */
+.productos-page td small {
+    color: #6b7280 !important;
+    font-weight: 500 !important;
+    line-height: 1.4 !important;
+}
+
+/* Mejorar nombres de categorías y marcas */
+.productos-page td {
+    color: #374151 !important;
+    font-weight: 500 !important;
+}
+
+/* Hacer más visibles los enlaces de subcategorías */
+.productos-page td small {
+    color: #6b7280 !important;
+    font-style: italic !important;
+}
+
+/* Estado sin productos */
+.productos-page .text-center.text-muted {
+    color: #6b7280 !important;
+    padding: 3rem 1rem !important;
+}
+
+.productos-page .text-center.text-muted i {
+    color: #d1d5db !important;
+    margin-bottom: 1rem !important;
+}
+
+/* Responsive para tabla */
+@media (max-width: 768px) {
+    .productos-page .btn-group .btn {
+        padding: 0.4rem 0.6rem !important;
+        font-size: 0.75rem !important;
+    }
+    
+    .productos-page .table tbody td {
+        padding: 0.75rem 0.5rem !important;
+        font-size: 0.8rem !important;
+    }
+    
+    .productos-page .badge {
+        font-size: 0.7rem !important;
+        padding: 0.3rem 0.6rem !important;
+    }
+}
+
+/* Estilos para configuración de almacenes */
+.config-almacenes-page {
+    background: #f8f9fc;
+    min-height: 100vh;
+}
+
+.config-almacenes-page .card {
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+    background: #ffffff !important;
+}
+
+.config-almacenes-page .card-header {
+    background-color: #f9fafb !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    padding: 1rem 1.25rem !important;
+    color: #374151 !important;
+    font-weight: 600 !important;
+}
+
+.almacen-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    border: 1px solid #e5e7eb !important;
+}
+
+.almacen-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.almacen-card .card-title {
+    color: #3b82f6 !important;
+    font-weight: 600 !important;
+    margin-bottom: 1rem !important;
+}
+
+.almacen-info {
+    margin-bottom: 1rem;
+}
+
+.info-item {
+    display: flex !important;
+    align-items: center !important;
+    margin-bottom: 0.75rem !important;
+    padding: 0.5rem 0 !important;
+}
+
+.info-item i {
+    width: 20px !important;
+    margin-right: 0.75rem !important;
+    color: #6b7280 !important;
+}
+
+.info-item .label {
+    font-weight: 600 !important;
+    color: #374151 !important;
+    margin-right: 0.5rem !important;
+    min-width: 70px !important;
+}
+
+.info-item .value {
+    color: #1f2937 !important;
+    font-weight: 500 !important;
+}
+
+/* Modales de configuración */
+.config-almacenes-page .modal-content {
+    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.config-almacenes-page .modal-header {
+    background-color: #f8fafc !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 1.25rem 1.5rem !important;
+}
+
+.config-almacenes-page .modal-title {
+    color: #374151 !important;
+    font-weight: 600 !important;
+}
+
+.config-almacenes-page .modal-body {
+    padding: 1.5rem !important;
+}
+
+.config-almacenes-page .form-label {
+    color: #374151 !important;
+    font-weight: 600 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.config-almacenes-page .form-control {
+    border: 2px solid #e5e7eb !important;
+    border-radius: 6px !important;
+    padding: 0.75rem !important;
+    color: #1f2937 !important;
+    background-color: #ffffff !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.config-almacenes-page .form-control:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+    outline: none !important;
+}
+
+.config-almacenes-page .form-text {
+    color: #6b7280 !important;
+    font-size: 0.875rem !important;
+}
+
+.config-almacenes-page .btn {
+    font-weight: 600 !important;
+    border-radius: 6px !important;
+    padding: 0.75rem 1.5rem !important;
+    transition: all 0.2s ease !important;
+}
+
+.config-almacenes-page .btn-primary {
+    background-color: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+    color: #ffffff !important;
+}
+
+.config-almacenes-page .btn-primary:hover {
+    background-color: #2563eb !important;
+    border-color: #2563eb !important;
+    transform: translateY(-1px) !important;
+}
+
+.config-almacenes-page .btn-outline-primary {
+    color: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+    background-color: transparent !important;
+}
+
+.config-almacenes-page .btn-outline-primary:hover {
+    background-color: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+}
+
+.config-almacenes-page .btn-outline-info {
+    color: #0ea5e9 !important;
+    border-color: #0ea5e9 !important;
+    background-color: transparent !important;
+}
+
+.config-almacenes-page .btn-outline-info:hover {
+    background-color: #0ea5e9 !important;
+    border-color: #0ea5e9 !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Estado vacío */
+.config-almacenes-page .text-center.py-5 {
+    padding: 3rem 1rem !important;
+}
+
+.config-almacenes-page .text-center.py-5 i {
+    color: #d1d5db !important;
+}
+
+.config-almacenes-page .text-muted {
+    color: #6b7280 !important;
+}
+
+/* Estilos para enlaces rápidos del dashboard */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+}
+
+.admin-quick-links .btn {
+    min-height: 120px !important;
+    transition: all 0.3s ease !important;
+    border: 2px solid !important;
+    text-decoration: none !important;
+}
+
+.admin-quick-links .btn:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.admin-quick-links .btn-outline-primary:hover {
+    background-color: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+    color: #ffffff !important;
+}
+
+.admin-quick-links .btn-outline-secondary:hover {
+    background-color: #6b7280 !important;
+    border-color: #6b7280 !important;
+    color: #ffffff !important;
+}
+
+.admin-quick-links .btn-outline-info:hover {
+    background-color: #0ea5e9 !important;
+    border-color: #0ea5e9 !important;
+    color: #ffffff !important;
+}
+
+.admin-quick-links .btn-outline-success:hover {
+    background-color: #059669 !important;
+    border-color: #059669 !important;
+    color: #ffffff !important;
+}
+
+.admin-quick-links .btn i {
+    transition: transform 0.3s ease !important;
+}
+
+.admin-quick-links .btn:hover i {
+    transform: scale(1.1) !important;
+}
+
+/* ==============================================
+   MEJORAS DE CONTRASTE Y VISIBILIDAD
+   ============================================== */
+
+/* Herramientas de Trabajo - texto verde mejor contraste */
+.card-header.bg-success {
+    background-color: #28a745 !important;
+}
+
+.card-header.bg-success h5,
+.card-header.bg-success * {
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3) !important;
+}
+
+/* Mejorar contraste general */
+.text-white {
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+}
+
+/* Dropdowns con mejor contraste */
+.sidebar .dropdown-item {
+    color: rgba(255, 255, 255, 0.9) !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+}
+
+.sidebar .dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
 }
 
 /* Animaciones */

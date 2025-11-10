@@ -42,7 +42,7 @@ class Notificacion extends Model
     public function asignarATodosUsuarios($idNotificacion)
     {
         $sql = "SELECT id_usuario FROM usuarios WHERE estado = 'activo'";
-        $usuarios = $this->db->fetch($sql);
+        $usuarios = $this->db->select($sql);
 
         $idsUsuarios = array_column($usuarios, 'id_usuario');
         return $this->asignarAUsuarios($idNotificacion, $idsUsuarios);
@@ -61,7 +61,7 @@ class Notificacion extends Model
                 WHERE nu.id_usuario = ? {$whereLeida}
                 ORDER BY n.fecha DESC";
 
-        return $this->db->fetch($sql, [$idUsuario]);
+        return $this->db->select($sql, [$idUsuario]);
     }
 
     /**
@@ -81,8 +81,8 @@ class Notificacion extends Model
     {
         $sql = "SELECT COUNT(*) as total FROM notificacionesusuarios 
                 WHERE id_usuario = ? AND leida = 0";
-        $result = $this->db->fetch($sql, [$idUsuario]);
-        return $result[0]['total'] ?? 0;
+        $result = $this->db->selectOne($sql, [$idUsuario]);
+        return $result['total'] ?? 0;
     }
 
     /**
@@ -98,7 +98,7 @@ class Notificacion extends Model
             $sql = "SELECT u.id_usuario FROM usuarios u 
                     INNER JOIN roles_usuarios r ON u.id_rol = r.id_rol 
                     WHERE r.nombre = 'Administrador' AND u.estado = 'activo'";
-            $admins = $this->db->fetch($sql);
+            $admins = $this->db->select($sql);
 
             if (!empty($admins)) {
                 $idsAdmins = array_column($admins, 'id_usuario');

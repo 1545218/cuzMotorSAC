@@ -22,7 +22,7 @@ $breadcrumb = [
                                 <i class="fas fa-cash-register fa-3x text-primary mb-3"></i>
                                 <h5 class="card-title">Reporte de Ventas</h5>
                                 <p class="card-text">Consulta las ventas realizadas por período</p>
-                                <button type="button" class="btn btn-primary" onclick="generarReporteVentas()">
+                                <button type="button" class="btn btn-primary" onclick="window.location.href='?page=reportes&action=ventas'">
                                     <i class="fas fa-file-alt me-1"></i>Generar
                                 </button>
                             </div>
@@ -33,9 +33,9 @@ $breadcrumb = [
                         <div class="card h-100 border-success">
                             <div class="card-body text-center">
                                 <i class="fas fa-boxes fa-3x text-success mb-3"></i>
-                                <h5 class="card-title">Reporte de Inventario</h5>
+                                <h5 class="card-title">Reporte de Stock</h5>
                                 <p class="card-text">Estado actual del inventario y stock</p>
-                                <button type="button" class="btn btn-success" onclick="generarReporteInventario()">
+                                <button type="button" class="btn btn-success" onclick="window.location.href='?page=reportes&action=stock'">
                                     <i class="fas fa-file-alt me-1"></i>Generar
                                 </button>
                             </div>
@@ -45,10 +45,10 @@ $breadcrumb = [
                     <div class="col-md-6 col-lg-4 mb-4">
                         <div class="card h-100 border-info">
                             <div class="card-body text-center">
-                                <i class="fas fa-users fa-3x text-info mb-3"></i>
-                                <h5 class="card-title">Reporte de Clientes</h5>
-                                <p class="card-text">Listado y estadísticas de clientes</p>
-                                <button type="button" class="btn btn-info" onclick="generarReporteClientes()">
+                                <i class="fas fa-exchange-alt fa-3x text-info mb-3"></i>
+                                <h5 class="card-title">Reporte de Movimientos</h5>
+                                <p class="card-text">Entradas, salidas y ajustes de inventario</p>
+                                <button type="button" class="btn btn-info" onclick="window.location.href='?page=reportes&action=movimientos'">
                                     <i class="fas fa-file-alt me-1"></i>Generar
                                 </button>
                             </div>
@@ -58,10 +58,10 @@ $breadcrumb = [
                     <div class="col-md-6 col-lg-4 mb-4">
                         <div class="card h-100 border-warning">
                             <div class="card-body text-center">
-                                <i class="fas fa-file-invoice-dollar fa-3x text-warning mb-3"></i>
-                                <h5 class="card-title">Reporte de Cotizaciones</h5>
-                                <p class="card-text">Estado de cotizaciones por período</p>
-                                <button type="button" class="btn btn-warning" onclick="generarReporteCotizaciones()">
+                                <i class="fas fa-chart-line fa-3x text-warning mb-3"></i>
+                                <h5 class="card-title">Reporte de Consumo</h5>
+                                <p class="card-text">Análisis de productos más utilizados</p>
+                                <button type="button" class="btn btn-warning" onclick="window.location.href='?page=reportes&action=consumo'">
                                     <i class="fas fa-file-alt me-1"></i>Generar
                                 </button>
                             </div>
@@ -72,9 +72,9 @@ $breadcrumb = [
                         <div class="card h-100 border-danger">
                             <div class="card-body text-center">
                                 <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
-                                <h5 class="card-title">Productos Bajo Stock</h5>
+                                <h5 class="card-title">Stock Bajo</h5>
                                 <p class="card-text">Productos que requieren reposición</p>
-                                <button type="button" class="btn btn-danger" onclick="generarReporteBajoStock()">
+                                <button type="button" class="btn btn-danger" onclick="window.location.href='?page=reportes&action=stock&solo_stock_bajo=true'">
                                     <i class="fas fa-file-alt me-1"></i>Generar
                                 </button>
                             </div>
@@ -109,13 +109,13 @@ $breadcrumb = [
                                     <div class="row">
                                         <div class="col-md-4">
                                             <label for="fecha_inicio" class="form-label">Fecha Inicio</label>
-                                            <input type="date" class="form-control" id="fecha_inicio" 
-                                                   value="<?= date('Y-m-01') ?>">
+                                            <input type="date" class="form-control" id="fecha_inicio"
+                                                value="<?= date('Y-m-01') ?>">
                                         </div>
                                         <div class="col-md-4">
                                             <label for="fecha_fin" class="form-label">Fecha Fin</label>
-                                            <input type="date" class="form-control" id="fecha_fin" 
-                                                   value="<?= date('Y-m-d') ?>">
+                                            <input type="date" class="form-control" id="fecha_fin"
+                                                value="<?= date('Y-m-d') ?>">
                                         </div>
                                         <div class="col-md-4">
                                             <label for="tipo_reporte" class="form-label">Formato</label>
@@ -141,14 +141,14 @@ $breadcrumb = [
         const fechaInicio = document.getElementById('fecha_inicio').value;
         const fechaFin = document.getElementById('fecha_fin').value;
         const formato = document.getElementById('tipo_reporte').value;
-        
+
         if (!fechaInicio || !fechaFin) {
             alert('Por favor selecciona las fechas para el reporte');
             return;
         }
-        
+
         const url = `<?= BASE_PATH ?>/public/?page=reportes&action=ventas&fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}&formato=${formato}`;
-        
+
         if (formato === 'html') {
             window.location.href = url;
         } else {
@@ -159,7 +159,7 @@ $breadcrumb = [
     function generarReporteInventario() {
         const formato = document.getElementById('tipo_reporte').value;
         const url = `<?= BASE_PATH ?>/public/?page=reportes&action=inventario&formato=${formato}`;
-        
+
         if (formato === 'html') {
             window.location.href = url;
         } else {
@@ -170,7 +170,7 @@ $breadcrumb = [
     function generarReporteClientes() {
         const formato = document.getElementById('tipo_reporte').value;
         const url = `<?= BASE_PATH ?>/public/?page=reportes&action=clientes&formato=${formato}`;
-        
+
         if (formato === 'html') {
             window.location.href = url;
         } else {
@@ -182,14 +182,14 @@ $breadcrumb = [
         const fechaInicio = document.getElementById('fecha_inicio').value;
         const fechaFin = document.getElementById('fecha_fin').value;
         const formato = document.getElementById('tipo_reporte').value;
-        
+
         if (!fechaInicio || !fechaFin) {
             alert('Por favor selecciona las fechas para el reporte');
             return;
         }
-        
+
         const url = `<?= BASE_PATH ?>/public/?page=reportes&action=cotizaciones&fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}&formato=${formato}`;
-        
+
         if (formato === 'html') {
             window.location.href = url;
         } else {
@@ -200,7 +200,7 @@ $breadcrumb = [
     function generarReporteBajoStock() {
         const formato = document.getElementById('tipo_reporte').value;
         const url = `<?= BASE_PATH ?>/public/?page=reportes&action=bajo_stock&formato=${formato}`;
-        
+
         if (formato === 'html') {
             window.location.href = url;
         } else {

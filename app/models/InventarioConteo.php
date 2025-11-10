@@ -7,6 +7,15 @@ class InventarioConteo extends Model
     protected $primaryKey = 'id_inventario';
 
     /**
+     * Obtiene todos los inventarios
+     */
+    public function getAll()
+    {
+        $sql = "SELECT * FROM inventarioconteo ORDER BY fecha DESC";
+        return $this->db->select($sql);
+    }
+
+    /**
      * Inicia un nuevo conteo de inventario
      */
     public function iniciarConteo($idUsuario, $observaciones = null)
@@ -28,8 +37,8 @@ class InventarioConteo extends Model
     {
         // Obtener stock actual del sistema
         $sqlStock = "SELECT stock_actual FROM productos WHERE id_producto = ?";
-        $resultStock = $this->db->fetch($sqlStock, [$idProducto]);
-        $stockSistema = $resultStock[0]['stock_actual'] ?? 0;
+        $resultStock = $this->db->selectOne($sqlStock, [$idProducto]);
+        $stockSistema = $resultStock['stock_actual'] ?? 0;
 
         $diferencia = $stockFisico - $stockSistema;
 
@@ -54,7 +63,7 @@ class InventarioConteo extends Model
                 WHERE di.id_inventario = ?
                 ORDER BY p.nombre";
 
-        return $this->db->fetch($sql, [$idInventario]);
+        return $this->db->select($sql, [$idInventario]);
     }
 
     /**
@@ -72,7 +81,7 @@ class InventarioConteo extends Model
                 ORDER BY ic.fecha DESC
                 LIMIT ? OFFSET ?";
 
-        return $this->db->fetch($sql, [$limite, $offset]);
+        return $this->db->select($sql, [$limite, $offset]);
     }
 
     /**
@@ -138,8 +147,8 @@ class InventarioConteo extends Model
                 FROM detalleinventario 
                 WHERE id_inventario = ?";
 
-        $result = $this->db->fetch($sql, [$idInventario]);
-        return $result[0] ?? [];
+        $result = $this->db->selectOne($sql, [$idInventario]);
+        return $result ?? [];
     }
 
     /**
@@ -171,7 +180,20 @@ class InventarioConteo extends Model
                     COUNT(DISTINCT id_usuario) as usuarios_diferentes
                 FROM inventarioconteo";
 
-        $result = $this->db->fetch($sql);
-        return $result[0] ?? [];
+        $result = $this->db->selectOne($sql);
+        return $result ?? [];
+    }
+
+    /**
+     * Obtiene un conteo con información del usuario
+     */
+    public function getConteoConUsuario($idInventario)
+    {
+        $sql = "SELECT ic.*, u.nombre as usuario_nombre, u.apellido as usuario_apellido
+                FROM inventarioconteo ic
+                LEFT JOIN usuarios u ON ic.id_usuario = u.id_usuario
+                WHERE ic.id_inventario = ?";
+
+        return $this->db->selectOne($sql, [$idInventario]);
     }
 }

@@ -140,10 +140,25 @@
 
                                 <div class="d-grid gap-2">
                                     <button type="submit" class="btn btn-success">
-                                        <i class="fas fa-cash-register me-2"></i>Crear Venta y Marcar Cotización como Aprobada
+                                        <i class="fas fa-check me-2"></i>Confirmar Cotización
                                     </button>
+
+                                    <!-- Botón de Rechazar Cotización -->
+                                    <a href="?page=cotizaciones&action=rechazar&id=<?= $cot['id_cotizacion'] ?? '' ?>"
+                                        class="btn btn-danger"
+                                        onclick="return confirm('¿Está seguro de que desea rechazar esta cotización?')">
+                                        <i class="fas fa-times me-2"></i>Rechazar Cotización
+                                    </a>
+
+                                    <!-- Botón de Eliminar Cotización -->
+                                    <a href="?page=cotizaciones&action=eliminar&id=<?= $cot['id_cotizacion'] ?? '' ?>"
+                                        class="btn btn-outline-danger"
+                                        onclick="return confirm('¿Está seguro de que desea ELIMINAR PERMANENTEMENTE esta cotización? Esta acción no se puede deshacer.')">
+                                        <i class="fas fa-trash me-2"></i>Eliminar Cotización
+                                    </a>
+
                                     <a href="?page=cotizaciones" class="btn btn-outline-secondary">
-                                        <i class="fas fa-times me-2"></i>Cancelar
+                                        <i class="fas fa-arrow-left me-2"></i>Cancelar
                                     </a>
                                 </div>
                             </form>

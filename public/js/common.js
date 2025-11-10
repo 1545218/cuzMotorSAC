@@ -29,6 +29,40 @@ const CruzMotor = {
         });
     },
 
+    // Función para esperar jQuery
+    waitForJQuery: function(callback) {
+        if (typeof jQuery !== 'undefined') {
+            callback();
+        } else {
+            setTimeout(() => this.waitForJQuery(callback), 100);
+        }
+    },
+
+    // Mostrar toast Bootstrap
+    mostrarToast: function(mensaje, tipo = 'primary') {
+        let toastEl = document.getElementById('toastNotificacion');
+        if (!toastEl) {
+            const toastHtml = `
+                <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
+                    <div id="toastNotificacion" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body" id="toastMensaje"></div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', toastHtml);
+            toastEl = document.getElementById('toastNotificacion');
+        }
+        
+        const toastMsg = document.getElementById('toastMensaje');
+        toastMsg.textContent = mensaje;
+        toastEl.className = 'toast align-items-center text-bg-' + tipo + ' border-0';
+        const toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    },
+
     // Confirmar acción con SweetAlert2
     confirmAction: function(title, text, confirmText = 'Sí, continuar') {
         return Swal.fire({

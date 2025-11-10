@@ -9,11 +9,16 @@ class Auth
 {
     private $db;
     private $sessionName;
+    private $sesionUsuario;
 
     public function __construct()
     {
         $this->db = Database::getInstance();
         $this->sessionName = SESSION_NAME;
+
+        // Inicializar modelo de sesiones de usuario
+        require_once __DIR__ . '/../models/SesionUsuario.php';
+        $this->sesionUsuario = new SesionUsuario();
 
         // Configurar sesión
         $this->initSession();
@@ -107,15 +112,44 @@ class Auth
             }
 
             // Autenticación exitosa
+
+            // Verificar y gestionar sesiones concurrentes
+            $controlConcurrente = $this->gestionarSesionesConcurrentes($user['id_usuario']);
+            if (!$controlConcurrente['permitir']) {
+                return [
+                    'success' => false,
+                    'message' => $controlConcurrente['mensaje']
+                ];
+            }
+
+            // Configurar sesión de usuario
             $this->setUserSession($user);
+
+            // Registrar sesión en base de datos
+            $sessionDbId = $this->sesionUsuario->iniciarSesion(
+                $user['id_usuario'],
+                $this->obtenerIPCliente(),
+                session_id()
+            );
+
+            // Guardar ID de sesión en sesión PHP
+            if ($sessionDbId) {
+                $_SESSION['db_session_id'] = $sessionDbId;
+            }
+
             $this->updateLastLogin($user['id_usuario']);
 
-            Logger::info("Login exitoso", ['username' => $username]);
+            Logger::info("Login exitoso", [
+                'username' => $username,
+                'session_db_id' => $sessionDbId,
+                'sesiones_concurrentes' => $controlConcurrente['sesiones_activas']
+            ]);
 
             return [
                 'success' => true,
                 'message' => 'Bienvenido ' . $user['nombre'],
-                'user' => $user
+                'user' => $user,
+                'sesiones_concurrentes' => $controlConcurrente['sesiones_activas']
             ];
         } catch (Exception $e) {
             Logger::error("Error en login: " . $e->getMessage());
@@ -131,6 +165,14 @@ class Auth
      */
     public function logout()
     {
+        // Finalizar sesión en base de datos
+        if (isset($_SESSION['db_session_id']) && isset($_SESSION['user_id'])) {
+            $this->sesionUsuario->finalizarSesion(
+                $_SESSION['db_session_id'],
+                $_SESSION['user_id']
+            );
+        }
+
         // Limpiar datos de sesión
         $_SESSION = [];
 
@@ -578,5 +620,229 @@ class Auth
         }
 
         return false;
+    }
+
+    // =============================================
+    // FUNCIONES PARA CONTROL DE SESIONES AVANZADO
+    // =============================================
+
+    /**
+     * Gestionar sesiones concurrentes de un usuario
+     * 
+     * @param int $userId ID del usuario
+     * @return array Resultado de la gestión
+     */
+    private function gestionarSesionesConcurrentes($userId)
+    {
+        try {
+            $sesionesActivas = $this->sesionUsuario->contarSesionesConcurrentes($userId);
+            $maxSesiones = defined('MAX_SESIONES_CONCURRENTES') ? MAX_SESIONES_CONCURRENTES : 3;
+
+            if ($sesionesActivas >= $maxSesiones) {
+                // Política: cerrar sesión más antigua
+                $this->cerrarSesionMasAntigua($userId);
+                $sesionesActivas--;
+            }
+
+            return [
+                'permitir' => true,
+                'sesiones_activas' => $sesionesActivas + 1, // +1 porque la nueva sesión se contará
+                'mensaje' => $sesionesActivas > 0 ?
+                    "Tienes {$sesionesActivas} sesión(es) activa(s) adicional(es)" :
+                    "Primera sesión activa"
+            ];
+        } catch (Exception $e) {
+            Logger::error("Error al gestionar sesiones concurrentes: " . $e->getMessage());
+            return [
+                'permitir' => true,
+                'sesiones_activas' => 1,
+                'mensaje' => 'Control de sesiones no disponible'
+            ];
+        }
+    }
+
+    /**
+     * Cerrar la sesión más antigua de un usuario
+     * 
+     * @param int $userId ID del usuario
+     * @return bool
+     */
+    private function cerrarSesionMasAntigua($userId)
+    {
+        try {
+            $sesionesActivas = $this->sesionUsuario->obtenerSesionesActivas($userId);
+
+            if (!empty($sesionesActivas)) {
+                // Ordenar por fecha y tomar la más antigua
+                usort($sesionesActivas, function ($a, $b) {
+                    return strtotime($a['inicio_sesion']) - strtotime($b['inicio_sesion']);
+                });
+
+                $sesionAntigua = $sesionesActivas[0];
+                return $this->sesionUsuario->finalizarSesion($sesionAntigua['id_sesion'], $userId);
+            }
+
+            return true;
+        } catch (Exception $e) {
+            Logger::error("Error al cerrar sesión antigua: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Obtener sesiones activas del usuario actual
+     * 
+     * @return array
+     */
+    public function obtenerMisSesionesActivas()
+    {
+        if (!self::isLoggedIn()) {
+            return [];
+        }
+
+        return $this->sesionUsuario->obtenerSesionesActivas($_SESSION['user_id']);
+    }
+
+    /**
+     * Cerrar una sesión específica del usuario actual
+     * 
+     * @param int $sessionId ID de la sesión
+     * @return bool
+     */
+    public function cerrarMiSesion($sessionId)
+    {
+        if (!self::isLoggedIn()) {
+            return false;
+        }
+
+        return $this->sesionUsuario->finalizarSesion($sessionId, $_SESSION['user_id']);
+    }
+
+    /**
+     * Cerrar todas las demás sesiones del usuario actual
+     * 
+     * @return bool
+     */
+    public function cerrarOtrasSesiones()
+    {
+        if (!self::isLoggedIn()) {
+            return false;
+        }
+
+        $userId = $_SESSION['user_id'];
+        $sesionActual = $_SESSION['db_session_id'] ?? null;
+
+        try {
+            $sesiones = $this->sesionUsuario->obtenerSesionesActivas($userId);
+            $cerradas = 0;
+
+            foreach ($sesiones as $sesion) {
+                if ($sesion['id_sesion'] != $sesionActual) {
+                    if ($this->sesionUsuario->finalizarSesion($sesion['id_sesion'], $userId)) {
+                        $cerradas++;
+                    }
+                }
+            }
+
+            return $cerradas;
+        } catch (Exception $e) {
+            Logger::error("Error al cerrar otras sesiones: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Obtener estadísticas de sesiones del usuario actual
+     * 
+     * @return array
+     */
+    public function obtenerEstadisticasMisSesiones()
+    {
+        if (!self::isLoggedIn()) {
+            return [];
+        }
+
+        try {
+            $userId = $_SESSION['user_id'];
+            $estadisticas = $this->sesionUsuario->obtenerEstadisticas('month');
+
+            // Añadir información específica del usuario
+            $sesionesUsuario = $this->sesionUsuario->obtenerSesionesActivas($userId);
+            $estadisticas['mis_sesiones_activas'] = count($sesionesUsuario);
+
+            return $estadisticas;
+        } catch (Exception $e) {
+            Logger::error("Error al obtener estadísticas: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Obtener IP del cliente
+     * 
+     * @return string
+     */
+    private function obtenerIPCliente()
+    {
+        $ipKeys = ['HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP', 'HTTP_CLIENT_IP', 'REMOTE_ADDR'];
+
+        foreach ($ipKeys as $key) {
+            if (!empty($_SERVER[$key])) {
+                $ip = $_SERVER[$key];
+                // Si hay múltiples IPs, tomar la primera
+                if (strpos($ip, ',') !== false) {
+                    $ip = trim(explode(',', $ip)[0]);
+                }
+                // Validar que sea una IP válida
+                if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                    return $ip;
+                }
+            }
+        }
+
+        return $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    }
+
+    /**
+     * Limpiar sesiones expiradas automáticamente
+     * 
+     * @param int $horasVencimiento Horas de vencimiento
+     * @return int Número de sesiones limpiadas
+     */
+    public function limpiarSesionesExpiradas($horasVencimiento = 24)
+    {
+        try {
+            return $this->sesionUsuario->limpiarSesionesExpiradas($horasVencimiento);
+        } catch (Exception $e) {
+            Logger::error("Error al limpiar sesiones expiradas: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * Verificar si la sesión actual es válida en base de datos
+     * 
+     * @return bool
+     */
+    public function verificarSesionBD()
+    {
+        if (!self::isLoggedIn() || !isset($_SESSION['db_session_id'])) {
+            return false;
+        }
+
+        try {
+            $sesiones = $this->sesionUsuario->obtenerSesionesActivas($_SESSION['user_id']);
+
+            foreach ($sesiones as $sesion) {
+                if ($sesion['id_sesion'] == $_SESSION['db_session_id']) {
+                    return true;
+                }
+            }
+
+            return false;
+        } catch (Exception $e) {
+            Logger::error("Error al verificar sesión BD: " . $e->getMessage());
+            return false;
+        }
     }
 }

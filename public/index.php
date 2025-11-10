@@ -132,13 +132,6 @@ function handleCRUD($controllerClass, $customActions = [])
 $page = $_GET['page'] ?? '';
 $action = $_GET['action'] ?? 'index';
 
-// Manejar URLs amigables como /auth/logout
-$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-if ($requestUri === '/auth/logout') {
-    $page = 'auth';
-    $action = 'logout';
-}
-
 try {
     // Log de la request entrante
     Logger::info("Request procesada", [
@@ -176,8 +169,10 @@ try {
         case 'auth':
             // Verificar si es logout específicamente
             if ($action === 'logout') {
-                $auth->logout();
-                header("Location: ?page=login");
+                // Usar AuthController para logout
+                require_once APP_PATH . '/controllers/AuthController.php';
+                $authController = new AuthController();
+                $authController->logout();
                 exit;
             }
 
@@ -220,11 +215,6 @@ try {
             extract($data);
             include APP_PATH . '/views/auth/login_layout.php';
             break;
-
-        case 'logout':
-            $auth->logout();
-            header("Location: ?page=login");
-            exit;
 
         case 'dashboard':
             if (file_exists(APP_PATH . '/controllers/DashboardController.php')) {
@@ -276,6 +266,32 @@ try {
             }
             break;
 
+        case 'ajustes':
+            Auth::requireAuth();
+            Auth::requireRole(['administrador']);
+            $controller = new AjusteController();
+            switch ($action) {
+                case 'create':
+                    $controller->create();
+                    break;
+                case 'store':
+                    $controller->store();
+                    break;
+                case 'show':
+                    $id = $_GET['id'] ?? 0;
+                    $controller->show($id);
+                    break;
+                case 'estadisticas':
+                    $controller->estadisticas();
+                    break;
+                case 'api_productos':
+                    $controller->apiProductos();
+                    break;
+                default:
+                    $controller->index();
+            }
+            break;
+
         case 'productos':
             Auth::requireAuth();
             $controller = new ProductoController();
@@ -291,7 +307,9 @@ try {
                     $controller->edit($id);
                     break;
                 case 'update':
-                    $controller->update();
+                    // El método edit() ya maneja las actualizaciones vía POST
+                    $id = $_GET['id'] ?? 0;
+                    $controller->edit($id);
                     break;
                 case 'view':
                     $id = $_GET['id'] ?? 0;
@@ -300,6 +318,82 @@ try {
                 case 'delete':
                     $id = $_GET['id'] ?? 0;
                     $controller->delete($id);
+                    break;
+                default:
+                    $controller->index();
+            }
+            break;
+
+        case 'vehiculos':
+            Auth::requireAuth();
+            $controller = new VehiculoController();
+            switch ($action) {
+                case 'create':
+                    $controller->create();
+                    break;
+                case 'store':
+                    $controller->store();
+                    break;
+                case 'edit':
+                    $id = $_GET['id'] ?? 0;
+                    $controller->edit($id);
+                    break;
+                case 'update':
+                    $id = $_GET['id'] ?? 0;
+                    $controller->update($id);
+                    break;
+                case 'delete':
+                    $id = $_GET['id'] ?? 0;
+                    $controller->delete($id);
+                    break;
+                case 'porCliente':
+                    $id = $_GET['id'] ?? 0;
+                    $controller->porCliente($id);
+                    break;
+                default:
+                    $controller->index();
+            }
+            break;
+
+        case 'ordenes':
+            Auth::requireAuth();
+            $controller = new OrdenTrabajoController();
+            switch ($action) {
+                case 'create':
+                    $controller->create();
+                    break;
+                case 'store':
+                    $controller->store();
+                    break;
+                case 'show':
+                    $id = $_GET['id'] ?? 0;
+                    $controller->show($id);
+                    break;
+                case 'edit':
+                    $id = $_GET['id'] ?? 0;
+                    $controller->edit($id);
+                    break;
+                case 'update':
+                    $id = $_GET['id'] ?? 0;
+                    $controller->update($id);
+                    break;
+                case 'delete':
+                    $id = $_GET['id'] ?? 0;
+                    $controller->delete($id);
+                    break;
+                case 'cambiarEstado':
+                    $id = $_GET['id'] ?? 0;
+                    $controller->cambiarEstado($id);
+                    break;
+                case 'vehiculosPorCliente':
+                    $id = $_GET['id'] ?? 0;
+                    $controller->vehiculosPorCliente($id);
+                    break;
+                case 'buscar':
+                    $controller->buscar();
+                    break;
+                case 'estadisticas':
+                    $controller->estadisticas();
                     break;
                 default:
                     $controller->index();
@@ -393,6 +487,29 @@ try {
                 case 'reporte':
                     $controller->reporte();
                     break;
+                case 'detalle':
+                    $controller->detalle();
+                    break;
+                case 'conteo':
+                    $controller->conteo();
+                    break;
+                case 'nuevoConteo':
+                    $controller->nuevoConteo();
+                    break;
+                case 'realizarConteo':
+                    $id = $_GET['id'] ?? 0;
+                    $controller->realizarConteo($id);
+                    break;
+                case 'guardarConteoProducto':
+                    $controller->guardarConteoProducto();
+                    break;
+                case 'finalizarConteo':
+                    $id = $_GET['id'] ?? 0;
+                    $controller->finalizarConteo($id);
+                    break;
+                case 'aplicarAjustes':
+                    $controller->aplicarAjustes();
+                    break;
                 default:
                     $controller->index();
             }
@@ -438,6 +555,13 @@ try {
                     $id = $_GET['id'] ?? 0;
                     $controller->changeStatus($id);
                     break;
+                case 'aceptar':
+                    $controller->aceptar();
+                    break;
+                case 'rechazar':
+                    $controller->rechazar();
+                    break;
+                case 'eliminar':
                 case 'delete':
                     $id = $_GET['id'] ?? 0;
                     $controller->delete($id);
@@ -533,8 +657,37 @@ try {
             Auth::requireAuth();
             Auth::requireRole(['administrador']); // Solo administradores
             $controller = new ReporteController();
-            // Solo permitir la acción index, ya que los demás métodos pueden no estar implementados
-            $controller->index();
+            switch ($action) {
+                case 'ventas':
+                    $controller->ventas();
+                    break;
+                case 'stock':
+                    $controller->stock();
+                    break;
+                case 'movimientos':
+                    $controller->movimientos();
+                    break;
+                case 'consumo':
+                    $controller->consumo();
+                    break;
+                case 'dashboard':
+                    $controller->dashboard();
+                    break;
+                case 'movimientos-inventario':
+                    $controller->movimientosInventario();
+                    break;
+                case 'consumo-periodo':
+                    $controller->consumoPorPeriodo();
+                    break;
+                case 'estado-stock':
+                    $controller->estadoStock();
+                    break;
+                case 'programar-reportes':
+                    $controller->programarReportes();
+                    break;
+                default:
+                    $controller->index();
+            }
             break;
 
         case 'alertas':
@@ -550,6 +703,22 @@ try {
                     break;
                 case 'contarPendientes':
                     $controller->contarPendientes();
+                    break;
+                default:
+                    $controller->index();
+            }
+            break;
+
+        case 'notificaciones':
+            Auth::requireAuth();
+            Auth::requireRole(['administrador']); // Solo administradores
+            $controller = new NotificacionController();
+            switch ($action) {
+                case 'add':
+                    $controller->add();
+                    break;
+                case 'delete':
+                    $controller->delete();
                     break;
                 default:
                     $controller->index();
@@ -618,7 +787,7 @@ try {
 
         case 'config':
             Auth::requireAuth();
-            Auth::requireRole(['administrador']); // Corregido el rol
+            Auth::requireRole(['administrador']);
             $controller = new ConfigController();
             $action = $_GET['action'] ?? 'index';
 
@@ -631,6 +800,107 @@ try {
                     break;
                 case 'clear-cache':
                     $controller->clearCache();
+                    break;
+                case 'almacen':
+                    $controller->almacen();
+                    break;
+                case 'createAlmacen':
+                    $controller->createAlmacen();
+                    break;
+                case 'editAlmacen':
+                    $controller->editAlmacen();
+                    break;
+                case 'deleteAlmacen':
+                    $controller->deleteAlmacen();
+                    break;
+                case 'sistema':
+                    $controller->sistema();
+                    break;
+                case 'updateSistema':
+                    $controller->updateSistema();
+                    break;
+                case 'createParametro':
+                    $controller->createParametro();
+                    break;
+                case 'empresa':
+                    $controller->empresa();
+                    break;
+                case 'actualizarEmpresa':
+                    $controller->actualizarEmpresa();
+                    break;
+                default:
+                    $controller->index();
+            }
+            break;
+
+        case 'auditoria':
+            Auth::requireAuth();
+            Auth::requireRole(['administrador']);
+            $controller = new AuditoriaController();
+            $action = $_GET['action'] ?? 'index';
+
+            switch ($action) {
+                case 'estadisticas':
+                    $controller->estadisticas();
+                    break;
+                case 'buscar':
+                    $controller->buscar();
+                    break;
+                case 'registro':
+                    $controller->registro();
+                    break;
+                case 'limpiar':
+                    $controller->limpiar();
+                    break;
+                case 'exportar':
+                    $controller->exportar();
+                    break;
+                case 'api_recientes':
+                    $controller->api_recientes();
+                    break;
+                case 'dashboard-seguridad':
+                    $controller->dashboard_seguridad();
+                    break;
+                case 'monitoreo-sesiones':
+                    $controller->monitoreo_sesiones();
+                    break;
+                case 'detectar-anomalias':
+                    $controller->detectar_anomalias();
+                    break;
+                case 'reporte-seguridad':
+                    $controller->generar_reporte_seguridad();
+                    break;
+                default:
+                    $controller->index();
+            }
+            break;
+
+        case 'sesiones':
+            Auth::requireAuth();
+            $controller = new SesionController();
+            $action = $_GET['action'] ?? 'index';
+
+            switch ($action) {
+                case 'estadisticas':
+                    Auth::requireRole(['administrador']);
+                    $controller->estadisticas();
+                    break;
+                case 'cerrar':
+                    $controller->cerrar();
+                    break;
+                case 'cerrarOtras':
+                    $controller->cerrarOtras();
+                    break;
+                case 'limpiar':
+                    Auth::requireRole(['administrador']);
+                    $controller->limpiar();
+                    break;
+                case 'cerrarUsuario':
+                    Auth::requireRole(['administrador']);
+                    $controller->cerrarUsuario();
+                    break;
+                case 'activas':
+                    $controller->activas();
                     break;
                 default:
                     $controller->index();

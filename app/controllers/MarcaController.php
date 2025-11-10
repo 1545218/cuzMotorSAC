@@ -66,7 +66,7 @@ class MarcaController extends Controller
             }
 
             // Solo administradores y almacén pueden crear marcas
-            if (!in_array($_SESSION['user_role'], ['admin', 'almacen'])) {
+            if (!in_array($_SESSION['rol'] ?? '', ['administrador', 'almacen'])) {
                 echo json_encode(['success' => false, 'errors' => ['general' => 'No tienes permisos para esta acción']]);
                 return;
             }
@@ -145,7 +145,7 @@ class MarcaController extends Controller
             }
 
             // Solo administradores y almacén pueden actualizar marcas
-            if (!in_array($_SESSION['user_role'], ['admin', 'almacen'])) {
+            if (!in_array($_SESSION['rol'] ?? '', ['administrador', 'almacen'])) {
                 echo json_encode(['success' => false, 'errors' => ['general' => 'No tienes permisos para esta acción']]);
                 return;
             }
@@ -207,7 +207,7 @@ class MarcaController extends Controller
             }
 
             // Solo administradores pueden eliminar marcas
-            if ($_SESSION['user_role'] !== 'admin') {
+            if ($_SESSION['rol'] ?? '' !== 'administrador') {
                 echo json_encode(['success' => false, 'message' => 'No tienes permisos para esta acción']);
                 return;
             }
@@ -250,7 +250,7 @@ class MarcaController extends Controller
             }
 
             // Solo administradores y almacén pueden cambiar estado
-            if (!in_array($_SESSION['user_role'], ['admin', 'almacen'])) {
+            if (!in_array($_SESSION['rol'] ?? '', ['administrador', 'almacen'])) {
                 echo json_encode(['success' => false, 'message' => 'No tienes permisos para esta acción']);
                 return;
             }
@@ -399,7 +399,7 @@ class MarcaController extends Controller
                     </button>';
 
             // Solo administradores pueden eliminar
-            if ($_SESSION['user_role'] === 'admin') {
+            if ($_SESSION['rol'] ?? '' === 'administrador') {
                 $actions .= '
                     <button type="button" class="btn btn-sm btn-outline-danger" onclick="eliminarMarca(' . $marca['id'] . ')" title="Eliminar">
                         <i class="fas fa-trash"></i>

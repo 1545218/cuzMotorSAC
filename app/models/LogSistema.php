@@ -56,7 +56,7 @@ class LogSistema extends Model
         $params[] = $limite;
         $params[] = $offset;
 
-        return $this->db->fetch($sql, $params);
+        return $this->db->select($sql, $params);
     }
 
     public function contarLogs($filtros = [])
@@ -92,8 +92,8 @@ class LogSistema extends Model
                 LEFT JOIN usuarios u ON l.id_usuario = u.id_usuario
                 {$whereClause}";
 
-        $result = $this->db->fetch($sql, $params);
-        return $result[0]['total'];
+        $result = $this->db->selectOne($sql, $params);
+        return $result['total'];
     }
 
     public function limpiarLogsAntiguos($diasAntiguedad = 90)

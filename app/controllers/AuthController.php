@@ -129,12 +129,27 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        $user = $this->auth->getUser();
-        Logger::info("Logout realizado", [
-            'username' => $user['usuario'] ?? 'unknown',
-            'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown'
-        ]);
-        $this->logActivity('logout', 'Usuario cerró sesión');
+        try {
+            $user = $this->auth->getUser();
+            $username = 'unknown';
+
+            if ($user && isset($user['usuario'])) {
+                $username = $user['usuario'];
+            } elseif (isset($_SESSION['username'])) {
+                $username = $_SESSION['username'];
+            }
+
+            Logger::info("Logout realizado", [
+                'username' => $username,
+                'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown'
+            ]);
+
+            $this->logActivity('logout', 'Usuario cerró sesión');
+        } catch (Exception $e) {
+            // Si hay error al obtener usuario, continuar con logout
+            Logger::warning("Error al obtener usuario en logout: " . $e->getMessage());
+        }
+
         $this->auth->logout();
         $this->setFlash('success', 'Sesión cerrada correctamente');
         $this->redirect('auth/login');

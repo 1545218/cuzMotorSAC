@@ -1,6 +1,4 @@
 <?php
-require_once __DIR__ . '/../core/Controller.php';
-require_once __DIR__ . '/../models/BackupSistema.php';
 
 class BackupSistemaController extends Controller
 {

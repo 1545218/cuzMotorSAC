@@ -99,7 +99,7 @@
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                // Error de red, ya se maneja visualmente
                 Swal.fire('Error', 'Error de conexión', 'error');
             })
             .finally(() => {
@@ -151,7 +151,7 @@
                         }
                     })
                     .catch(error => {
-                        console.error('Error:', error);
+                        // Error de red, ya se maneja visualmente
                         Swal.fire('Error', 'Error de conexión', 'error');
                     });
             }
@@ -229,7 +229,7 @@
                             procesarAlerta(index + 1);
                         })
                         .catch(error => {
-                            console.error('Error procesando alerta:', error);
+                            // Error procesando alerta
                             // Continuar con la siguiente aunque haya error
                             procesarAlerta(index + 1);
                         });
@@ -258,7 +258,8 @@
                     }
                 }
             })
-            .catch(error => console.error('Error actualizando contador:', error));
+            .catch(error => {
+                /* Error actualizando contador */ });
     }, 30000);
 
     // Actualizar contador al cargar la página
@@ -278,6 +279,7 @@
                     }
                 }
             })
-            .catch(error => console.error('Error actualizando contador:', error));
+            .catch(error => {
+                /* Error actualizando contador */ });
     });
 </script>

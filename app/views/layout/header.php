@@ -55,7 +55,18 @@ if (!isset($user) || !$user) {
                     </div>
                     <div>
                         <div class="fw-bold"><?= htmlspecialchars($user['nombre']) ?></div>
-                        <small class="text-muted"><?= ucfirst($user['rol'] ?? 'Usuario') ?></small>
+                        <small class="text-muted">
+                            <?php
+                            $rolMostrar = $user['rol'] ?? 'Usuario';
+                            // Convertir vendedor a mecánico en la visualización
+                            if ($rolMostrar === 'vendedor') {
+                                $rolMostrar = 'Mecánico';
+                            } else {
+                                $rolMostrar = ucfirst($rolMostrar);
+                            }
+                            echo $rolMostrar;
+                            ?>
+                        </small>
                     </div>
                 </div>
             </div>
@@ -71,15 +82,61 @@ if (!isset($user) || !$user) {
                     <i class="fas fa-home"></i>Inicio
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link <?= ($_GET['page'] ?? '') == 'productos' ? 'active' : '' ?>" href="?page=productos">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle <?= in_array(($_GET['page'] ?? ''), ['productos', 'inventario']) ? 'active' : '' ?>"
+                    href="#" id="navbarInventario" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-box"></i>Inventario
                 </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarInventario">
+                    <li>
+                        <a class="dropdown-item <?= ($_GET['page'] ?? '') == 'productos' ? 'active' : '' ?>" href="?page=productos">
+                            <i class="fas fa-boxes me-2"></i>Gestión de Productos
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item <?= ($_GET['page'] ?? '') == 'inventario' ? 'active' : '' ?>" href="?page=inventario">
+                            <i class="fas fa-warehouse me-2"></i>Control de Stock
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="?page=inventario&action=detalle">
+                            <i class="fas fa-clipboard-list me-2"></i>Detalle de Inventario
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="?page=inventario&action=movimientos">
+                            <i class="fas fa-exchange-alt me-2"></i>Movimientos
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="?page=inventario&action=conteo">
+                            <i class="fas fa-clipboard-check me-2"></i>Conteo Físico
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="?page=inventario&action=alertas">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Alertas de Stock
+                        </a>
+                    </li>
+                </ul>
             </li>
-            <?php if ($rol === 'administrador' || $rol === 'vendedor'): ?>
+            <?php if ($rol === 'administrador' || $rol === 'mecanico'): ?>
                 <li class="nav-item">
                     <a class="nav-link <?= ($_GET['page'] ?? '') == 'clientes' ? 'active' : '' ?>" href="?page=clientes">
                         <i class="fas fa-users"></i>Clientes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= ($_GET['page'] ?? '') == 'vehiculos' ? 'active' : '' ?>" href="?page=vehiculos">
+                        <i class="fas fa-car"></i>Vehículos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= ($_GET['page'] ?? '') == 'ordenes' ? 'active' : '' ?>" href="?page=ordenes">
+                        <i class="fas fa-clipboard-list"></i>Órdenes de Trabajo
                     </a>
                 </li>
                 <li class="nav-item">
@@ -106,6 +163,11 @@ if (!isset($user) || !$user) {
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link <?= ($_GET['page'] ?? '') == 'notificaciones' ? 'active' : '' ?>" href="?page=notificaciones">
+                        <i class="fas fa-envelope"></i>Notificaciones Email
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link <?= ($_GET['page'] ?? '') == 'reportes' ? 'active' : '' ?>" href="?page=reportes">
                         <i class="fas fa-chart-bar"></i>Reportes
                     </a>
@@ -121,9 +183,57 @@ if (!isset($user) || !$user) {
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= ($_GET['page'] ?? '') == 'usuarios' ? 'active' : '' ?>" href="?page=usuarios">
-                        <i class="fas fa-users-cog"></i>Usuarios
+                    <a class="nav-link <?= ($_GET['page'] ?? '') == 'auditoria' ? 'active' : '' ?>" href="?page=auditoria">
+                        <i class="fas fa-shield-alt"></i>Auditoría
                     </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= ($_GET['page'] ?? '') == 'sesiones' ? 'active' : '' ?>" href="?page=sesiones">
+                        <i class="fas fa-users-cog"></i>Sesiones
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= ($_GET['page'] ?? '') == 'usuarios' ? 'active' : '' ?>" href="?page=usuarios">
+                        <i class="fas fa-users"></i>Usuarios
+                    </a>
+                </li>
+
+                <!-- Operaciones Avanzadas -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle <?= in_array(($_GET['page'] ?? ''), ['ajustes', 'movimientos', 'roles']) ? 'active' : '' ?>"
+                        href="#" id="navbarOperaciones" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-cogs"></i>Operaciones Avanzadas
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarOperaciones">
+                        <li>
+                            <a class="dropdown-item <?= ($_GET['page'] ?? '') == 'ajustes' ? 'active' : '' ?>" href="?page=ajustes">
+                                <i class="fas fa-balance-scale me-2"></i>Ajustes de Inventario
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item <?= ($_GET['page'] ?? '') == 'movimientos' ? 'active' : '' ?>" href="?page=movimientos">
+                                <i class="fas fa-exchange-alt me-2"></i>Movimientos de Stock
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item <?= ($_GET['page'] ?? '') == 'roles' ? 'active' : '' ?>" href="?page=roles">
+                                <i class="fas fa-user-shield me-2"></i>Gestión de Roles
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="?page=reportes&action=dashboard">
+                                <i class="fas fa-chart-line me-2"></i>Dashboard de Reportes
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="?page=auditoria&action=dashboard-seguridad">
+                                <i class="fas fa-shield-alt me-2"></i>Dashboard de Seguridad
+                            </a>
+                        </li>
+                    </ul>
                 </li>
             <?php endif; ?>
         </ul>
@@ -138,10 +248,13 @@ if (!isset($user) || !$user) {
                     <li><a class="dropdown-item" href="?page=perfil">
                             <i class="fas fa-user-edit me-2"></i>Mi Perfil
                         </a></li>
+                    <li><a class="dropdown-item" href="?page=sesiones">
+                            <i class="fas fa-user-clock me-2"></i>Mis Sesiones
+                        </a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item text-danger" href="/auth/logout">
+                    <li><a class="dropdown-item text-danger" href="?page=auth&action=logout">
                             <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
                         </a></li>
                 </ul>
@@ -173,7 +286,7 @@ if (!isset($user) || !$user) {
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item text-danger" href="/auth/logout">
+                            <li><a class="dropdown-item text-danger" href="?page=auth&action=logout">
                                     <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
                                 </a></li>
                         </ul>

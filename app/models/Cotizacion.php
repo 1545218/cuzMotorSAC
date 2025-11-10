@@ -108,7 +108,33 @@ class Cotizacion extends Model
      */
     public function changeStatus($id, $estado, $userId = null)
     {
-        return $this->update($id, ['estado' => $estado]);
+        try {
+            $sql = "UPDATE cotizaciones SET estado = ? WHERE id_cotizacion = ?";
+            $result = $this->db->execute($sql, [$estado, $id]);
+            return $result;
+        } catch (Exception $e) {
+            Logger::error("Error en changeStatus: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Elimina una cotización
+     */
+    public function delete($id)
+    {
+        try {
+            // Primero eliminar detalles
+            $this->db->execute("DELETE FROM detallecotizacion WHERE id_cotizacion = ?", [$id]);
+
+            // Luego eliminar cotización
+            $result = $this->db->execute("DELETE FROM cotizaciones WHERE id_cotizacion = ?", [$id]);
+
+            return $result;
+        } catch (Exception $e) {
+            Logger::error("Error en delete cotización: " . $e->getMessage());
+            return false;
+        }
     }
 
     /**

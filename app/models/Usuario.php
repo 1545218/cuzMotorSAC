@@ -12,12 +12,11 @@ class Usuario extends Model
     protected $fillable = [
         'nombre',
         'apellido',
-        'username',
-        'password',
+        'usuario',
+        'password_hash',
         'telefono',
-        'email',
-        'rol',
-        'activo'
+        'id_rol',
+        'estado'
     ];
 
     /**
@@ -35,7 +34,7 @@ class Usuario extends Model
      */
     public function countByRole($role)
     {
-        return $this->count('rol = ? AND activo = ?', [$role, 1]);
+        return $this->count('rol = ? AND estado = ?', [$role, 'activo']);
     }
 
     /**
@@ -59,7 +58,7 @@ class Usuario extends Model
      */
     public function getActiveUsers()
     {
-        return $this->where('activo = ?', [1], 'nombre ASC');
+        return $this->where('estado = ?', ['activo'], 'nombre ASC');
     }
 
     /**
@@ -67,7 +66,7 @@ class Usuario extends Model
      */
     public function getUsersByRole($role)
     {
-        return $this->where('rol = ? AND activo = ?', [$role, 1], 'nombre ASC');
+        return $this->where('rol = ? AND estado = ?', [$role, 'activo'], 'nombre ASC');
     }
 
     /**
@@ -136,8 +135,8 @@ class Usuario extends Model
             throw new Exception('Usuario no encontrado');
         }
 
-        $newStatus = $user['activo'] ? 0 : 1;
-        return $this->update($id, ['activo' => $newStatus]);
+        $newStatus = $user['estado'] === 'activo' ? 'inactivo' : 'activo';
+        return $this->update($id, ['estado' => $newStatus]);
     }
 
     /**
@@ -158,11 +157,11 @@ class Usuario extends Model
     {
         return [
             'total' => $this->count(),
-            'activos' => $this->count('activo = ?', [1]),
-            'inactivos' => $this->count('activo = ?', [0]),
-            'administradores' => $this->count('rol = ? AND activo = ?', ['admin', 1]),
-            'vendedores' => $this->count('rol = ? AND activo = ?', ['vendedor', 1]),
-            'mecanicos' => $this->count('rol = ? AND activo = ?', ['mecanico', 1])
+            'activos' => $this->count('estado = ?', ['activo']),
+            'inactivos' => $this->count('estado = ?', ['inactivo']),
+            'administradores' => $this->count('rol = ? AND estado = ?', ['admin', 'activo']),
+            'vendedores' => $this->count('rol = ? AND estado = ?', ['vendedor', 'activo']),
+            'mecanicos' => $this->count('rol = ? AND estado = ?', ['mecanico', 'activo'])
         ];
     }
 
@@ -187,8 +186,8 @@ class Usuario extends Model
         }
 
         if (isset($filters['activo']) && $filters['activo'] !== '') {
-            $conditions[] = "activo = ?";
-            $params[] = (int)$filters['activo'];
+            $conditions[] = "estado = ?";
+            $params[] = $filters['activo'] == 1 ? 'activo' : 'inactivo';
         }
 
         $whereClause = !empty($conditions) ? implode(' AND ', $conditions) : '1=1';
@@ -245,7 +244,7 @@ class Usuario extends Model
     public function canDelete($userId)
     {
         // No permitir eliminar si es el único administrador
-        if ($this->count('rol = ? AND activo = ?', ['admin', 1]) <= 1) {
+        if ($this->count('rol = ? AND estado = ?', ['admin', 'activo']) <= 1) {
             $user = $this->find($userId);
             if ($user && $user['rol'] === 'admin') {
                 return false;

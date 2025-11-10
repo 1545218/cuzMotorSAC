@@ -27,15 +27,10 @@ class Producto extends Model
         'id_ubicacion',
         'nombre',
         'descripcion',
-        'codigo',
         'codigo_barras',
         'precio_unitario',
-        'precio_compra',
-        'precio_venta',
-        'stock',
         'stock_actual',
         'stock_minimo',
-        'activo',
         'estado'
     ];
 
@@ -173,7 +168,8 @@ class Producto extends Model
      */
     public function obtenerPorId($id)
     {
-        return $this->getProductsWithDetails("p.id_producto = ?", [$id]);
+        $products = $this->getProductsWithDetails("p.id_producto = ?", [$id]);
+        return !empty($products) ? $products[0] : null;
     }
 
     /**
